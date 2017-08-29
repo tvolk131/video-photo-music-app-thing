@@ -1,13 +1,14 @@
-# Project Name
+# Video Photo Music App Thing
+---
+[![Stories in Ready](https://badge.waffle.io/The-Kids-Table/video-photo-music-app-thing.png?label=ready&title=Ready)](http://waffle.io/The-Kids-Table/video-photo-music-app-thing)
 
-The project description
+Multimedia Collaborative Content Sharing Platorm
 
 ## Team
 
-- teamMember
-- teamMember
-- teamMember
-- teamMember
+- [Brett Kirk](github.com/brettkirk)
+- [Spencer Mitchell](github.com/spoonlanding)
+- [Thomas Volk](github.com/tvolk131)
 
 ## Roadmap
 
