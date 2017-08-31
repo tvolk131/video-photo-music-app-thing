@@ -1,0 +1,22 @@
+language: node_js
+node_js:
+  - "node"
+
+services:
+  - mysql
+
+cache:
+  directories:
+    - "node_modules"
+
+env:
+  - DATABASE_URL=mysql://root@localhost/test
+
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
+
+before_script:
+  - webpack
+
+script:
+  - "npm test"
