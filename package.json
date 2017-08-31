@@ -14,7 +14,6 @@
     "bcrypt-nodejs": "^0.0.3",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.1",
-    "bookshelf": "^0.10.3",
     "config": "^1.26.1",
     "connect-flash": "^0.1.1",
     "connect-redis": "^3.2.0",
@@ -33,7 +32,8 @@
     "pg": "^6.1.5",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "redis": "^2.7.1"
+    "redis": "^2.7.1",
+    "sequelize": "^4.8.0"
   },
   "devDependencies": {
     "babel-loader": "^7.0.0",
@@ -46,7 +46,6 @@
     "grunt-mocha-test": "^0.13.2",
     "mocha": "^3.2.0",
     "node-mocks-http": "^1.6.1",
-    "supertest": "^3.0.0",
     "webpack": "^2.3.2",
     "webpack-dev-server": "^2.4.2"
   },

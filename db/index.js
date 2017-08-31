@@ -1,7 +1,36 @@
-const knex = require('knex')(require('../knexfile'));
-const db = require('bookshelf')(knex);
+const Comment = require('./models/comment');
+const Contributor = require('./models/contributor');
+const Like = require('./models/like');
+const Project = require('./models/project');
+const ProjectComponent = require('./models/projectComponent');
+const Tag = require('./models/tag');
+const User = require('./models/user');
 
-db.plugin('registry');
+const connection = require('./connection');
 
-module.exports = db;
+User.model.belongsToMany(Project.model, {through: Contributor.model, as: 'project', foreignKey: 'contributorId'});
+Project.model.belongsToMany(User.model, {through: Contributor.model, as: 'contributor', foreignKey: 'projectId'});
 
+Project.model.belongsToMany(Tag.model, {through: 'projectTags', as: 'tag', foreignKey: 'projectId'});
+Tag.model.belongsToMany(Project.model, {through: 'projectTags', as: 'project', foreignKey: 'tagId'});
+
+Like.model.belongsTo(User.model, {as: 'user'});
+
+Project.model.belongsTo(user.model, {as: 'owner'});
+Project.model.belongsTo(ProjectComponent.model, {as: 'featuredComponent'});
+
+ProjectComponent.model.belongsTo(Project.model, {as: 'project'});
+ProjectComponent.model.belongsTo(User.model, {as: 'author'});
+
+Comment.model.belongsTo(User.model, {as: 'user'});
+Comment.model.belongsTo(Project.model, {as: 'project'});
+
+module.exports = {
+  Comment,
+  Contributor,
+  Like,
+  Project,
+  ProjectComponent,
+  User,
+  connection
+};
