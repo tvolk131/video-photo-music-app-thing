@@ -11,4 +11,10 @@ const CommentModel = db.define('comments', {
 
 let Comment = {model: CommentModel};
 
+create(userId, text)
+edit(userId, newText)
+getByUser(userId)
+getByProject(projectId)
+delete(userId, commentId)
+
 module.exports = Comment;

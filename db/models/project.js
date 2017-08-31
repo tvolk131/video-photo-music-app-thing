@@ -21,4 +21,11 @@ const ProjectModel = db.define('projects', {
 
 let Project = {model: ProjectModel};
 
+create(userId, name, description)
+update(userId, projectId, options)
+delete(userId, projectId)
+getByNames([names]); // TODO - Talk this over
+getByName(name);
+// TODO - Add tags
+
 module.exports = Project;

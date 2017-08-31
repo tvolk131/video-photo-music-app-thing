@@ -11,4 +11,8 @@ const ContributorModel = db.define('contributors', {
 
 let Contributor = {model: ContributorModel};
 
+addContributor(ownerId, contributorId, projectId)
+removeContributor(ownerId, contributorId, projectId)
+getContributors(projectId)
+
 module.exports = Contributor;

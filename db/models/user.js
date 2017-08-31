@@ -38,4 +38,9 @@ const UserModel = db.define('users', {
 
 let User = {model: UserModel};
 
+create()
+update()
+getByEmail()
+getByName()
+
 module.exports = User;

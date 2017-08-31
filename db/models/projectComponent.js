@@ -21,4 +21,10 @@ const ProjectComponentModel = db.define('components', {
 
 let ProjectComponent = {model: ProjectComponentModel};
 
+create(userId, projectId, type, resourceLocation, name, description); // TODO - add component description and name to schema
+update(userId, componentId, options);
+delete(userId, componentId);
+getByProject(projectId);
+getByUser(userId);
+
 module.exports = ProjectComponent;
