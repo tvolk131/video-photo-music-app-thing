@@ -67,7 +67,6 @@ Project.getById = (projectId) => {
     });
 };
 
-// TODO - Test
 Project.getByName = (name) => {
   return Project.model.findAll({
     where: {name}

@@ -22,7 +22,6 @@ ProjectComponent.model.belongsTo(Project.model, {as: 'project'});
 ProjectComponent.model.belongsTo(User.model, {as: 'author'});
 
 Comment.model.belongsTo(User.model, {as: 'user'});
-Comment.model.belongsTo(Project.model, {as: 'project'});
 
 module.exports = {
   Comment,

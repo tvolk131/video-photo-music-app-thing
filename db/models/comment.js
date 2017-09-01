@@ -8,6 +8,11 @@ const CommentModel = db.define('comments', {
     autoIncrement: true,
     primaryKey: true
   },
+  type: {
+    type: Sequelize.STRING(32),
+    notEmpty: true,
+    allowNull: false
+  },
   text: {
     type: Sequelize.STRING(255),
     notEmpty: true,
@@ -20,9 +25,9 @@ let Comment = {model: CommentModel};
 Comment.create = (userId, projectId, text) => {
   return Comment.model.create({userId, projectId, text});
 };
-Comment.edit = (userId, newText) => {};
+Comment.edit = (userId, commentId, newText) => {};
+Comment.delete = (userId, commentId) => {};
 Comment.getByUser = (userId) => {};
 Comment.getByProject = (projectId) => {};
-Comment.delete = (userId, commentId) => {};
 
 module.exports = Comment;
