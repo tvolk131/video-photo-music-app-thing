@@ -27,8 +27,8 @@ const CommentModel = db.define('comments', {
 
 let Comment = {model: CommentModel};
 
-Comment.create = (userId, projectId, text) => {
-  return Comment.model.create({userId, projectId, text});
+Comment.create = (userId, type, parentId, text) => {
+  return Comment.model.create({userId, type, text});
 };
 Comment.edit = (userId, commentId, newText) => {};
 Comment.delete = (userId, commentId) => {};

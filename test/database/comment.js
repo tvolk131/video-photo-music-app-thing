@@ -2,6 +2,29 @@ const { connection, User, Comment } = require('../../db');
 const expect = require('chai').use(require('chai-as-promised')).expect;
 
 describe('Comment Model', () => {
+  let userOne = {
+    username: 'test',
+    password: 'test'
+  };
+  let userTwo = {
+    oAuthUserId: 1234,
+    oAuthProvider: 'facebook'
+  };
+
+  beforeEach(() => {
+    return connection.reset()
+      .then(() => {
+        return User.create(userTwo);
+      })
+      .then((newUser) => {
+        userOne = newUser;
+        return User.create(userTwo);
+      })
+      .then((newUser) => {
+        userTwo = newUser;
+      });
+  });
+
   describe('create()', () => {
     it('Should create comment when all parameters are valid', () => {
     });
