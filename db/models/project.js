@@ -24,7 +24,10 @@ const ProjectModel = db.define('projects', {
 let Project = {model: ProjectModel};
 
 Project.create = ({ownerId, name, description, tagline}) => {
-  return Project.model.create({ownerId, name, description, tagline});
+  return User.getById(ownerId)
+    .then(() => {
+      return Project.model.create({ownerId, name, description, tagline});
+    });
 };
 Project.update = ({userId, projectId, options}) => {
   return Project.getById(projectId)
@@ -32,10 +35,12 @@ Project.update = ({userId, projectId, options}) => {
       if (options.ownerId && project.ownerId !== userId) {
         return Promise.reject('Only the project owner can set another user as the owner');
       }
-      return Project.model.getContributors();
-    })
-    .then((contributorModels) => {
-      // TODO - Continue implementation
+      return Project.getContributors(project.id)
+        .then((contributors) => {
+          let contributorIds = [];
+          contributors.forEach((contributor) => {contributorIds.push(contributor.id)});
+          return contributorIds.includes(userId) || userId === project.ownerId ? project.update(options) : Promise.reject('Must be a contributor or owner to edit project');
+        });
     });
 };
 Project.delete = (userId, projectId) => {};
@@ -47,7 +52,8 @@ Project.getById = (projectId) => {
       return project ? project : Promise.reject('Project does not exist');
     });
 };
-Project.getByNames = ([names]) => {};
+Project.getByNames = (names) => {};
+
 Project.getByName = (name) => {};
 
 Project.addContributor = ({ownerId, contributorId, projectId}) => {
@@ -68,6 +74,7 @@ Project.addContributor = ({ownerId, contributorId, projectId}) => {
         });
     });
 };
+
 Project.removeContributor = ({ownerId, contributorId, projectId}) => {
   return Project.getById(projectId)
     .then((project) => {
@@ -83,6 +90,7 @@ Project.removeContributor = ({ownerId, contributorId, projectId}) => {
         });
     });
 };
+
 Project.getContributors = (projectId) => {
   return Project.model.findOne({
     where: {
@@ -96,9 +104,10 @@ Project.getContributors = (projectId) => {
     ]
   })
     .then((project) => {
-      return project.contributor;
+      return project ? project.contributor : Promise.reject('Project does not exist');
     });
 };
+
 Project.addTag = (userId, projectId, tagText) => {};
 Project.removeTag = (userId, projectId, tagText) => {};
 Project.getTags = (projectId) => {};

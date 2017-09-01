@@ -121,7 +121,10 @@ User.getByName = (name) => {
 
 // TODO - Write tests for this function
 User.getById = (userId) => {
-  return User.model.findById(userId);
+  return User.model.findById(userId)
+    .then((user) => {
+      return user ? user : Promise.reject('User does not exist');
+    });
 };
 
 module.exports = User;

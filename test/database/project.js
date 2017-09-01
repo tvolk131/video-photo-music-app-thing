@@ -55,23 +55,76 @@ describe('Project Model', () => {
         ownerId: localUser.id
       })).to.be.rejected;
     });
+    it('Should reject when user ID does not map to an existing user', () => {
+      return expect(Project.create({
+        ownerId: 1234
+      })).to.be.rejectedWith('User does not exist');
+    });
   });
 
   describe('update()', () => {
-    it('Should update a project with all-valid parameters', () => {
+    it('Should update a project with all-valid parameters as the owner', () => {
       return Project.create({
         ownerId: localUser.id,
         name: 'test project'
       })
         .then((project) => {
-          // return Project.update(); // TODO - finish implementing
+          return Project.update({userId: localUser.id, projectId: project.id, options: {name: 'updated project name'}});
+        })
+        .then((project) => {
+          expect(project.name).to.equal('updated project name');
         });
     });
-    it('Should reject when updating a project that you are not a contributor of', () => {
+    it('Should update a project with all-valid parameters as a contributor', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+            .then(() => {
+              return Project.update({userId: oAuthUser.id, projectId: project.id, options: {name: 'updated project name'}});
+            });
+        })
+        .then((project) => {
+          expect(project.name).to.equal('updated project name');
+        });
+    });
+    it('Should reject when updating a project that you are not the owner or contributor of', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return expect(Project.update({userId: oAuthUser.id, projectId: project.id, options: {name: 'updated project name'}})).to.be.rejectedWith('Must be a contributor or owner to edit project');
+        });
     });
     it('Should reject when attempting to change the ownership of a project that you are a contributor to', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+            .then(() => {
+              return expect(Project.update({userId: oAuthUser.id, projectId: project.id, options: {ownerId: oAuthUser.id}})).to.be.rejectedWith('Only the project owner can set another user as the owner');
+            });
+        });
     });
     it('Should succeed when giving up ownership of a project that you own to someone else', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+            .then(() => {
+              return Project.update({userId: localUser.id, projectId: project.id, options: {ownerId: oAuthUser.id}});
+            });
+        })
+        .then((project) => {
+          expect(project.ownerId).to.equal(oAuthUser.id);
+        });
     });
   });
 
@@ -197,6 +250,7 @@ describe('Project Model', () => {
         });
     });
     it('Should reject when retrieving contributors from a non-existent project', () => {
+      return expect(Project.getContributors(1234)).to.be.rejectedWith('Project does not exist');
     });
   });
 });
