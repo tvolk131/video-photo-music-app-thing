@@ -1,20 +1,38 @@
 const db = require('../connection');
 const Sequelize = require('sequelize');
+const User = require('./user');
 
 const CommentModel = db.define('comments', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true
+  },
+  type: {
+    type: Sequelize.STRING(32),
+    notEmpty: true,
+    allowNull: false
+  },
+  parentId: {
+    type: Sequelize.INTEGER,
+    notEmpty: true,
+    allowNull: false
+  },
+  text: {
+    type: Sequelize.STRING(255),
+    notEmpty: true,
+    allowNull: false
   }
 });
 
 let Comment = {model: CommentModel};
 
-create(userId, text)
-edit(userId, newText)
-getByUser(userId)
-getByProject(projectId)
-delete(userId, commentId)
+Comment.create = (userId, type, parentId, text) => {
+  return Comment.model.create({userId, type, text});
+};
+Comment.edit = (userId, commentId, newText) => {};
+Comment.delete = (userId, commentId) => {};
+Comment.getByUser = (userId) => {};
+Comment.getByProject = (projectId) => {};
 
 module.exports = Comment;

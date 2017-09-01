@@ -21,10 +21,10 @@ const ProjectComponentModel = db.define('components', {
 
 let ProjectComponent = {model: ProjectComponentModel};
 
-create(userId, projectId, type, resourceLocation, name, description); // TODO - add component description and name to schema
-update(userId, componentId, options);
-delete(userId, componentId);
-getByProject(projectId);
-getByUser(userId);
+ProjectComponentModel.create = (userId, projectId, type, resourceLocation, name, description) => {}; // TODO - add component description and name to schema
+ProjectComponentModel.update = (userId, componentId, options) => {};
+ProjectComponentModel.delete = (userId, componentId) => {};
+ProjectComponentModel.getByProject = (projectId) => {};
+ProjectComponentModel.getByUser = (userId) => {};
 
 module.exports = ProjectComponent;
