@@ -60,7 +60,6 @@ Project.delete = (userId, projectId) => {
     });
 };
 
-// TODO - Test this
 Project.getById = (projectId) => {
   return Project.model.findById(projectId)
     .then((project) => {

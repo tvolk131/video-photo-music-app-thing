@@ -152,6 +152,24 @@ describe('Project Model', () => {
     });
   });
 
+  describe('getById()', () => {
+    it('Should return project if it exists', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.getById(project.id)
+            .then((project) => {
+              expect(project).to.eql(project);
+            });
+        });
+    });
+    it('Should reject if project does not exist', () => {
+      return expect(Project.getById(1234)).to.be.rejectedWith('Project does not exist');
+    });
+  });
+
   describe('addContributor()', () => {
     it('Should add contributors to an existing project when adding as the project owner', () => {
       return Project.create({
