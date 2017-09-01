@@ -21,9 +21,9 @@ const LikeModel = db.define('likes', {
 
 let Like = {model: LikeModel};
 
-like(userId, modelType, modelId)
-unlike(userId, modelType, modelId)
-getLikesByModel(modelType, modelId)
-getLikesByUser(userId)
+Like.create = (userId, modelType, modelId) => {};
+Like.destroy = (userId, modelType, modelId) => {};
+Like.getByModel = (modelType, modelId) => {};
+Like.getByUser = (userId) => {};
 
 module.exports = Like;
