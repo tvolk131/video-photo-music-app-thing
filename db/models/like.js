@@ -12,7 +12,7 @@ const LikeModel = db.define('likes', {
     notEmpty: true,
     allowNull: false
   },
-  likedId: {
+  parentId: {
     type: Sequelize.INTEGER,
     notEmpty: true,
     allowNull: false

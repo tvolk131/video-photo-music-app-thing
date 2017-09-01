@@ -13,6 +13,11 @@ const CommentModel = db.define('comments', {
     notEmpty: true,
     allowNull: false
   },
+  parentId: {
+    type: Sequelize.INTEGER,
+    notEmpty: true,
+    allowNull: false
+  },
   text: {
     type: Sequelize.STRING(255),
     notEmpty: true,
