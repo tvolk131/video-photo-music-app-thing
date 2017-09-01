@@ -16,7 +16,7 @@ Tag.model.belongsToMany(Project.model, {through: 'projectTags', as: 'project', f
 
 Like.model.belongsTo(User.model, {as: 'user'});
 
-Project.model.hasOne(User.model, {as: 'owner'});
+Project.model.belongsTo(User.model, {as: 'owner'});
 Project.model.hasOne(ProjectComponent.model, {as: 'featuredComponent'});
 
 ProjectComponent.model.belongsTo(Project.model, {as: 'project'});
