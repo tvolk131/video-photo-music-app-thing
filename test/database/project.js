@@ -170,6 +170,31 @@ describe('Project Model', () => {
     });
   });
 
+  describe('getByName()', () => {
+    it('Should return all projects with the given name', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.create({
+            ownerId: localUser.id,
+            name: 'test project'
+          })
+            .then((project2) => {
+              return Project.getByName('test project')
+                .then((projects) => {
+                  expect(projects.length).to.equal(2);
+                  expect(projects[0].name).to.equal('test project');
+                  expect(projects[1].name).to.equal('test project');
+                  expect(projects[0].id).to.equal(project.id);
+                  expect(projects[1].id).to.equal(project2.id);
+                });
+            });
+        });
+    });
+  });
+
   describe('addContributor()', () => {
     it('Should add contributors to an existing project when adding as the project owner', () => {
       return Project.create({

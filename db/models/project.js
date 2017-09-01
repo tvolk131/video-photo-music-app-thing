@@ -67,11 +67,12 @@ Project.getById = (projectId) => {
     });
 };
 
-// TODO - Implement and test
-Project.getByNames = (names) => {};
-
-// TODO - Implement and test
-Project.getByName = (name) => {};
+// TODO - Test
+Project.getByName = (name) => {
+  return Project.model.findAll({
+    where: {name}
+  });
+};
 
 Project.addContributor = ({ownerId, contributorId, projectId}) => {
   return Project.getById(projectId)
