@@ -85,7 +85,7 @@ describe('Project Model', () => {
           return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id});
         })
         .then((response) => {
-          expect(response).to.exist;
+          expect(response).to.equal(true);
         });
     });
     it('Should reject when adding contributors as someone other than the project owner', () => {
@@ -103,10 +103,10 @@ describe('Project Model', () => {
         name: 'test project'
       })
         .then((project) => {
-          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id});
-        })
-        .then((project) => {
-          return expect(Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})).to.be.rejectedWith('User is already a contributor to this project');
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+            .then(() => {
+              return expect(Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})).to.be.rejectedWith('User is already a contributor to this project');
+            });
         });
     });
     it('Should reject when adding a contributor to a non-existent project', () => {
@@ -118,15 +118,85 @@ describe('Project Model', () => {
           return expect(Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id + 1})).to.be.rejectedWith('Project does not exist');
         });
     });
+    it('Should reject when adding project owner as a contributor', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return expect(Project.addContributor({ownerId: localUser.id, contributorId: localUser.id, projectId: project.id})).to.be.rejectedWith('Owner cannot be added as a contributor');
+        });
+    });
   });
 
   describe('removeContributor()', () => {
-    it('Should', () => {
+    it('Should remove existing contributors when doing so as the project owner', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+            .then(() => {
+              return Project.removeContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id});
+            });
+        })
+        .then((response) => {
+          expect(response).to.equal(true);
+        });
+    });
+    it('Should reject when removing a contributor that is not listed as a contributor to the project', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return expect(Project.removeContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})).to.be.rejectedWith('User is not a contributor to this project');
+        });
+    });
+    it('Should reject when removing contributors as someone other than the project owner', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+            .then(() => {
+              return expect(Project.removeContributor({ownerId: oAuthUser.id, contributorId: oAuthUser.id, projectId: project.id})).to.be.rejectedWith('Cannot remove contributors from a project you do not own');
+            });
+        });
+    });
+    it('Should reject when removing a contributor from a non-existent project', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return expect(Project.removeContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id + 1})).to.be.rejectedWith('Project does not exist');
+        });
     });
   });
 
   describe('getContributors()', () => {
-    it('Should', () => {
+    it('Should retrieve contributors from an existing project', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+            .then(() => {
+              return Project.getContributors(project.id);
+            });
+        })
+        .then((contributors) => {
+          expect(contributors).to.exist;
+          expect(contributors).to.be.a('array');
+          expect(contributors.length).to.equal(1);
+          expect(contributors[0].id).to.equal(oAuthUser.id);
+        });
+    });
+    it('Should reject when retrieving contributors from a non-existent project', () => {
     });
   });
 });

@@ -1,5 +1,4 @@
 const Comment = require('./models/comment');
-const Contributor = require('./models/contributor');
 const Like = require('./models/like');
 const Project = require('./models/project');
 const ProjectComponent = require('./models/projectComponent');
@@ -8,8 +7,8 @@ const User = require('./models/user');
 
 const connection = require('./connection');
 
-User.model.belongsToMany(Project.model, {through: Contributor.model, as: 'project', foreignKey: 'contributorId'});
-Project.model.belongsToMany(User.model, {through: Contributor.model, as: 'contributor', foreignKey: 'projectId'});
+User.model.belongsToMany(Project.model, {through: 'contributors', as: 'project', foreignKey: 'contributorId'});
+Project.model.belongsToMany(User.model, {through: 'contributors', as: 'contributor', foreignKey: 'projectId'});
 
 Project.model.belongsToMany(Tag.model, {through: 'projectTags', as: 'tag', foreignKey: 'projectId'});
 Tag.model.belongsToMany(Project.model, {through: 'projectTags', as: 'project', foreignKey: 'tagId'});
@@ -27,7 +26,6 @@ Comment.model.belongsTo(Project.model, {as: 'project'});
 
 module.exports = {
   Comment,
-  Contributor,
   Like,
   Project,
   ProjectComponent,
