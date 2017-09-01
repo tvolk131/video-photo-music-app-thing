@@ -9,7 +9,6 @@ describe('User Model', () => {
   describe('create()', () => {
     it('Should create local auth user with all valid parameters', () => {
       return User.create({
-        email: 'foo@gmail.com',
         username: 'test',
         password: 'test'
       })
@@ -20,8 +19,7 @@ describe('User Model', () => {
     it('Should create oAuth user with all valid parameters', () => {
       return User.create({
         oAuthUserId: 1,
-        oAuthProvider: 'google',
-        email: 'foo@gmail.com'
+        oAuthProvider: 'google'
       })
         .then((user) => {
           expect(user).to.exist;
@@ -57,6 +55,56 @@ describe('User Model', () => {
         .then(() => {
           return expect(User.create({username: 'test', email: 'bar@gmail.com', password: 'test', handle: 'Macho Man Randy Savage'})).to.be.rejected;
         });
+    });
+  });
+
+  describe('update()', () => {
+    let localUser = {
+      username: 'test',
+      password: 'test'
+    };
+    let oAuthUser = {
+      oAuthUserId: 1234,
+      oAuthProvider: 'facebook'
+    };
+
+    beforeEach(() => {
+      return User.create(localUser)
+        .then((newUser) => {
+          localUser = newUser;
+          return User.create(oAuthUser);
+        })
+        .then((newUser) => {
+          oAuthUser = newUser;
+        });
+    });
+
+    it('Should update local user and return the updated version when query is valid', () => {
+      return User.update(localUser.id, {handle: 'freddyz'})
+        .then((user) => {
+          expect(user.handle).to.equal('freddyz');
+        });
+    });
+    it('Should update oAuth user and return the updated version when query is valid', () => {
+      return User.update(oAuthUser.id, {handle: 'freddyz'})
+        .then((user) => {
+          expect(user.handle).to.equal('freddyz');
+        });
+    });
+    it('Should not allow changing of oAuthUserId and oAuthProvider fields if attempting to change local user', () => {
+      return expect(User.update(localUser.id, {oAuthUserId: 1234})).to.be.rejectedWith('Cannot modify oAuth data');
+    });
+    it('Should not allow changing of username and password fields if attempting to change oAuth user', () => {
+      return expect(User.update(oAuthUser.id, {username: 'foo'})).to.be.rejectedWith('Cannot update username or password fields when signed in through oAuth provider');
+    });
+    it('Should reject when no update query is specified', () => {
+      return expect(User.update(localUser.id)).to.rejectedWith('No update query was specified');
+    });
+    it('Should reject when attempting to change oAuthUserId', () => {
+      return expect(User.update(localUser.id, {oAuthUserId: 1234})).to.rejectedWith('Cannot modify oAuth data');
+    });
+    it('Should reject when attempting to change oAuthProvider', () => {
+      return expect(User.update(localUser.id, {oAuthProvider: 1234})).to.rejectedWith('Cannot modify oAuth data');
     });
   });
 });

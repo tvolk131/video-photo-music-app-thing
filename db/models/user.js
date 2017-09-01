@@ -60,7 +60,7 @@ User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, han
         reject('Cannot create oAuth account with local password');
       });
     }
-  } else if (email && username && password) {
+  } else if (username && password) {
     if (oAuthUserId) {
       return new Promise((resolve, reject) => {
         reject('Cannot create local auth account with oAuth ID');
@@ -89,9 +89,39 @@ User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, han
     description
   });
 };
-User.update = (userId, {theme, }) => {};
-User.getByEmail = () => {};
-User.getByName = () => {};
-User.getById = () => {};
+User.update = (userId, query) => {
+  if (!query) {
+    return Promise.reject('No update query was specified');
+  }
+  if (query.oAuthUserId || query.oAuthProvider) {
+    return Promise.reject('Cannot modify oAuth data');
+  }
+  return User.getById(userId)
+    .then((user) => {
+      if (user.oAuthUserId && (query.username || query.password)) {
+        return Promise.reject('Cannot update username or password fields when signed in through oAuth provider');
+      }
+      return user.update(query);
+    });
+};
+
+// TODO - Write tests for this function
+User.getByEmail = (email) => {
+  return User.model.findOne({
+    where: {email}
+  });
+};
+
+// TODO - Write tests for this function
+User.getByName = (name) => {
+  return User.model.findAll({
+    where: {name}
+  });
+};
+
+// TODO - Write tests for this function
+User.getById = (userId) => {
+  return User.model.findById(userId);
+};
 
 module.exports = User;
