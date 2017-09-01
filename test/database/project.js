@@ -128,6 +128,30 @@ describe('Project Model', () => {
     });
   });
 
+  describe('delete()', () => {
+    it('Should delete existing project as the owner', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return expect(Project.delete(localUser.id, project.id)).to.eventually.equal(true);
+        });
+    });
+    it('Should reject when trying to delete a project that you are not the owner of', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return expect(Project.delete(oAuthUser.id, project.id)).to.be.rejectedWith('Cannot delete a project that you do not own');
+        });
+    });
+    it('Should reject when trying to delete a project that does not exist', () => {
+      return expect(Project.delete(localUser.id, 1234)).to.be.rejectedWith('Project does not exist');
+    });
+  });
+
   describe('addContributor()', () => {
     it('Should add contributors to an existing project when adding as the project owner', () => {
       return Project.create({

@@ -43,7 +43,22 @@ Project.update = ({userId, projectId, options}) => {
         });
     });
 };
-Project.delete = (userId, projectId) => {};
+
+Project.delete = (userId, projectId) => {
+  return User.getById(userId)
+    .then((user) => {
+      return Project.getById(projectId)
+        .then((project) => {
+          if (project.ownerId !== user.id) {
+            return Promise.reject('Cannot delete a project that you do not own');
+          }
+          return project.destroy();
+        })
+        .then((res) => {
+          return true;
+        });
+    });
+};
 
 // TODO - Test this
 Project.getById = (projectId) => {
@@ -52,8 +67,11 @@ Project.getById = (projectId) => {
       return project ? project : Promise.reject('Project does not exist');
     });
 };
+
+// TODO - Implement and test
 Project.getByNames = (names) => {};
 
+// TODO - Implement and test
 Project.getByName = (name) => {};
 
 Project.addContributor = ({ownerId, contributorId, projectId}) => {
@@ -108,8 +126,13 @@ Project.getContributors = (projectId) => {
     });
 };
 
+// TODO - Implement and test
 Project.addTag = (userId, projectId, tagText) => {};
+
+// TODO - Implement and test
 Project.removeTag = (userId, projectId, tagText) => {};
+
+// TODO - Implement and test
 Project.getTags = (projectId) => {};
 
 module.exports = Project;
