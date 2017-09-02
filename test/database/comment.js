@@ -61,12 +61,12 @@ describe('Comment Model', () => {
   describe('edit()', () => {
     it('Should edit comment when all parameters are valid', () => {
       return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
-      .then((comment) => {
-        return Comment.edit(userOne.id, comment.id, 'new comment text');
-      })
-      .then((comment) => {
-        expect(comment.text).to.equal('new comment text');
-      });
+        .then((comment) => {
+          return Comment.edit(userOne.id, comment.id, 'new comment text');
+        })
+        .then((comment) => {
+          expect(comment.text).to.equal('new comment text');
+        });
     });
     it(`Should reject when attempting to edit another user's comment`, () => {
       return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
@@ -89,12 +89,25 @@ describe('Comment Model', () => {
   });
   describe('delete()', () => {
     it('Should delete comment when all parameters are valid', () => {
+      return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
+        .then((comment) => {
+          return Comment.delete(userOne.id, comment.id);
+        })
+        .then((response) => {
+          expect(response).to.equal(true);
+        });
     });
     it('Should reject when userId does not map to an existing user', () => {
+      return expect(Comment.delete(1234)).to.be.rejectedWith('User does not exist');
     });
     it('Should reject when commentId does not map to an existing comment', () => {
+      return expect(Comment.delete(userOne.id, 1234)).to.be.rejectedWith('Comment does not exist');
     });
     it(`Should reject when attempting to delete another user's comment`, () => {
+      return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
+        .then((comment) => {
+          return expect(Comment.delete(userTwo.id, comment.id)).to.be.rejectedWith(`Cannot delete another user's comment`);
+        });
     });
   });
   describe('getByUser()', () => {

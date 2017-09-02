@@ -63,7 +63,22 @@ Comment.edit = (userId, commentId, newText) => {
     });
 };
 
-Comment.delete = (userId, commentId) => {};
+Comment.delete = (userId, commentId) => {
+  return User.getById(userId)
+    .then(() => {
+      return Comment.getById(commentId)
+        .then((comment) => {
+          if (userId !== comment.userId) {
+            return Promise.reject(`Cannot delete another user's comment`);
+          }
+          return comment.destroy()
+            .then(() => {
+              return true;
+            });
+        });
+    });
+};
+
 // TODO - Write tests for this function
 Comment.getById = (userId) => {
   return Comment.model.findById(userId)
