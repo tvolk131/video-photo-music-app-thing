@@ -60,14 +60,31 @@ describe('Comment Model', () => {
   });
   describe('edit()', () => {
     it('Should edit comment when all parameters are valid', () => {
+      return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
+      .then((comment) => {
+        return Comment.edit(userOne.id, comment.id, 'new comment text');
+      })
+      .then((comment) => {
+        expect(comment.text).to.equal('new comment text');
+      });
     });
     it(`Should reject when attempting to edit another user's comment`, () => {
+      return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
+        .then((comment) => {
+          return expect(Comment.edit(userTwo.id, comment.id, 'new comment text')).to.be.rejectedWith('Cannot edit a comment you do not own');
+        });
     });
     it('Should reject when attempting to change comment text to an empty string', () => {
+      return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
+        .then((comment) => {
+          return expect(Comment.edit(userOne.id, comment.id, '')).to.be.rejectedWith('Comment text cannot be empty');
+        });
     });
     it('Should reject when userId does not map to an existing user', () => {
+      return expect(Comment.edit(1234, null, 'asdf')).to.be.rejectedWith('User does not exist');
     });
     it('Should reject when commentId does not map to an existing comment', () => {
+      return expect(Comment.edit(userOne.id, 1234, 'asdf')).to.be.rejectedWith('Comment does not exist');
     });
   });
   describe('delete()', () => {

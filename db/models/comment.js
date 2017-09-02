@@ -46,8 +46,31 @@ Comment.create = (userId, parentType, parentId, text) => {
       return Comment.model.create({userId, parentType, parentId, text});
     });
 };
-Comment.edit = (userId, commentId, newText) => {};
+
+Comment.edit = (userId, commentId, newText) => {
+  if (!newText) {
+    return Promise.reject('Comment text cannot be empty');
+  }
+  return User.getById(userId)
+    .then((user) => {
+      return Comment.getById(commentId)
+        .then((comment) => {
+          if (user.id !== comment.userId) {
+            return Promise.reject('Cannot edit a comment you do not own');
+          }
+          return comment.update({text: newText});
+        });
+    });
+};
+
 Comment.delete = (userId, commentId) => {};
+// TODO - Write tests for this function
+Comment.getById = (userId) => {
+  return Comment.model.findById(userId)
+    .then((comment) => {
+      return comment ? comment : Promise.reject('Comment does not exist');
+    });
+};
 Comment.getByUser = (userId) => {};
 Comment.getByParent = (parentType, parentId) => {};
 
