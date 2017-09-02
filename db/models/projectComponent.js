@@ -7,13 +7,26 @@ const ProjectComponentModel = db.define('components', {
     autoIncrement: true,
     primaryKey: true
   },
-  type: {
+  parentType: {
     type: Sequelize.STRING(32),
     notEmpty: true,
     allowNull: false
   },
-  likedId: {
+  parentId: {
     type: Sequelize.INTEGER,
+    notEmpty: true,
+    allowNull: false
+  },
+  name: {
+    type: Sequelize.STRING(32),
+    notEmpty: true,
+    allowNull: false
+  },
+  description: {
+    type: Sequelize.STRING(256)
+  },
+  isDownloadable: {
+    type: Sequelize.BOOLEAN,
     notEmpty: true,
     allowNull: false
   }
