@@ -2,7 +2,7 @@ import webpack from 'webpack';
 import path from 'path';
 
 const config = {
-  entry: './client/src/app',
+  entry: './client/src/App.jsx',
   output: {
     path: path.join(__dirname, 'public/dist'),
     filename: 'bundle.js'
@@ -15,10 +15,20 @@ const config = {
         use: [
           { loader: 'babel-loader',
             options: {
-              presets: ['react', 'es2015']
+              presets: ['react', 'es2015', 'stage-0']
             }
           }
         ]
+      },
+      {
+        test: /\.css$/, loader: 'style-loader!css-loader' // Allows css in React
+      },
+      {
+        test: /\.(jpg|png|svg)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 25000,
+        }
       }
     ]
   }
