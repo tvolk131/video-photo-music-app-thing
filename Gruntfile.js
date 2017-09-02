@@ -14,7 +14,13 @@ module.exports = function(grunt) {
         options: {
           reporter: 'spec'
         },
-        src: ['test/**/*.js']
+        src: ['test/server/*.js', 'test/database/*.js']
+      }
+    },
+
+    run: {
+      commands: {
+        exec: 'npm run-script test-client'
       }
     },
 
@@ -36,7 +42,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-pg');
+  grunt.loadNpmTasks('grunt-run');
 
   grunt.registerTask('default', ['eslint']);
-  grunt.registerTask('test', ['mochaTest']);
+  grunt.registerTask('test', ['mochaTest', 'run']);
 };
