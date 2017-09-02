@@ -114,13 +114,24 @@ describe('Comment Model', () => {
   });
 
   describe('getByUser()', () => {
-    it('Should', () => {
+    it('Should return comments when all input parameters are valid', () => {
+      return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
+        .then((comment) => {
+          return Comment.getByUser(userOne.id)
+            .then((comments) => {
+              expect(comments.length).to.equal(1);
+              expect(comments[0].text).to.equal('this is a comment');
+            });
+        });
     });
-    it('Should', () => {
+    it('Should return empty array when user has no comments', () => {
+      return Comment.getByUser(userOne.id)
+        .then((comments) => {
+          expect(comments).to.eql([]);
+        });
     });
-    it('Should', () => {
-    });
-    it('Should', () => {
+    it('Should reject when userId does not map to an existing user', () => {
+      return expect(Comment.getById(1234)).to.be.rejectedWith('Comment does not exist');
     });
   });
 

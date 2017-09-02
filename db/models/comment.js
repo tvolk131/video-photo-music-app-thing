@@ -79,7 +79,14 @@ Comment.delete = (userId, commentId) => {
     });
 };
 
-Comment.getByUser = (userId) => {};
+Comment.getByUser = (userId) => {
+  return User.getById(userId)
+    .then(() => {
+      return Comment.model.findAll({
+        where: userId
+      });
+    });
+};
 Comment.getByParent = (parentType, parentId) => {};
 
 Comment.getById = (userId) => {
