@@ -136,13 +136,21 @@ describe('Comment Model', () => {
   });
 
   describe('getByParent()', () => {
-    it('Should', () => {
+    it('Should get comments when all input parameters are valid', () => {
+      return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
+        .then((comment) => {
+          return Comment.getByParent('project', project.id);
+        })
+        .then((comments) => {
+          expect(comments).to.be.a('array');
+          expect(comments[0].text).to.equal('this is a comment');
+        });
     });
-    it('Should', () => {
+    it('Should reject when parent type is not registered in comment.js', () => {
+      return expect(Comment.getByParent('asdf', 1234)).to.be.rejectedWith('Comment parent model not defined');
     });
-    it('Should', () => {
-    });
-    it('Should', () => {
+    it('Should reject when parent ID does not map to existing parent model', () => {
+      return expect(Comment.getByParent('project', 1234)).to.be.rejectedWith('does not exist');
     });
   });
 

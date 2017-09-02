@@ -87,7 +87,18 @@ Comment.getByUser = (userId) => {
       });
     });
 };
-Comment.getByParent = (parentType, parentId) => {};
+
+Comment.getByParent = (parentType, parentId) => {
+  if (!commentTypes[parentType]) {
+    return Promise.reject(`Comment parent model not defined - please specify '${parentType}' in database comment.js commentTypes constant`);
+  }
+  return commentTypes[parentType].getById(parentId)
+    .then((parent) => {
+      return Comment.model.findAll({
+        where: {parentId: parent.id}
+      });
+    });
+};
 
 Comment.getById = (userId) => {
   return Comment.model.findById(userId)
