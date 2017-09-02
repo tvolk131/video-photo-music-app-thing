@@ -79,14 +79,14 @@ Comment.delete = (userId, commentId) => {
     });
 };
 
-// TODO - Write tests for this function
+Comment.getByUser = (userId) => {};
+Comment.getByParent = (parentType, parentId) => {};
+
 Comment.getById = (userId) => {
   return Comment.model.findById(userId)
     .then((comment) => {
       return comment ? comment : Promise.reject('Comment does not exist');
     });
 };
-Comment.getByUser = (userId) => {};
-Comment.getByParent = (parentType, parentId) => {};
 
 module.exports = Comment;

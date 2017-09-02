@@ -58,6 +58,7 @@ describe('Comment Model', () => {
       return expect(Comment.create(userOne.id, 'project', project.id, '')).to.be.rejectedWith('Comment text cannot be empty');
     });
   });
+
   describe('edit()', () => {
     it('Should edit comment when all parameters are valid', () => {
       return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
@@ -87,6 +88,7 @@ describe('Comment Model', () => {
       return expect(Comment.edit(userOne.id, 1234, 'asdf')).to.be.rejectedWith('Comment does not exist');
     });
   });
+
   describe('delete()', () => {
     it('Should delete comment when all parameters are valid', () => {
       return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
@@ -110,6 +112,7 @@ describe('Comment Model', () => {
         });
     });
   });
+
   describe('getByUser()', () => {
     it('Should', () => {
     });
@@ -120,6 +123,7 @@ describe('Comment Model', () => {
     it('Should', () => {
     });
   });
+
   describe('getByParent()', () => {
     it('Should', () => {
     });
@@ -128,6 +132,22 @@ describe('Comment Model', () => {
     it('Should', () => {
     });
     it('Should', () => {
+    });
+  });
+
+  describe('getById()', () => {
+    it('Should return model if ID maps to an existing comment', () => {
+      return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
+        .then((comment) => {
+          return Comment.getById(comment.id)
+            .then((newComment) => {
+              expect(comment.id).to.equal(newComment.id);
+              expect(comment.text).to.equal(newComment.text);
+              expect(comment.parentType).to.equal(newComment.parentType);
+            });
+        });
+    });
+    it('Should reject if ID does not map to an existing comment', () => {
     });
   });
 });
