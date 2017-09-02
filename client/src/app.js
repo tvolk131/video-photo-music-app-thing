@@ -1,4 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react'
+import logo from './logo.svg'
+import './App.css'
 
-ReactDOM.render(<h1>Hello World from React</h1>, document.getElementById('root'));
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Hello World!</h2>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default App
