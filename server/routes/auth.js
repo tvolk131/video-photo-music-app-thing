@@ -14,8 +14,7 @@ router.route('/login')
   })
   .post(middleware.passport.authenticate('local-login', {
     successRedirect: '/profile',
-    failureRedirect: '/login',
-    failureFlash: true
+    failureRedirect: '/login'
   }));
 
 router.route('/signup')
@@ -24,8 +23,7 @@ router.route('/signup')
   })
   .post(middleware.passport.authenticate('local-signup', {
     successRedirect: '/profile',
-    failureRedirect: '/signup',
-    failureFlash: true
+    failureRedirect: '/signup'
   }));
 
 router.route('/profile')
@@ -56,8 +54,7 @@ router.get('/auth/facebook', middleware.passport.authenticate('facebook', {
 
 router.get('/auth/facebook/callback', middleware.passport.authenticate('facebook', {
   successRedirect: '/profile',
-  failureRedirect: '/login',
-  failureFlash: true
+  failureRedirect: '/login'
 }));
 
 router.get('/auth/twitter', middleware.passport.authenticate('twitter'));
