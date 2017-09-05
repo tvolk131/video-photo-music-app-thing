@@ -2,7 +2,7 @@ import webpack from 'webpack';
 import path from 'path';
 
 const config = {
-  entry: './client/src/App.jsx',
+  entry: './client/src/index.jsx',
   output: {
     path: path.join(__dirname, 'public/dist'),
     filename: 'bundle.js'
@@ -21,7 +21,7 @@ const config = {
         ]
       },
       {
-        test: /\.css$/, loader: 'style-loader!css-loader' // Allows css in React
+        test: /\.css$/, loader: 'style-loader!css-loader'
       },
       {
         test: /\.(jpg|png|svg)$/,
@@ -31,7 +31,8 @@ const config = {
         }
       }
     ]
-  }
+  },
+  watch: true
 };
 
 export default config;
