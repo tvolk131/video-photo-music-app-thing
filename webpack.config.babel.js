@@ -32,8 +32,7 @@ const config = {
         }
       }
     ]
-  },
-  watch: true
+  }
 };
 
 export default config;
