@@ -31,7 +31,7 @@ const CommentModel = db.define('comments', {
 
 let Comment = {model: CommentModel};
 
-Comment.create = (userId, parentType, parentId, text) => {
+Comment.create = ({userId, parentType, parentId, text}) => {
   if (!text) {
     return Promise.reject('Comment text cannot be empty');
   }
@@ -47,8 +47,8 @@ Comment.create = (userId, parentType, parentId, text) => {
     });
 };
 
-Comment.edit = (userId, commentId, newText) => {
-  if (!newText) {
+Comment.edit = ({userId, commentId, text}) => {
+  if (!text) {
     return Promise.reject('Comment text cannot be empty');
   }
   return User.getById(userId)
@@ -58,12 +58,12 @@ Comment.edit = (userId, commentId, newText) => {
           if (user.id !== comment.userId) {
             return Promise.reject('Cannot edit a comment you do not own');
           }
-          return comment.update({text: newText});
+          return comment.update({text: text});
         });
     });
 };
 
-Comment.delete = (userId, commentId) => {
+Comment.delete = ({userId, commentId}) => {
   return User.getById(userId)
     .then(() => {
       return Comment.getById(commentId)
@@ -88,7 +88,7 @@ Comment.getByUser = (userId) => {
     });
 };
 
-Comment.getByParent = (parentType, parentId) => {
+Comment.getByParent = ({parentType, parentId}) => {
   if (!commentTypes[parentType]) {
     return Promise.reject(`Comment parent model not defined - please specify '${parentType}' in database comment.js commentTypes constant`);
   }
