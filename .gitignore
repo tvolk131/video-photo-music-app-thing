@@ -9,6 +9,7 @@ config/test.json
 
 # Logs
 logs
+package-lock.json
 *.log
 
 # Runtime data
