@@ -105,28 +105,33 @@ User.update = (userId, query) => {
     });
 };
 
-// TODO - Write tests for this function
 User.getByEmail = (email) => {
   return User.model.findOne({
     where: {email}
-  });
+  })
+    .then((user) => {
+      return user ? user : Promise.reject('User does not exist');
+    });
 };
 
-// TODO - Write tests for this function
 User.getByUsername = (username) => {
   return User.model.findOne({
     where: {username}
-  });
+  })
+    .then((user) => {
+      return user ? user : Promise.reject('User does not exist');
+    });
 };
 
-// TODO - Write tests for this function
-User.getByName = (name) => {
-  return User.model.findAll({
-    where: {name}
-  });
+User.getByHandle = (handle) => {
+  return User.model.findOne({
+    where: {handle}
+  })
+    .then((user) => {
+      return user ? user : Promise.reject('User does not exist');
+    });
 };
 
-// TODO - Write tests for this function
 User.getById = (userId) => {
   return User.model.findById(userId)
     .then((user) => {
