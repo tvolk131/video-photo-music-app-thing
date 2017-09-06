@@ -10,7 +10,7 @@ router.post('/login', middleware.passport.authenticate('local-login', {
   }));
 
 router.post('/signup', middleware.passport.authenticate('local-signup', {
-    successRedirect: '/success'
+    successRedirect: '/'
   }));
 
 router.get('/logout', (req, res) => {
