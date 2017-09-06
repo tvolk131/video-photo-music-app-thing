@@ -17,7 +17,13 @@ app.use(middleware.auth.session);
 app.use(middleware.passport.initialize());
 app.use(middleware.passport.session());
 
-app.use(express.static(path.join(__dirname, '../public')));
+// Serve static files
+app.get('*/bundle.js', (req, res) => {
+  res.sendFile(path.resolve(__dirname + '/../public/dist/bundle.js'));
+});
+app.get('/*', (req, res) => {
+  res.sendFile(path.resolve(__dirname + '/../client/public/index.html'));
+});
 
 app.use('/', routes.auth);
 app.use('/api', routes.api);
