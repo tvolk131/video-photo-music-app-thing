@@ -10,8 +10,6 @@ app.use(middleware.morgan('dev'));
 app.use(middleware.cookieParser());
 app.use(middleware.bodyParser.urlencoded({extended: false}));
 app.use(middleware.bodyParser.json());
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
 
 app.use(middleware.auth.session);
 app.use(middleware.passport.initialize());
@@ -20,6 +18,12 @@ app.use(middleware.passport.session());
 // Serve static files
 app.get('*/bundle.js', (req, res) => {
   res.sendFile(path.resolve(__dirname + '/../public/dist/bundle.js'));
+});
+app.get('*/favicon.ico', (req, res) => {
+  res.sendFile(path.resolve(__dirname + '/../client/public/favicon.ico'));
+});
+app.get('*/manifest.json', (req, res) => {
+  res.sendFile(path.resolve(__dirname + '/../client/public/manifest.json'));
 });
 app.get('/*', (req, res) => {
   res.sendFile(path.resolve(__dirname + '/../client/public/index.html'));
