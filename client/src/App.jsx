@@ -18,7 +18,6 @@ class App extends Component {
     const { drawerOpen } = this.props;
     return (
       <div className="App">
-<<<<<<< HEAD
         <Nav />
         <Route exact path='/search' component={Search}/>
         <Route exact path='/projects' component={Projects}/>
@@ -27,13 +26,6 @@ class App extends Component {
         <Route exact path='/login' component={Login}/>
         <Route exact path='/signup' component={Signup}/>
         <Route exact path='/logout' component={Logout}/>
-=======
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Hello World!</h2>
-        </div>
-        
->>>>>>> Setup build and connect react router
       </div>
     );
   }
