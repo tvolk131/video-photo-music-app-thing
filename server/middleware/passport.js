@@ -16,7 +16,7 @@ passport.deserializeUser((id, done) => {
   return User.getById(id)
     .then((user) => {
       if (!user) {
-        throw profile;
+        throw user;
       }
       done(null, user);
     })
@@ -45,7 +45,7 @@ passport.use('local-signup', new LocalStrategy({
             return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
           };
           let data = {
-            email,
+            username,
             password: generateHash(password),
             firstname: req.body.firstname,
             lastname: req.body.lastname
@@ -68,7 +68,7 @@ passport.use('local-signup', new LocalStrategy({
   }));
 
 passport.use('local-login', new LocalStrategy({
-  usernameField: 'email',
+  usernameField: 'username',
   passwordField: 'password',
   passReqToCallback: true
 },
