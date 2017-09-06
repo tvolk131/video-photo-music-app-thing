@@ -121,6 +121,7 @@ ProjectComponent.delete = (userId, componentId) => {
       return true;
     });
 };
+
 ProjectComponent.getByProject = (projectId) => {
   return Project.getById(projectId)
     .then(() => {
@@ -130,17 +131,20 @@ ProjectComponent.getByProject = (projectId) => {
     });
 };
 
-// TODO - Implement this method
-// ProjectComponent.getByUser = (userId) => {
-//   return User.getById(userId)
-//     .then(() => {
-//     })
-//     .then(() => {
-//       return ProjectComponent.model.findAll({
-//         where: {userId}
-//       });
-//     });
-// };
+ProjectComponent.getByUser = (userId) => {
+  return User.getById(userId)
+    .then(() => {
+      return ProjectComponent.model.findAll({
+        where: {authorId: userId}
+      });
+    });
+};
+
+ProjectComponent.getByName = (componentName) => {
+  return ProjectComponent.model.findAll({
+    where: {name: componentName}
+  });
+};
 
 ProjectComponent.getById = (componentId) => {
   return ProjectComponent.model.findById(componentId)
