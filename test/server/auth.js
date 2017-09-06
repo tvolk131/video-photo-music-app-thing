@@ -8,13 +8,14 @@ describe('/signup', () => {
   beforeEach(() => {
     return db.connection.clear();
   });
-  it('Should be able to create new local users', () => {
+  it('Should be able to create new local users', (done) => {
     let agent = chai.request.agent(app);
-    return agent.post('/signup')
+    agent.post('/signup')
       .send({username: 'test', password: 'test'})
       .end((err, res) => {
-        expect(err).to.exist;
+        expect(err).to.not.exist;
         expect(res).to.have.cookie;
+        done();
       });
   });
   it('Should return error when attempting to create a user using an email that is already taken', (done) => {
