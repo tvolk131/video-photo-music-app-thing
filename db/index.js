@@ -6,6 +6,9 @@ const Tag = require('./models/tag');
 const User = require('./models/user');
 
 const connection = require('./connection');
+connection.clear = () => {
+  return connection.sync({force: true});
+};
 
 User.model.belongsToMany(Project.model, {through: 'contributors', as: 'project', foreignKey: 'contributorId'});
 Project.model.belongsToMany(User.model, {through: 'contributors', as: 'contributor', foreignKey: 'projectId'});

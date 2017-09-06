@@ -113,6 +113,13 @@ User.getByEmail = (email) => {
 };
 
 // TODO - Write tests for this function
+User.getByUsername = (username) => {
+  return User.model.findOne({
+    where: {username}
+  });
+};
+
+// TODO - Write tests for this function
 User.getByName = (name) => {
   return User.model.findAll({
     where: {name}

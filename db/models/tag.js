@@ -7,6 +7,16 @@ const TagModel = db.define('tags', {
     autoIncrement: true,
     primaryKey: true
   },
+  parentType: {
+    type: Sequelize.STRING(32),
+    notEmpty: true,
+    allowNull: false
+  },
+  parentId: {
+    type: Sequelize.INTEGER,
+    notEmpty: true,
+    allowNull: false
+  },
   text: {
     type: Sequelize.STRING(32),
     notEmpty: true,
@@ -15,5 +25,7 @@ const TagModel = db.define('tags', {
 });
 
 let Tag = {model: TagModel};
+
+
 
 module.exports = Tag;
