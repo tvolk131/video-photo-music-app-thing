@@ -6,17 +6,17 @@ const router = express.Router();
 router.get('/', middleware.auth.verify);
 
 router.post('/login', middleware.passport.authenticate('local-login', {
-    successRedirect: '/'
-  }));
+  successRedirect: '/'
+}));
 
 router.post('/signup', middleware.passport.authenticate('local-signup', {
-    successRedirect: '/'
-  }));
+  successRedirect: '/'
+}));
 
 router.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('/login');
-  });
+  req.logout();
+  res.redirect('/login');
+});
 
 router.get('/auth/google', middleware.passport.authenticate('google', {
   scope: ['email', 'profile']

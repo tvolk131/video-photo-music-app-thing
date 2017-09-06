@@ -69,7 +69,7 @@ Comment.delete = (userId, commentId) => {
       return Comment.getById(commentId)
         .then((comment) => {
           if (userId !== comment.userId) {
-            return Promise.reject(`Cannot delete another user's comment`);
+            return Promise.reject('Cannot delete another user\'s comment');
           }
           return comment.destroy()
             .then(() => {
