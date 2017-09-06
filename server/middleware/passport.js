@@ -33,65 +33,65 @@ passport.use('local-signup', new LocalStrategy({
   passwordField: 'password',
   passReqToCallback: true
 },
-  (req, username, password, done) => {
-    return User.getByUsername(username)
-      .then((user) => {
-        if (user) {
-          return done(null, false, {
-            message: 'Username is already taken'
-          });
-        } else {
-          let generateHash = (password) => {
-            return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
-          };
-          let data = {
-            username,
-            password: generateHash(password),
-            firstname: req.body.firstname,
-            lastname: req.body.lastname
-          };
-          User.create(data)
-            .then((newUser) => {
-              if (!newUser) {
-                return done(null, false);
-              } else {
-                return done(null, newUser);
-              }
-            })
-            .catch((err) => {
-              return done(null, false, {
-                message: 'Username is invalid'
-              });
+(req, username, password, done) => {
+  return User.getByUsername(username)
+    .then((user) => {
+      if (user) {
+        return done(null, false, {
+          message: 'Username is already taken'
+        });
+      } else {
+        let generateHash = (password) => {
+          return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+        };
+        let data = {
+          username,
+          password: generateHash(password),
+          firstname: req.body.firstname,
+          lastname: req.body.lastname
+        };
+        User.create(data)
+          .then((newUser) => {
+            if (!newUser) {
+              return done(null, false);
+            } else {
+              return done(null, newUser);
+            }
+          })
+          .catch((err) => {
+            return done(null, false, {
+              message: 'Username is invalid'
             });
-        }
-      });
-  }));
+          });
+      }
+    });
+}));
 
 passport.use('local-login', new LocalStrategy({
   usernameField: 'username',
   passwordField: 'password',
   passReqToCallback: true
 },
-  (req, username, password, done) => {
-    User.getByUsername(username)
-      .then((user) => {
-        let isValidPassword = (userpass, password) => {
-          return bCrypt.compareSync(password, userpass);
-        };
-        if (!user || !isValidPassword(user.password, password)) {
-          return done(null, false, {
-            message: 'Incorrect username or password'
-          });
-        }
-        return done(null, user.get());
-      })
-      .catch((err) => {
-        console.error('Error: ' + err);
+(req, username, password, done) => {
+  User.getByUsername(username)
+    .then((user) => {
+      let isValidPassword = (userpass, password) => {
+        return bCrypt.compareSync(password, userpass);
+      };
+      if (!user || !isValidPassword(user.password, password)) {
         return done(null, false, {
-          message: 'Something went wrong with your sign-in'
+          message: 'Incorrect username or password'
         });
+      }
+      return done(null, user.get());
+    })
+    .catch((err) => {
+      console.error('Error: ' + err);
+      return done(null, false, {
+        message: 'Something went wrong with your sign-in'
       });
-  }));
+    });
+}));
 
 // passport.use('google', new GoogleStrategy({
 //   clientID: config.Google.clientID,

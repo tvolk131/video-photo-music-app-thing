@@ -49,7 +49,7 @@ describe('Comment Model', () => {
       return expect(Comment.create(1234, 'project', project.id, 'this is a comment')).to.be.rejectedWith('User does not exist');
     });
     it('Should reject when comment type is not registered in model file', () => {
-      return expect(Comment.create(userOne.id, 'asdf', project.id, 'this is a comment')).to.be.rejectedWith(`Comment parent model not defined`);
+      return expect(Comment.create(userOne.id, 'asdf', project.id, 'this is a comment')).to.be.rejectedWith('Comment parent model not defined');
     });
     it('Should reject when projectId does not map to an existing project', () => {
       return expect(Comment.create(userOne.id, 'project', 1234, 'this is a comment')).to.be.rejectedWith('does not exist');
@@ -69,7 +69,7 @@ describe('Comment Model', () => {
           expect(comment.text).to.equal('new comment text');
         });
     });
-    it(`Should reject when attempting to edit another user's comment`, () => {
+    it('Should reject when attempting to edit another user\'s comment', () => {
       return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
         .then((comment) => {
           return expect(Comment.edit(userTwo.id, comment.id, 'new comment text')).to.be.rejectedWith('Cannot edit a comment you do not own');
@@ -105,10 +105,10 @@ describe('Comment Model', () => {
     it('Should reject when commentId does not map to an existing comment', () => {
       return expect(Comment.delete(userOne.id, 1234)).to.be.rejectedWith('Comment does not exist');
     });
-    it(`Should reject when attempting to delete another user's comment`, () => {
+    it('Should reject when attempting to delete another user\'s comment', () => {
       return Comment.create(userOne.id, 'project', project.id, 'this is a comment')
         .then((comment) => {
-          return expect(Comment.delete(userTwo.id, comment.id)).to.be.rejectedWith(`Cannot delete another user's comment`);
+          return expect(Comment.delete(userTwo.id, comment.id)).to.be.rejectedWith('Cannot delete another user\'s comment');
         });
     });
   });

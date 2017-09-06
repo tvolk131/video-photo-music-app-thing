@@ -78,7 +78,7 @@ describe('Project Component Model', () => {
       return expect(ProjectComponent.create({userId: userOne.id, projectId: 1234, type: 'file'})).to.be.rejectedWith('Project does not exist');
     });
     it('Should reject when content type is invalid', () => {
-      return expect(ProjectComponent.create({userId: userOne.id, projectId: project.id, name:'test component', type: 'asdf', resourceUrl: 'google.com'})).to.be.rejectedWith('Component type is invalid');
+      return expect(ProjectComponent.create({userId: userOne.id, projectId: project.id, name: 'test component', type: 'asdf', resourceUrl: 'google.com'})).to.be.rejectedWith('Component type is invalid');
     });
   });
 

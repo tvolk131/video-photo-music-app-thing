@@ -84,17 +84,17 @@ ProjectComponent.update = (userId, componentId, options) => {
       return Project.getById(component.projectId)
         .then((project) => {
           return Project.getContributors(project.id)
-          .then((contributors) => {
-            let isContributor = !!contributors.filter((user) => {
-              return user.id === userId;
-            })[0];
-            if (!isContributor && project.ownerId !== userId) {
-              return Promise.reject('Cannot edit a component in a project you are not a part of');
-            }
-            return component.update(options);
-          });
+            .then((contributors) => {
+              let isContributor = !!contributors.filter((user) => {
+                return user.id === userId;
+              })[0];
+              if (!isContributor && project.ownerId !== userId) {
+                return Promise.reject('Cannot edit a component in a project you are not a part of');
+              }
+              return component.update(options);
+            });
         });
-      });
+    });
 };
 
 ProjectComponent.delete = (userId, componentId) => {
@@ -106,20 +106,20 @@ ProjectComponent.delete = (userId, componentId) => {
       return Project.getById(component.projectId)
         .then((project) => {
           return Project.getContributors(project.id)
-          .then((contributors) => {
-            let isContributor = !!contributors.filter((user) => {
-              return user.id === userId;
-            })[0];
-            if (!isContributor && project.ownerId !== userId) {
-              return Promise.reject('Cannot delete a component in a project you are not a part of');
-            }
-            return component.destroy();
-          });
+            .then((contributors) => {
+              let isContributor = !!contributors.filter((user) => {
+                return user.id === userId;
+              })[0];
+              if (!isContributor && project.ownerId !== userId) {
+                return Promise.reject('Cannot delete a component in a project you are not a part of');
+              }
+              return component.destroy();
+            });
         });
-      })
-      .then(() => {
-        return true;
-      });
+    })
+    .then(() => {
+      return true;
+    });
 };
 ProjectComponent.getByProject = (projectId) => {
   return Project.getById(projectId)

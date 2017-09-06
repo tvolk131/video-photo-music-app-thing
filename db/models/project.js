@@ -38,7 +38,7 @@ Project.update = ({userId, projectId, options}) => {
       return Project.getContributors(project.id)
         .then((contributors) => {
           let contributorIds = [];
-          contributors.forEach((contributor) => {contributorIds.push(contributor.id)});
+          contributors.forEach((contributor) => { contributorIds.push(contributor.id); });
           return contributorIds.includes(userId) || userId === project.ownerId ? project.update(options) : Promise.reject('Must be a contributor or owner to edit project');
         });
     });
