@@ -16,13 +16,13 @@ const ProjectComponentModel = db.define('components', {
     autoIncrement: true,
     primaryKey: true
   },
-  resourceUrl: {
-    type: Sequelize.STRING(256),
+  name: {
+    type: Sequelize.STRING(32),
     notEmpty: true,
     allowNull: false
   },
-  name: {
-    type: Sequelize.STRING(32),
+  resourceUrl: {
+    type: Sequelize.STRING(256),
     notEmpty: true,
     allowNull: false
   },
@@ -43,7 +43,7 @@ const ProjectComponentModel = db.define('components', {
 
 let ProjectComponent = {model: ProjectComponentModel};
 
-ProjectComponent.create = ({userId, projectId, type, resourceUrl, name, description, isDownloadable = false}) => {
+ProjectComponent.create = ({userId, projectId, type, name, resourceUrl, description, isDownloadable = false}) => {
   if (!componentTypes[type]) {
     return Promise.reject('Component type is invalid');
   }
@@ -66,8 +66,8 @@ ProjectComponent.create = ({userId, projectId, type, resourceUrl, name, descript
       return ProjectComponent.model.create({
         authorId: userId,
         projectId,
-        resourceUrl,
         name,
+        resourceUrl,
         description,
         type,
         isDownloadable: isDownloadable === true ? true : false

@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const middleware = require('./middleware');
 const routes = require('./routes');
+const graphQLSchema = require('./graphql');
+const expressGraphQL = require('express-graphql');
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.use(middleware.bodyParser.json());
 app.use(middleware.auth.session);
 app.use(middleware.passport.initialize());
 app.use(middleware.passport.session());
+
+app.use('/graphql', expressGraphQL({schema: graphQLSchema, graphiql: true}));
 
 // Serve static files
 app.get('*/bundle.js', (req, res) => {
@@ -32,4 +36,4 @@ app.get('/*', (req, res) => {
 app.use('/', routes.auth);
 app.use('/api', routes.api);
 
-module.exports = app;
+module.exports = require('http').Server(app);
