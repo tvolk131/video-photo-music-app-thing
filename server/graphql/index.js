@@ -102,7 +102,51 @@ const mutation = new GraphQLObjectType({
         description: {type: GraphQLString}
       },
       resolve(parentValue, args, request) {
+        if (!request.user) {
+          return Promise.reject('You are not logged in');
+        }
         return db.User.update(request.user.id, args);
+      }
+    },
+    createProject: {
+      type: ProjectType,
+      args: {
+        name: {type: new GraphQLNonNull(GraphQLString)},
+        description: {type: GraphQLString},
+        tagline: {type: GraphQLString}
+      },
+      resolve(parentValue, {name, description, tagline}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot create a project when you are not logged in');
+        }
+        return db.Project.create({ownerId: request.user.id, name, description, tagline});
+      }
+    },
+    editProject: {
+      type: ProjectType,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLInt)},
+        name: {type: GraphQLString},
+        description: {type: GraphQLString},
+        tagline: {type: GraphQLString}
+      },
+      resolve(parentValue, {id, name, description, tagline}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot edit a project when you are not logged in');
+        }
+        return db.Project.update({userId: request.user.id, projectId: id, options: {name, description, tagline}});
+      }
+    },
+    deleteProject: {
+      type: ProjectType,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {id}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot delete a project when you are not logged in');
+        }
+        return db.Project.delete(request.user.id, id);
       }
     }
   }
