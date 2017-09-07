@@ -1,6 +1,7 @@
 const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
-const redisClient = require('redis').createClient();
+const Store = require('connect-session-sequelize')(session.Store);
+const db = require('../../db');
+let store = new Store({db: db.connection});
 
 module.exports.verify = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -10,12 +11,8 @@ module.exports.verify = (req, res, next) => {
 };
 
 module.exports.session = session({
-  store: new RedisStore({
-    client: redisClient,
-    host: 'localhost',
-    port: 6379
-  }),
+  store,
   secret: 'more laughter, more love, more life',
-  resave: false,
+  resave: true,
   saveUninitialized: false
 });

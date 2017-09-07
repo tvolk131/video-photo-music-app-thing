@@ -6,4 +6,11 @@ connection.reset = () => {
   return connection.sync({force: true});
 };
 
+connection.sync().then(() => {
+  console.log('Nice! Database looks fine.');
+}).catch((err) => {
+  console.log('Uh oh. something went wrong when updating the database.');
+  console.error(err);
+});
+
 module.exports = connection;

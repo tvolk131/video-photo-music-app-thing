@@ -9,7 +9,7 @@ const UserModel = db.define('users', {
     primaryKey: true
   },
   oAuthUserId: {
-    type: Sequelize.INTEGER
+    type: Sequelize.STRING(128)
   },
   oAuthProvider: {
     type: Sequelize.STRING(32)
@@ -134,6 +134,16 @@ User.getByHandle = (handle) => {
 
 User.getById = (userId) => {
   return User.model.findById(userId)
+    .then((user) => {
+      return user ? user : Promise.reject('User does not exist');
+    });
+};
+
+// TODO - Write tests for this function
+User.getByOAuthId = (oAuthUserId, oAuthProvider) => {
+  return User.model.findOne({
+    where: {oAuthUserId, oAuthProvider}
+  })
     .then((user) => {
       return user ? user : Promise.reject('User does not exist');
     });
