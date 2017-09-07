@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import GoogleButton from '../components/GoogleButton/index.jsx';
+import GoogleButton from '../components/buttons/GoogleButton/index.jsx';
+import FacebookButton from '../components/buttons/FacebookButton/index.jsx';
 import { NavLink } from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
@@ -82,6 +83,10 @@ class Login extends React.Component {
     window.location.href = '/auth/google';
   }
 
+  facebookOAuthRedirect () {
+    window.location.href = '/auth/facebook';
+  }
+
   render() {
     const navItemStyle = {textDecoration: 'none'};
     return (
@@ -94,9 +99,10 @@ class Login extends React.Component {
           to='/signup'
           style={navItemStyle}
         >
-        <Button className={'btn'}>Sign Up</Button><br/>
+          <Button className={'btn'}>Sign Up</Button><br/>
         </NavLink>
-        <GoogleButton className={'btn'} onClick={this.googleOAuthRedirect} />
+        <GoogleButton className={'btn'} onClick={this.googleOAuthRedirect} /><br/>
+        <FacebookButton className={'btn'} onClick={this.facebookOAuthRedirect} />
         <Snackbar open={this.state.showError} message={this.state.errorMessage} autoHideDuration={4000} onRequestClose={this.hideError} />
       </div>
     ) 
