@@ -2,6 +2,8 @@ const db = require('../connection');
 const Sequelize = require('sequelize');
 const User = require('./user');
 const Project = require('./project');
+const Comment = require('./comment');
+const Like = require('./like');
 const componentTypes = {
   audio: true,
   video: true,
@@ -152,5 +154,9 @@ ProjectComponent.getById = (componentId) => {
       return component ? component : Promise.reject('Component does not exist');
     });
 };
+
+ProjectComponent.name = 'projectComponent';
+Comment.addToClass(ProjectComponent);
+Like.addToClass(ProjectComponent);
 
 module.exports = ProjectComponent;

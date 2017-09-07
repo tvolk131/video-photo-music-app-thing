@@ -321,6 +321,7 @@ describe('Project Model', () => {
     });
   });
 
+  // TODO - Move comment and like tests to their own models
   describe('Comment', () => {
     let project;
     beforeEach(() => {

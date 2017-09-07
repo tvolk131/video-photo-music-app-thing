@@ -129,9 +129,7 @@ Project.getContributors = (projectId) => {
 
 
 Project.name = 'project';
-
 Comment.addToClass(Project);
-
 Like.addToClass(Project);
 
 
