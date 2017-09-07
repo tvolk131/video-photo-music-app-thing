@@ -11,6 +11,7 @@ config/test.json
 logs
 package-lock.json
 *.log
+db/config.json
 
 # Runtime data
 pids

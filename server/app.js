@@ -24,13 +24,13 @@ app.get('*/bundle.js', (req, res) => {
   res.sendFile(path.resolve(__dirname + '/../public/dist/bundle.js'));
 });
 app.get('*/favicon.ico', (req, res) => {
-  res.sendFile(path.resolve(__dirname + '/../client/public/favicon.ico'));
+  res.sendFile(path.resolve(__dirname + '/../public/dist/favicon.ico'));
 });
 app.get('*/manifest.json', (req, res) => {
-  res.sendFile(path.resolve(__dirname + '/../client/public/manifest.json'));
+  res.sendFile(path.resolve(__dirname + '/../public/dist/manifest.json'));
 });
 app.get('/*', (req, res) => {
-  res.sendFile(path.resolve(__dirname + '/../client/public/index.html'));
+  res.sendFile(path.resolve(__dirname + '/../public/dist/index.html'));
 });
 
 app.use('/', routes.auth);
