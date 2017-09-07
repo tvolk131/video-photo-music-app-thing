@@ -1,10 +1,6 @@
 const db = require('../connection');
 const Sequelize = require('sequelize');
 const User = require('./user');
-const Project = require('./project');
-const commentTypes = {
-  project: Project
-};
 
 const CommentModel = db.define('comments', {
   id: {
@@ -31,19 +27,19 @@ const CommentModel = db.define('comments', {
 
 let Comment = {model: CommentModel};
 
-Comment.create = ({userId, parentType, parentId, text}) => {
+Comment.create = ({userId, parentClass, parentId, text}) => {
   if (!text) {
     return Promise.reject('Comment text cannot be empty');
   }
+  if (!parentClass.getById) {
+    return Promise.reject('Comment parent model not defined');
+  }
   return User.getById(userId)
     .then(() => {
-      if (!commentTypes[parentType]) {
-        return Promise.reject(`Comment parent model not defined - please specify '${parentType}' in database comment.js commentTypes constant`);
-      }
-      return commentTypes[parentType].getById(parentId);
+      return parentClass.getById(parentId);
     })
     .then(() => {
-      return Comment.model.create({userId, parentType, parentId, text});
+      return Comment.model.create({userId, parentType: parentClass.name, parentId, text});
     });
 };
 
@@ -88,14 +84,14 @@ Comment.getByUser = (userId) => {
     });
 };
 
-Comment.getByParent = ({parentType, parentId}) => {
-  if (!commentTypes[parentType]) {
-    return Promise.reject(`Comment parent model not defined - please specify '${parentType}' in database comment.js commentTypes constant`);
+Comment.getByParent = ({parentClass, parentId}) => {
+  if (!parentClass.getById) {
+    return Promise.reject('Comment parent model not defined');
   }
-  return commentTypes[parentType].getById(parentId)
+  return parentClass.getById(parentId)
     .then((parent) => {
       return Comment.model.findAll({
-        where: {parentId: parent.id}
+        where: {parentType: parentClass.name, parentId: parent.id}
       });
     });
 };

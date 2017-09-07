@@ -1,6 +1,7 @@
 const db = require('../connection');
 const User = require('./user');
 const Sequelize = require('sequelize');
+const Comment = require('./comment');
 
 const ProjectModel = db.define('projects', {
   id: {
@@ -123,6 +124,23 @@ Project.getContributors = (projectId) => {
     .then((project) => {
       return project ? project.contributor : Promise.reject('Project does not exist');
     });
+};
+
+
+Project.name = 'project';
+
+Project.Comment = {};
+
+Project.Comment.create = ({userId, projectId, text}) => {
+  return Comment.create({userId, parentClass: Project, parentId: projectId, text});
+};
+
+Project.Comment.edit = Comment.edit;
+
+Project.Comment.delete = Comment.delete;
+
+Project.Comment.getByProject = (projectId) => {
+  return Comment.getByParent({parentClass: Project, parentId: projectId});
 };
 
 // TODO - Implement and test

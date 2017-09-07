@@ -36,7 +36,7 @@ describe('Comment Model', () => {
 
   describe('create()', () => {
     it('Should create comment when all parameters are valid', () => {
-      return Comment.create({userId: userOne.id, parentType: 'project', parentId: project.id, text: 'this is a comment'})
+      return Comment.create({userId: userOne.id, parentClass: Project, parentId: project.id, text: 'this is a comment'})
         .then((comment) => {
           expect(comment).to.exist;
           expect(comment.userId).to.equal(userOne.id);
@@ -46,22 +46,22 @@ describe('Comment Model', () => {
         });
     });
     it('Should reject when userId does not map to an existing user', () => {
-      return expect(Comment.create({userId: 1234, parentType: 'project', parentId: project.id, text: 'this is a comment'})).to.be.rejectedWith('User does not exist');
+      return expect(Comment.create({userId: 1234, parentClass: Project, parentId: project.id, text: 'this is a comment'})).to.be.rejectedWith('User does not exist');
     });
     it('Should reject when comment type is not registered in model file', () => {
-      return expect(Comment.create({userId: userOne.id, parentType: 'asdf', parentId: project.id, text: 'this is a comment'})).to.be.rejectedWith('Comment parent model not defined');
+      return expect(Comment.create({userId: userOne.id, parentClass: 'asdf', parentId: project.id, text: 'this is a comment'})).to.be.rejectedWith('Comment parent model not defined');
     });
     it('Should reject when projectId does not map to an existing project', () => {
-      return expect(Comment.create({userId: userOne.id, parentType: 'project', parentId: 1234, text: 'this is a comment'})).to.be.rejectedWith('does not exist');
+      return expect(Comment.create({userId: userOne.id, parentClass: Project, parentId: 1234, text: 'this is a comment'})).to.be.rejectedWith('does not exist');
     });
     it('Should reject when comment text is empty', () => {
-      return expect(Comment.create({userId: userOne.id, parentType: 'project', parentId: project.id, text: ''})).to.be.rejectedWith('Comment text cannot be empty');
+      return expect(Comment.create({userId: userOne.id, parentClass: Project, parentId: project.id, text: ''})).to.be.rejectedWith('Comment text cannot be empty');
     });
   });
 
   describe('edit()', () => {
     it('Should edit comment when all parameters are valid', () => {
-      return Comment.create({userId: userOne.id, parentType: 'project', parentId: project.id, text: 'this is a comment'})
+      return Comment.create({userId: userOne.id, parentClass: Project, parentId: project.id, text: 'this is a comment'})
         .then((comment) => {
           return Comment.edit({userId: userOne.id, commentId: comment.id, text: 'new comment text'});
         })
@@ -70,13 +70,13 @@ describe('Comment Model', () => {
         });
     });
     it('Should reject when attempting to edit another user\'s comment', () => {
-      return Comment.create({userId: userOne.id, parentType: 'project', parentId: project.id, text: 'this is a comment'})
+      return Comment.create({userId: userOne.id, parentClass: Project, parentId: project.id, text: 'this is a comment'})
         .then((comment) => {
           return expect(Comment.edit({userId: userTwo.id, commentId: comment.id, text: 'new comment text'})).to.be.rejectedWith('Cannot edit a comment you do not own');
         });
     });
     it('Should reject when attempting to change comment text to an empty string', () => {
-      return Comment.create({userId: userOne.id, parentType: 'project', parentId: project.id, text: 'this is a comment'})
+      return Comment.create({userId: userOne.id, parentClass: Project, parentId: project.id, text: 'this is a comment'})
         .then((comment) => {
           return expect(Comment.edit({userId: userOne.id, commentId: comment.id, text: ''})).to.be.rejectedWith('Comment text cannot be empty');
         });
@@ -91,7 +91,7 @@ describe('Comment Model', () => {
 
   describe('delete()', () => {
     it('Should delete comment when all parameters are valid', () => {
-      return Comment.create({userId: userOne.id, parentType: 'project', parentId: project.id, text: 'this is a comment'})
+      return Comment.create({userId: userOne.id, parentClass: Project, parentId: project.id, text: 'this is a comment'})
         .then((comment) => {
           return Comment.delete({userId: userOne.id, commentId: comment.id});
         })
@@ -106,7 +106,7 @@ describe('Comment Model', () => {
       return expect(Comment.delete({userId: userOne.id, commentId: 1234})).to.be.rejectedWith('Comment does not exist');
     });
     it('Should reject when attempting to delete another user\'s comment', () => {
-      return Comment.create({userId: userOne.id, parentType: 'project', parentId: project.id, text: 'this is a comment'})
+      return Comment.create({userId: userOne.id, parentClass: Project, parentId: project.id, text: 'this is a comment'})
         .then((comment) => {
           return expect(Comment.delete({userId: userTwo.id, commentId: comment.id})).to.be.rejectedWith('Cannot delete another user\'s comment');
         });
@@ -115,7 +115,7 @@ describe('Comment Model', () => {
 
   describe('getByUser()', () => {
     it('Should return comments when all input parameters are valid', () => {
-      return Comment.create({userId: userOne.id, parentType: 'project', parentId: project.id, text: 'this is a comment'})
+      return Comment.create({userId: userOne.id, parentClass: Project, parentId: project.id, text: 'this is a comment'})
         .then((comment) => {
           return Comment.getByUser(userOne.id)
             .then((comments) => {
@@ -137,9 +137,9 @@ describe('Comment Model', () => {
 
   describe('getByParent()', () => {
     it('Should get comments when all input parameters are valid', () => {
-      return Comment.create({userId: userOne.id, parentType: 'project', parentId: project.id, text: 'this is a comment'})
+      return Comment.create({userId: userOne.id, parentClass: Project, parentId: project.id, text: 'this is a comment'})
         .then((comment) => {
-          return Comment.getByParent({parentType: 'project', parentId: project.id});
+          return Comment.getByParent({parentClass: Project, parentId: project.id});
         })
         .then((comments) => {
           expect(comments).to.be.a('array');
@@ -147,16 +147,16 @@ describe('Comment Model', () => {
         });
     });
     it('Should reject when parent type is not registered in comment.js', () => {
-      return expect(Comment.getByParent({parentType: 'asdf', parentId: 1234})).to.be.rejectedWith('Comment parent model not defined');
+      return expect(Comment.getByParent({parentClass: 'asdf', parentId: 1234})).to.be.rejectedWith('Comment parent model not defined');
     });
     it('Should reject when parent ID does not map to existing parent model', () => {
-      return expect(Comment.getByParent({parentType: 'project', parentId: 1234})).to.be.rejectedWith('does not exist');
+      return expect(Comment.getByParent({parentClass: Project, parentId: 1234})).to.be.rejectedWith('does not exist');
     });
   });
 
   describe('getById()', () => {
     it('Should return model if ID maps to an existing comment', () => {
-      return Comment.create({userId: userOne.id, parentType: 'project', parentId: project.id, text: 'this is a comment'})
+      return Comment.create({userId: userOne.id, parentClass: Project, parentId: project.id, text: 'this is a comment'})
         .then((comment) => {
           return Comment.getById(comment.id)
             .then((newComment) => {
