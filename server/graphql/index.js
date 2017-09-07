@@ -5,7 +5,7 @@ const UserType = new GraphQLObjectType({
   name: 'User',
   fields: {
     id: {type: GraphQLInt},
-    oAuthUserId: {type: GraphQLInt},
+    oAuthUserId: {type: GraphQLString},
     oAuthProvider: {type: GraphQLString},
     name: {type: GraphQLString},
     email: {type: GraphQLString},
@@ -86,11 +86,29 @@ const RootQuery = new GraphQLObjectType({
   }
 });
 
-// const mutation = new GraphQLObjectType({
-//   name: 'Mutation',
-//   fields: {}
-// });
+const mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    editUser: {
+      type: UserType,
+      args: {
+        email: {type: GraphQLString},
+        username: {type: GraphQLString},
+        password: {type: GraphQLString},
+        theme: {type: GraphQLInt},
+        name: {type: GraphQLString},
+        handle: {type: GraphQLString},
+        avatar: {type: GraphQLString},
+        description: {type: GraphQLString}
+      },
+      resolve(parentValue, args, request) {
+        return db.User.update(request.user.id, args);
+      }
+    }
+  }
+});
 
 module.exports = new GraphQLSchema({
-  query: RootQuery
+  query: RootQuery,
+  mutation
 });
