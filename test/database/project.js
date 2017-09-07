@@ -375,4 +375,47 @@ describe('Project Model', () => {
       });
     });
   });
+
+  describe('Like', () => {
+    let project;
+    beforeEach(() => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((newProject) => {
+          project = newProject;
+        });
+    });
+    describe('create()', () => {
+      it('Should create a like on a project', () => {
+        return Project.Like.create({userId: localUser.id, projectId: project.id})
+          .then((like) => {
+            expect(like).to.exist;
+          });
+      });
+    });
+    describe('delete()', () => {
+      it('Should delete a like on a project', () => {
+        return Project.Like.create({userId: localUser.id, projectId: project.id})
+          .then((like) => {
+            return Project.Like.delete({userId: localUser.id, projectId: project.id});
+          })
+          .then((response) => {
+            expect(response).to.equal(true);
+          });
+      });
+    });
+    describe('getByProject()', () => {
+      it('Should return likes for a project', () => {
+        return Project.Like.create({userId: localUser.id, projectId: project.id})
+          .then(() => {
+            return Project.Like.getByProject(project.id);
+          })
+          .then((likes) => {
+            expect(likes.length).to.equal(1);
+          });
+      });
+    });
+  });
 });

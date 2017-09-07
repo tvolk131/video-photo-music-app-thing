@@ -2,6 +2,7 @@ const db = require('../connection');
 const User = require('./user');
 const Sequelize = require('sequelize');
 const Comment = require('./comment');
+const Like = require('./like');
 
 const ProjectModel = db.define('projects', {
   id: {
@@ -142,6 +143,22 @@ Project.Comment.delete = Comment.delete;
 Project.Comment.getByProject = (projectId) => {
   return Comment.getByParent({parentClass: Project, parentId: projectId});
 };
+
+
+Project.Like = {};
+
+Project.Like.create = ({userId, projectId}) => {
+  return Like.create({userId, parentClass: Project, parentId: projectId});
+};
+
+Project.Like.delete = ({userId, projectId}) => {
+  return Like.delete({userId, parentClass: Project, parentId: projectId});
+};
+
+Project.Like.getByProject = (projectId) => {
+  return Like.getByParent({parentClass: Project, parentId: projectId});
+};
+
 
 // TODO - Implement and test
 Project.addTag = (userId, projectId, tagText) => {};
