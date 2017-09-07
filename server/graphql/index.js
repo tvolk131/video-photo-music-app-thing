@@ -45,9 +45,28 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     user: {
       type: UserType,
-      args: {id: {type: GraphQLInt}},
+      args: {
+        id: {type: GraphQLInt},
+        handle: {type: GraphQLString},
+        email: {type: GraphQLString},
+        username: {type: GraphQLString}
+      },
       resolve(parentValue, args) {
-        return db.User.getById(args.id);
+        if (Object.keys(args).length !== 1) {
+          return Promise.reject('Needs one argument but got ' + Object.keys(args).length);
+        }
+        if (args.id) {
+          return db.User.getById(args.id);
+        }
+        if (args.handle) {
+          return db.User.getByHandle(args.handle);
+        }
+        if (args.email) {
+          return db.User.getByEmail(args.email);
+        }
+        if (args.username) {
+          return db.User.getByUsername(args.username);
+        }
       }
     },
     project: {
