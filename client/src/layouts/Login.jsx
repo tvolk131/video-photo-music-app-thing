@@ -10,7 +10,7 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
+      username: '',
       password: '',
       errorMessage: '',
       showError: false
@@ -35,9 +35,9 @@ class Login extends React.Component {
   }
 
   sendLoginRequest () {
-    if (this.state.email && this.state.password) {
+    if (this.state.username && this.state.password) {
       axios.post('/login', {
-        email: this.state.email,
+        username: this.state.username,
         password: this.state.password
       })
       .then((res) => {
@@ -45,13 +45,13 @@ class Login extends React.Component {
         return res;
       })
       .catch((err) => {
-        this.setState({errorMessage: 'Incorrect email or password'});
+        this.setState({errorMessage: 'Incorrect username or password'});
         this.showError();
       });
     } else {
       let missingVals = [];
-      if (!this.state.email) {
-        missingVals.push('email');
+      if (!this.state.username) {
+        missingVals.push('username');
       }
       if (!this.state.password) {
         missingVals.push('password');
@@ -87,7 +87,7 @@ class Login extends React.Component {
     return (
       <div>
         <h1>Login</h1>
-        <TextField onKeyPress={this.handleKeyPress} placeholder='hello@world.com' label='Email' type='email' value={this.state.email} onChange={this.handleInputChange.bind(this, 'email')} /><br/>
+        <TextField onKeyPress={this.handleKeyPress} label='Username' type='text' value={this.state.email} onChange={this.handleInputChange.bind(this, 'username')} /><br/>
         <TextField onKeyPress={this.handleKeyPress} label='Password' type='password' value={this.state.password} onChange={this.handleInputChange.bind(this, 'password')} /><br/>
         <Button raised className={'btn'} onClick={this.sendLoginRequest}>Login</Button>
         <NavLink
