@@ -148,6 +148,52 @@ const mutation = new GraphQLObjectType({
         }
         return db.Project.delete(request.user.id, id);
       }
+    },
+    createProjectComponent: {
+      type: ProjectComponentType,
+      args: {
+        projectId: {type: new GraphQLNonNull(GraphQLInt)},
+        name: {type: new GraphQLNonNull(GraphQLString)},
+        type: {type: new GraphQLNonNull(GraphQLString)},
+        resourceUrl: {type: new GraphQLNonNull(GraphQLString)},
+        description: {type: GraphQLString},
+        isDownloadable: {type: new GraphQLNonNull(GraphQLBoolean)}
+      },
+      resolve(parentValue, {projectId, name, type, resourceUrl, description, isDownloadable}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot create a project component when you are not logged in');
+        }
+        return db.ProjectComponent.create({userId: request.user.id, projectId, name, type, resourceUrl, description, isDownloadable});
+      }
+    },
+    editProjectComponent: {
+      type: ProjectComponentType,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLInt)},
+        name: {type: GraphQLString},
+        type: {type: GraphQLString},
+        resourceUrl: {type: GraphQLString},
+        description: {type: GraphQLString},
+        isDownloadable: {type: GraphQLBoolean}
+      },
+      resolve(parentValue, {id, name, type, resourceUrl, description, isDownloadable}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot edit a project component when you are not logged in');
+        }
+        return db.ProjectComponent.update(request.user.id, id, {name, type, resourceUrl, description, isDownloadable});
+      }
+    },
+    deleteProjectComponent: {
+      type: ProjectComponentType,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {id}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot delete a project component when you are not logged in');
+        }
+        return db.ProjectComponent.delete(request.user.id, id);
+      }
     }
   }
 });
