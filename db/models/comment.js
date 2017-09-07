@@ -103,4 +103,22 @@ Comment.getById = (userId) => {
     });
 };
 
+
+// TODO - Test this somehow
+Comment.addToClass = (parentClass) => {
+  parentClass.Comment = {};
+  
+  parentClass.Comment.create = (input) => {
+    return Comment.create({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id'], text: input.text});
+  };
+  
+  parentClass.Comment.edit = Comment.edit;
+  
+  parentClass.Comment.delete = Comment.delete;
+  
+  parentClass.Comment.get = (parentId) => {
+    return Comment.getByParent({parentClass, parentId});
+  };
+};
+
 module.exports = Comment;

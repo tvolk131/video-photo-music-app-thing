@@ -101,4 +101,21 @@ Like.getByUser = (userId) => {
     });
 };
 
+// TODO - Test this somehow
+Like.addToClass = (parentClass) => {
+  parentClass.Like = {};
+
+  parentClass.Like.create = (input) => {
+    return Like.create({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']});
+  };
+
+  parentClass.Like.delete = (input) => {
+    return Like.delete({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']});
+  };
+
+  parentClass.Like.get = (parentId) => {
+    return Like.getByParent({parentClass, parentId});
+  };
+};
+
 module.exports = Like;

@@ -130,34 +130,9 @@ Project.getContributors = (projectId) => {
 
 Project.name = 'project';
 
-Project.Comment = {};
+Comment.addToClass(Project);
 
-Project.Comment.create = ({userId, projectId, text}) => {
-  return Comment.create({userId, parentClass: Project, parentId: projectId, text});
-};
-
-Project.Comment.edit = Comment.edit;
-
-Project.Comment.delete = Comment.delete;
-
-Project.Comment.getByProject = (projectId) => {
-  return Comment.getByParent({parentClass: Project, parentId: projectId});
-};
-
-
-Project.Like = {};
-
-Project.Like.create = ({userId, projectId}) => {
-  return Like.create({userId, parentClass: Project, parentId: projectId});
-};
-
-Project.Like.delete = ({userId, projectId}) => {
-  return Like.delete({userId, parentClass: Project, parentId: projectId});
-};
-
-Project.Like.getByProject = (projectId) => {
-  return Like.getByParent({parentClass: Project, parentId: projectId});
-};
+Like.addToClass(Project);
 
 
 // TODO - Implement and test

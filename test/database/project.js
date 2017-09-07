@@ -362,11 +362,11 @@ describe('Project Model', () => {
           });
       });
     });
-    describe('getByProject()', () => {
+    describe('get()', () => {
       it('Should return comments for a project', () => {
         return Project.Comment.create({userId: localUser.id, projectId: project.id, text: 'this is a comment'})
           .then(() => {
-            return Project.Comment.getByProject(project.id);
+            return Project.Comment.get(project.id);
           })
           .then((comments) => {
             expect(comments.length).to.equal(1);
@@ -406,11 +406,11 @@ describe('Project Model', () => {
           });
       });
     });
-    describe('getByProject()', () => {
+    describe('get()', () => {
       it('Should return likes for a project', () => {
         return Project.Like.create({userId: localUser.id, projectId: project.id})
           .then(() => {
-            return Project.Like.getByProject(project.id);
+            return Project.Like.get(project.id);
           })
           .then((likes) => {
             expect(likes.length).to.equal(1);
