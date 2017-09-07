@@ -1,6 +1,8 @@
 const db = require('../connection');
 const User = require('./user');
 const Sequelize = require('sequelize');
+const Comment = require('./comment');
+const Like = require('./like');
 
 const ProjectModel = db.define('projects', {
   id: {
@@ -124,6 +126,12 @@ Project.getContributors = (projectId) => {
       return project ? project.contributor : Promise.reject('Project does not exist');
     });
 };
+
+
+Project.name = 'project';
+Comment.addToClass(Project);
+Like.addToClass(Project);
+
 
 // TODO - Implement and test
 Project.addTag = (userId, projectId, tagText) => {};

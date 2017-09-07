@@ -2,6 +2,8 @@ const db = require('../connection');
 const Sequelize = require('sequelize');
 const User = require('./user');
 const Project = require('./project');
+const Comment = require('./comment');
+const Like = require('./like');
 const componentTypes = {
   audio: true,
   video: true,
@@ -16,13 +18,13 @@ const ProjectComponentModel = db.define('components', {
     autoIncrement: true,
     primaryKey: true
   },
-  resourceUrl: {
-    type: Sequelize.STRING(256),
+  name: {
+    type: Sequelize.STRING(32),
     notEmpty: true,
     allowNull: false
   },
-  name: {
-    type: Sequelize.STRING(32),
+  resourceUrl: {
+    type: Sequelize.STRING(256),
     notEmpty: true,
     allowNull: false
   },
@@ -43,7 +45,7 @@ const ProjectComponentModel = db.define('components', {
 
 let ProjectComponent = {model: ProjectComponentModel};
 
-ProjectComponent.create = ({userId, projectId, type, resourceUrl, name, description, isDownloadable = false}) => {
+ProjectComponent.create = ({userId, projectId, type, name, resourceUrl, description, isDownloadable = false}) => {
   if (!componentTypes[type]) {
     return Promise.reject('Component type is invalid');
   }
@@ -66,8 +68,8 @@ ProjectComponent.create = ({userId, projectId, type, resourceUrl, name, descript
       return ProjectComponent.model.create({
         authorId: userId,
         projectId,
-        resourceUrl,
         name,
+        resourceUrl,
         description,
         type,
         isDownloadable: isDownloadable === true ? true : false
@@ -121,6 +123,7 @@ ProjectComponent.delete = (userId, componentId) => {
       return true;
     });
 };
+
 ProjectComponent.getByProject = (projectId) => {
   return Project.getById(projectId)
     .then(() => {
@@ -130,17 +133,20 @@ ProjectComponent.getByProject = (projectId) => {
     });
 };
 
-// TODO - Implement this method
-// ProjectComponent.getByUser = (userId) => {
-//   return User.getById(userId)
-//     .then(() => {
-//     })
-//     .then(() => {
-//       return ProjectComponent.model.findAll({
-//         where: {userId}
-//       });
-//     });
-// };
+ProjectComponent.getByUser = (userId) => {
+  return User.getById(userId)
+    .then(() => {
+      return ProjectComponent.model.findAll({
+        where: {authorId: userId}
+      });
+    });
+};
+
+ProjectComponent.getByName = (componentName) => {
+  return ProjectComponent.model.findAll({
+    where: {name: componentName}
+  });
+};
 
 ProjectComponent.getById = (componentId) => {
   return ProjectComponent.model.findById(componentId)
@@ -148,5 +154,9 @@ ProjectComponent.getById = (componentId) => {
       return component ? component : Promise.reject('Component does not exist');
     });
 };
+
+ProjectComponent.name = 'projectComponent';
+Comment.addToClass(ProjectComponent);
+Like.addToClass(ProjectComponent);
 
 module.exports = ProjectComponent;

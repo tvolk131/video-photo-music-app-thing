@@ -107,4 +107,84 @@ describe('User Model', () => {
       return expect(User.update(localUser.id, {oAuthProvider: 1234})).to.rejectedWith('Cannot modify oAuth data');
     });
   });
+
+  describe('getByEmail()', () => {
+    it('Should get user by ID if the user exists', () => {
+      return User.create({
+        email: 'foo@bar.com',
+        username: 'test',
+        password: 'test'
+      })
+        .then((user) => {
+          return User.getByEmail(user.email);
+        })
+        .then((user) => {
+          expect(user).to.exist;
+          expect(user.username).to.equal('test');
+          expect(user.email).to.equal('foo@bar.com');
+        });
+    });
+    it('Should throw error if ID does not map to an existing user', () => {
+      return expect(User.getByEmail('asdf')).to.be.rejectedWith('User does not exist');
+    });
+  });
+
+  describe('getByUsername()', () => {
+    it('Should get user by ID if the user exists', () => {
+      return User.create({
+        username: 'test',
+        password: 'test'
+      })
+        .then((user) => {
+          return User.getByUsername('test');
+        })
+        .then((user) => {
+          expect(user).to.exist;
+          expect(user.username).to.equal('test');
+        });
+    });
+    it('Should throw error if ID does not map to an existing user', () => {
+      return expect(User.getByUsername('asdf')).to.be.rejectedWith('User does not exist');
+    });
+  });
+
+  describe('getByHandle()', () => {
+    it('Should get user by ID if the user exists', () => {
+      return User.create({
+        handle: '@fred',
+        username: 'test',
+        password: 'test'
+      })
+        .then((user) => {
+          return User.getByHandle(user.handle);
+        })
+        .then((user) => {
+          expect(user).to.exist;
+          expect(user.username).to.equal('test');
+          expect(user.handle).to.equal('@fred');
+        });
+    });
+    it('Should throw error if ID does not map to an existing user', () => {
+      return expect(User.getByHandle('asdf')).to.be.rejectedWith('User does not exist');
+    });
+  });
+
+  describe('getById()', () => {
+    it('Should get user by ID if the user exists', () => {
+      return User.create({
+        username: 'test',
+        password: 'test'
+      })
+        .then((user) => {
+          return User.getById(user.id);
+        })
+        .then((user) => {
+          expect(user).to.exist;
+          expect(user.username).to.equal('test');
+        });
+    });
+    it('Should throw error if ID does not map to an existing user', () => {
+      return expect(User.getById(1234)).to.be.rejectedWith('User does not exist');
+    });
+  });
 });

@@ -1,10 +1,6 @@
 const db = require('../connection');
 const Sequelize = require('sequelize');
 const User = require('./user');
-const Project = require('./project');
-const commentTypes = {
-  project: Project
-};
 
 const CommentModel = db.define('comments', {
   id: {
@@ -31,24 +27,24 @@ const CommentModel = db.define('comments', {
 
 let Comment = {model: CommentModel};
 
-Comment.create = (userId, parentType, parentId, text) => {
+Comment.create = ({userId, parentClass, parentId, text}) => {
   if (!text) {
     return Promise.reject('Comment text cannot be empty');
   }
+  if (!parentClass.getById) {
+    return Promise.reject('Comment parent model not defined');
+  }
   return User.getById(userId)
     .then(() => {
-      if (!commentTypes[parentType]) {
-        return Promise.reject(`Comment parent model not defined - please specify '${parentType}' in database comment.js commentTypes constant`);
-      }
-      return commentTypes[parentType].getById(parentId);
+      return parentClass.getById(parentId);
     })
     .then(() => {
-      return Comment.model.create({userId, parentType, parentId, text});
+      return Comment.model.create({userId, parentType: parentClass.name, parentId, text});
     });
 };
 
-Comment.edit = (userId, commentId, newText) => {
-  if (!newText) {
+Comment.edit = ({userId, commentId, text}) => {
+  if (!text) {
     return Promise.reject('Comment text cannot be empty');
   }
   return User.getById(userId)
@@ -58,12 +54,12 @@ Comment.edit = (userId, commentId, newText) => {
           if (user.id !== comment.userId) {
             return Promise.reject('Cannot edit a comment you do not own');
           }
-          return comment.update({text: newText});
+          return comment.update({text: text});
         });
     });
 };
 
-Comment.delete = (userId, commentId) => {
+Comment.delete = ({userId, commentId}) => {
   return User.getById(userId)
     .then(() => {
       return Comment.getById(commentId)
@@ -88,14 +84,14 @@ Comment.getByUser = (userId) => {
     });
 };
 
-Comment.getByParent = (parentType, parentId) => {
-  if (!commentTypes[parentType]) {
-    return Promise.reject(`Comment parent model not defined - please specify '${parentType}' in database comment.js commentTypes constant`);
+Comment.getByParent = ({parentClass, parentId}) => {
+  if (!parentClass.getById) {
+    return Promise.reject('Comment parent model not defined');
   }
-  return commentTypes[parentType].getById(parentId)
+  return parentClass.getById(parentId)
     .then((parent) => {
       return Comment.model.findAll({
-        where: {parentId: parent.id}
+        where: {parentType: parentClass.name, parentId: parent.id}
       });
     });
 };
@@ -105,6 +101,24 @@ Comment.getById = (userId) => {
     .then((comment) => {
       return comment ? comment : Promise.reject('Comment does not exist');
     });
+};
+
+
+// TODO - Test this somehow
+Comment.addToClass = (parentClass) => {
+  parentClass.Comment = {};
+  
+  parentClass.Comment.create = (input) => {
+    return Comment.create({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id'], text: input.text});
+  };
+  
+  parentClass.Comment.edit = Comment.edit;
+  
+  parentClass.Comment.delete = Comment.delete;
+  
+  parentClass.Comment.get = (parentId) => {
+    return Comment.getByParent({parentClass, parentId});
+  };
 };
 
 module.exports = Comment;

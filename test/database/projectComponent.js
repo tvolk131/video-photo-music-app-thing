@@ -187,39 +187,65 @@ describe('Project Component Model', () => {
     });
   });
 
-  // TODO - Use these tests
-  // describe('getByUser()', () => {
-  //   let component;
-  //   beforeEach(() => {
-  //     return ProjectComponent.create({
-  //       userId: userOne.id,
-  //       projectId: project.id,
-  //       name: 'test component',
-  //       type: 'image',
-  //       resourceUrl: 'google.com'
-  //     })
-  //       .then((projectComponent) => {
-  //         component = projectComponent;
-  //       });
-  //   });
+  describe('getByUser()', () => {
+    let component;
+    beforeEach(() => {
+      return ProjectComponent.create({
+        userId: userOne.id,
+        projectId: project.id,
+        name: 'test component',
+        type: 'image',
+        resourceUrl: 'google.com'
+      })
+        .then((projectComponent) => {
+          component = projectComponent;
+        });
+    });
 
-  //   it('Should resolve to an array of components when userId is valid', () => {
-  //     return ProjectComponent.getByUser(userOne.id)
-  //       .then((components) => {
-  //         expect(components).to.be.a('array');
-  //         expect(components.length).to.equal(1);
-  //         expect(components[0].name).to.equal('test component');
-  //         return ProjectComponent.getByUser(userTwo.id);
-  //       })
-  //       .then((components) => {
-  //         expect(components).to.be.a('array');
-  //         expect(components.length).to.equal(0);
-  //       });
-  //   });
-  //   it('Should reject if userId does not map to an existing user', () => {
-  //     return expect(ProjectComponent.getByUser(1234)).to.be.rejectedWith('User does not exist');
-  //   });
-  // });
+    it('Should resolve to an array of components when userId is valid', () => {
+      return ProjectComponent.getByUser(userOne.id)
+        .then((components) => {
+          expect(components).to.be.a('array');
+          expect(components.length).to.equal(1);
+          expect(components[0].name).to.equal('test component');
+          return ProjectComponent.getByUser(userTwo.id);
+        })
+        .then((components) => {
+          expect(components).to.be.a('array');
+          expect(components.length).to.equal(0);
+        });
+    });
+    it('Should reject if userId does not map to an existing user', () => {
+      return expect(ProjectComponent.getByUser(1234)).to.be.rejectedWith('User does not exist');
+    });
+  });
+
+  describe('getByName()', () => {
+    // TODO - Clean up tests by removing all of the identical beforeeach's
+    beforeEach(() => {
+      return ProjectComponent.create({
+        userId: userOne.id,
+        projectId: project.id,
+        name: 'test component',
+        type: 'image',
+        resourceUrl: 'google.com'
+      })
+        .then((projectComponent) => {
+          component = projectComponent;
+        });
+    });
+    it('Should resolve to an array of components', () => {
+      return ProjectComponent.getByName('test component')
+        .then((components) => {
+          expect(components).to.be.a('array');
+          expect(components.length).to.equal(1);
+          expect(components[0].name).to.equal('test component');
+        });
+    });
+    it('Should resolve to empty array if no components with the provided name exist', () => {
+      return expect(ProjectComponent.getByName('asdf')).to.eventually.eql([]);
+    });
+  });
 
   describe('getById()', () => {
     let component;

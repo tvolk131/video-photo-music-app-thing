@@ -1,10 +1,6 @@
 const db = require('../connection');
 const Sequelize = require('sequelize');
 const User = require('./user');
-const Project = require('./project');
-const likeTypes = {
-  project: Project
-};
 
 const LikeModel = db.define('likes', {
   id: {
@@ -26,34 +22,37 @@ const LikeModel = db.define('likes', {
 
 let Like = {model: LikeModel};
 
-Like.create = (userId, parentType, parentId) => {
+Like.create = ({userId, parentClass, parentId}) => {
+  if (!parentClass.getById) {
+    return Promise.reject('Like parent model not defined');
+  }
   return User.getById(userId)
     .then((user) => {
-      if (!likeTypes[parentType]) {
-        return Promise.reject(`Like parent model not defined - please specify '${parentType}' in database like.js likeTypes constant`);
-      }
-      return likeTypes[parentType].getById(parentId);
+      return parentClass.getById(parentId);
     })
     .then(() => {
       return Like.model.findOne({
-        where: {userId, parentType, parentId}
+        where: {userId, parentType: parentClass.name, parentId}
       });
     })
     .then((like) => {
       if (like) {
         return Promise.reject('You have already liked this item');
       }
-      return Like.model.create({userId, parentType, parentId});
+      return Like.model.create({userId, parentType: parentClass.name, parentId});
     })
     .then(() => {
       return true;
     });
 };
 
-Like.delete = (userId, parentType, parentId) => {
+Like.delete = ({userId, parentClass, parentId}) => {
+  if (!parentClass.getById) {
+    return Promise.reject('Like parent model not defined');
+  }
   return User.getById(userId)
     .then(() => {
-      return Like.getOne(userId, parentType, parentId);
+      return Like.getOne({userId, parentClass, parentId});
     })
     .then((like) => {
       return like.destroy();
@@ -63,26 +62,26 @@ Like.delete = (userId, parentType, parentId) => {
     });
 };
 
-Like.getByParent = (parentType, parentId) => {
-  if (!likeTypes[parentType]) {
-    return Promise.reject(`Like parent model not defined - please specify '${parentType}' in database like.js likeTypes constant`);
+Like.getByParent = ({parentClass, parentId}) => {
+  if (!parentClass.getById) {
+    return Promise.reject('Like parent model not defined');
   }
-  return likeTypes[parentType].getById(parentId)
+  return parentClass.getById(parentId)
     .then((parent) => {
       return Like.model.findAll({
-        where: {parentId: parent.id}
+        where: {parentType: parentClass.name, parentId: parent.id}
       });
     });
 };
 
-Like.getOne = (userId, parentType, parentId) => {
-  if (!likeTypes[parentType]) {
-    return Promise.reject(`Like parent model not defined - please specify '${parentType}' in database like.js likeTypes constant`);
+Like.getOne = ({userId, parentClass, parentId}) => {
+  if (!parentClass.getById) {
+    return Promise.reject('Like parent model not defined');
   }
-  return likeTypes[parentType].getById(parentId)
+  return parentClass.getById(parentId)
     .then((parent) => {
       return Like.model.findOne({
-        where: {userId, parentType, parentId}
+        where: {userId, parentType: parentClass.name, parentId}
       });
     })
     .then((like) => {
@@ -100,6 +99,23 @@ Like.getByUser = (userId) => {
         where: {userId}
       });
     });
+};
+
+// TODO - Test this somehow
+Like.addToClass = (parentClass) => {
+  parentClass.Like = {};
+
+  parentClass.Like.create = (input) => {
+    return Like.create({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']});
+  };
+
+  parentClass.Like.delete = (input) => {
+    return Like.delete({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']});
+  };
+
+  parentClass.Like.get = (parentId) => {
+    return Like.getByParent({parentClass, parentId});
+  };
 };
 
 module.exports = Like;

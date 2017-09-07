@@ -320,4 +320,103 @@ describe('Project Model', () => {
       return expect(Project.getContributors(1234)).to.be.rejectedWith('Project does not exist');
     });
   });
+
+  // TODO - Move comment and like tests to their own models
+  describe('Comment', () => {
+    let project;
+    beforeEach(() => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((newProject) => {
+          project = newProject;
+        });
+    });
+    describe('create()', () => {
+      it('Should create a comment on a project', () => {
+        return Project.Comment.create({userId: localUser.id, projectId: project.id, text: 'this is a comment'})
+          .then((comment) => {
+            expect(comment.text).to.equal('this is a comment');
+          });
+      });
+    });
+    describe('edit()', () => {
+      it('Should edit a comment on a project', () => {
+        return Project.Comment.create({userId: localUser.id, projectId: project.id, text: 'this is a comment'})
+          .then((comment) => {
+            return Project.Comment.edit({userId: localUser.id, commentId: comment.id, text: 'updated text'});
+          })
+          .then((comment) => {
+            expect(comment.text).to.equal('updated text');
+          });
+      });
+    });
+    describe('delete()', () => {
+      it('Should delete a comment on a project', () => {
+        return Project.Comment.create({userId: localUser.id, projectId: project.id, text: 'this is a comment'})
+          .then((comment) => {
+            return Project.Comment.delete({userId: localUser.id, commentId: comment.id});
+          })
+          .then((response) => {
+            expect(response).to.equal(true);
+          });
+      });
+    });
+    describe('get()', () => {
+      it('Should return comments for a project', () => {
+        return Project.Comment.create({userId: localUser.id, projectId: project.id, text: 'this is a comment'})
+          .then(() => {
+            return Project.Comment.get(project.id);
+          })
+          .then((comments) => {
+            expect(comments.length).to.equal(1);
+            expect(comments[0].text).to.equal('this is a comment');
+          });
+      });
+    });
+  });
+
+  describe('Like', () => {
+    let project;
+    beforeEach(() => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((newProject) => {
+          project = newProject;
+        });
+    });
+    describe('create()', () => {
+      it('Should create a like on a project', () => {
+        return Project.Like.create({userId: localUser.id, projectId: project.id})
+          .then((like) => {
+            expect(like).to.exist;
+          });
+      });
+    });
+    describe('delete()', () => {
+      it('Should delete a like on a project', () => {
+        return Project.Like.create({userId: localUser.id, projectId: project.id})
+          .then((like) => {
+            return Project.Like.delete({userId: localUser.id, projectId: project.id});
+          })
+          .then((response) => {
+            expect(response).to.equal(true);
+          });
+      });
+    });
+    describe('get()', () => {
+      it('Should return likes for a project', () => {
+        return Project.Like.create({userId: localUser.id, projectId: project.id})
+          .then(() => {
+            return Project.Like.get(project.id);
+          })
+          .then((likes) => {
+            expect(likes.length).to.equal(1);
+          });
+      });
+    });
+  });
 });
