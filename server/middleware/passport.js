@@ -36,34 +36,33 @@ passport.use('local-signup', new LocalStrategy({
 (req, username, password, done) => {
   return User.getByUsername(username)
     .then((user) => {
-      if (user) {
-        return done(null, false, {
-          message: 'Username is already taken'
-        });
-      } else {
-        let generateHash = (password) => {
-          return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
-        };
-        let data = {
-          username,
-          password: generateHash(password),
-          firstname: req.body.firstname,
-          lastname: req.body.lastname
-        };
-        User.create(data)
-          .then((newUser) => {
-            if (!newUser) {
-              return done(null, false);
-            } else {
-              return done(null, newUser);
-            }
-          })
-          .catch((err) => {
-            return done(null, false, {
-              message: 'Username is invalid'
-            });
+      return done(null, false, {
+        message: 'Username is already taken'
+      });
+    })
+    .catch(() => {
+      let generateHash = (password) => {
+        return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+      };
+      let data = {
+        username,
+        password: generateHash(password),
+        firstname: req.body.firstname,
+        lastname: req.body.lastname
+      };
+      User.create(data)
+        .then((newUser) => {
+          if (!newUser) {
+            return done(null, false);
+          } else {
+            return done(null, newUser);
+          }
+        })
+        .catch((err) => {
+          return done(null, false, {
+            message: 'Username is invalid'
           });
-      }
+        });
     });
 }));
 
