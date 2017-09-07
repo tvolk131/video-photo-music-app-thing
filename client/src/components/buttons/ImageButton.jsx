@@ -8,7 +8,7 @@ class ImageButton extends React.Component {
     this.style = {
       transition: 'background-color 0.218s, border-color 0.218s, box-shadow 0.218s',
       outline: 'none',
-      width: '20em',
+      width: '15em',
       borderRadius: '3px',
       WebkitFilter: 'drop-shadow(2px 2px 3px #555)'
     }
