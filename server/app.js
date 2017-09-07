@@ -17,6 +17,9 @@ app.use(middleware.auth.session);
 app.use(middleware.passport.initialize());
 app.use(middleware.passport.session());
 
+app.use('/', routes.auth);
+app.use('/api', routes.api);
+
 app.use('/graphql', expressGraphQL({schema: graphQLSchema, graphiql: true}));
 
 // Serve static files
@@ -33,7 +36,5 @@ app.get('/*', (req, res) => {
   res.sendFile(path.resolve(__dirname + '/../public/dist/index.html'));
 });
 
-app.use('/', routes.auth);
-app.use('/api', routes.api);
 
 module.exports = require('http').Server(app);
