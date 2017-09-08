@@ -20,24 +20,54 @@ const UserType = new GraphQLObjectType({
 
 const ProjectType = new GraphQLObjectType({
   name: 'Project',
-  fields: {
+  fields: () => ({
     id: {type: GraphQLInt},
     name: {type: GraphQLString},
     description: {type: GraphQLString},
-    tagline: {type: GraphQLString}
-  }
+    tagline: {type: GraphQLString},
+    owner: {
+      type: UserType,
+      resolve(parentValue, args) {
+        return db.User.getById(parentValue.ownerId);
+      }
+    },
+    contributors: {
+      type: new GraphQLList(UserType),
+      resolve(parentValue, args) {
+        return db.Project.getContributors(parentValue.id)
+      }
+    },
+    components: {
+      type: new GraphQLList(ProjectComponentType),
+      resolve(parentValue, args) {
+        return db.ProjectComponent.getByProject(parentValue.id);
+      }
+    }
+  })
 });
 
 const ProjectComponentType = new GraphQLObjectType({
   name: 'ProjectComponent',
-  fields: {
+  fields: () => ({
     id: {type: GraphQLInt},
     name: {type: GraphQLString},
     resourceUrl: {type: GraphQLString},
     description: {type: GraphQLString},
     type: {type: GraphQLString},
-    isDownloadable: {type: GraphQLBoolean}
-  }
+    isDownloadable: {type: GraphQLBoolean},
+    author: {
+      type: UserType,
+      resolve(parentValue, args) {
+        return db.User.getById(parentValue.authorId);
+      }
+    },
+    project: {
+      type: ProjectType,
+      resolve(parentValue, args) {
+        return db.Project.getById(parentValue.projectId);
+      }
+    }
+  })
 });
 
 const RootQuery = new GraphQLObjectType({
@@ -194,7 +224,16 @@ const mutation = new GraphQLObjectType({
         }
         return db.ProjectComponent.delete(request.user.id, id);
       }
-    }
+    },
+    // addProjectContributor: {},
+    // removeProjectContributor: {},
+    // createProjectComment: {},
+    // editProjectComment: {},
+    // deleteProjectComment: {},
+    // likeProject: {},
+    // unlikeProject: {},
+    // likeComment: {},
+    // unlikeComment: {}
   }
 });
 
