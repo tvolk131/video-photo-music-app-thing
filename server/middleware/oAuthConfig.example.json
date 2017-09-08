@@ -1,8 +1,8 @@
 {
   "Google": {
-    "clientID": "324740252819-b1iskqfiih58hia3nr3779tdgshiajkc.apps.googleusercontent.com",
-    "clientSecret": "jKJAcWxi51V_WCSs0PgxVOO4",
-    "callbackURL": "http://localhost:3000/auth/google/callback"
+    "clientID": "FILL_ME_IN",
+    "clientSecret": "FILL_ME_IN",
+    "callbackURL": "http://FILL_ME_IN/auth/google/callback"
   },
 
   "Facebook": {
