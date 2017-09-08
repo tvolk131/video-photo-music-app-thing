@@ -14,7 +14,7 @@ let config = {
     callbackURL: process.env.GoogleCallbackURL
   }
 };
-if (!(config.GoogleClientID && config.GoogleClientSecret && config.GoogleCallbackURL)) {
+if (!(config.Google.clientID && config.Google.clientSecret && config.Google.callbackURL)) {
   config = require('./oAuthConfig.json');
 }
 
