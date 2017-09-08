@@ -85,6 +85,12 @@ describe('User Model', () => {
           expect(user.handle).to.equal('freddyz');
         });
     });
+    it('Should only update parameters that are specified', () => {
+      return User.update(localUser.id, {handle: 'freddyz'})
+        .then((user) => {
+          expect(user.username).to.equal('test');
+        });
+    });
     it('Should update oAuth user and return the updated version when query is valid', () => {
       return User.update(oAuthUser.id, {handle: 'freddyz'})
         .then((user) => {

@@ -75,6 +75,18 @@ describe('Project Model', () => {
           expect(project.name).to.equal('updated project name');
         });
     });
+    it('Should only change parameters specified', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.update({userId: localUser.id, projectId: project.id, options: {name: 'updated project name'}});
+        })
+        .then((project) => {
+          expect(project.ownerId).to.equal(localUser.id);
+        });
+    });
     it('Should update a project with all-valid parameters as a contributor', () => {
       return Project.create({
         ownerId: localUser.id,
