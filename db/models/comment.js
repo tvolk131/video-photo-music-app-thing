@@ -1,6 +1,7 @@
 const db = require('../connection');
 const Sequelize = require('sequelize');
 const User = require('./user');
+const Like = require('./like');
 
 const CommentModel = db.define('comments', {
   id: {
@@ -120,5 +121,8 @@ Comment.addToClass = (parentClass) => {
     return Comment.getByParent({parentClass, parentId});
   };
 };
+
+Comment.name = 'comment';
+Like.addToClass(Comment);
 
 module.exports = Comment;

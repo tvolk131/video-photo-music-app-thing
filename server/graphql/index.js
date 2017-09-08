@@ -48,7 +48,13 @@ const ProjectType = new GraphQLObjectType({
       resolve(parentValue, args) {
         return db.Project.Comment.get(parentValue.id)
       }
-    }
+    },
+    likes: {
+      type: new GraphQLList(LikeType),
+      resolve(parentValue, args) {
+        return db.Project.Like.get(parentValue.id);
+      }
+    },
   })
 });
 
@@ -78,15 +84,40 @@ const ProjectComponentType = new GraphQLObjectType({
       resolve(parentValue, args) {
         return db.ProjectComponent.Comment.get(parentValue.id)
       }
+    },
+    likes: {
+      type: new GraphQLList(LikeType),
+      resolve(parentValue, args) {
+        return db.ProjectComponent.Like.get(parentValue.id);
+      }
     }
   })
 });
 
 const CommentType = new GraphQLObjectType({
   name: 'Comment',
-  fields: {
+  fields: () => ({
     id: {type: GraphQLInt},
     text: {type: GraphQLString},
+    likes: {
+      type: new GraphQLList(LikeType),
+      resolve(parentValue, args) {
+        return db.Comment.Like.get(parentValue.id);
+      }
+    },
+    user: {
+      type: UserType,
+      resolve(parentValue, args) {
+        return db.User.getById(parentValue.userId);
+      }
+    }
+  })
+});
+
+const LikeType = new GraphQLObjectType({
+  name: 'Like',
+  fields: {
+    id: {type: GraphQLInt},
     user: {
       type: UserType,
       resolve(parentValue, args) {
@@ -314,12 +345,60 @@ const mutation = new GraphQLObjectType({
         return db.Comment.delete({userId: request.user.id, commentId});
       }
     },
-    // likeProject: {},
-    // unlikeProject: {},
-    // likeComponent: {},
-    // unlikeComponent: {},
-    // likeComment: {},
-    // unlikeComment: {}
+    likeProject: {
+      type: LikeType,
+      args: {
+        projectId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {projectId}, request) {
+        return db.Project.Like.create({userId: request.user.id, projectId});
+      }
+    },
+    unlikeProject: {
+      type: LikeType,
+      args: {
+        projectId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {projectId}, request) {
+        return db.Project.Like.delete({userId: request.user.id, projectId});
+      }
+    },
+    likeComponent: {
+      type: LikeType,
+      args: {
+        projectComponentId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {projectComponentId}, request) {
+        return db.ProjectComponent.Like.create({userId: request.user.id, projectComponentId});
+      }
+    },
+    unlikeComponent: {
+      type: LikeType,
+      args: {
+        projectComponentId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {projectComponentId}, request) {
+        return db.ProjectComponent.Like.delete({userId: request.user.id, projectComponentId});
+      }
+    },
+    likeComment: {
+      type: LikeType,
+      args: {
+        commentId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {commentId}, request) {
+        return db.Comment.Like.create({userId: request.user.id, commentId});
+      }
+    },
+    unlikeComment: {
+      type: LikeType,
+      args: {
+        commentId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {commentId}, request) {
+        return db.Comment.Like.delete({userId: request.user.id, commentId});
+      }
+    }
   }
 });
 
