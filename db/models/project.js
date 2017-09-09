@@ -29,7 +29,18 @@ let Project = {model: ProjectModel};
 Project.create = ({ownerId, name, description, tagline}) => {
   return User.getById(ownerId)
     .then(() => {
-      return Project.model.create({ownerId, name, description, tagline});
+      return Project.getByUserAndName(ownerId, name)
+        .then(() => {
+          // If it reached this 'then' block, then a project by this user and with this name already exists
+          return Promise.reject('Cannot create two projects with the same name');
+        });
+    })
+    .catch((e) => {
+      if (e === 'Project does not exist') {
+        return Project.model.create({ownerId, name, description, tagline});
+      } else {
+        return Promise.reject(e);
+      }
     });
 };
 Project.update = ({userId, projectId, options}) => {
@@ -74,6 +85,36 @@ Project.getByName = (name) => {
   return Project.model.findAll({
     where: {name}
   });
+};
+
+// TODO - Implement this into GraphQL
+
+// Gets all projects owned by a particular user
+Project.getByUser = (userId) => {
+  return User.getById(userId)
+    .then(() => {
+      return Project.model.findAll({
+        where: {ownerId: userId}
+      });
+    });
+};
+
+// TODO - Implement this into GraphQL
+
+// Gets a particular project by a user given the userID and the project name
+Project.getByUserAndName = (userId, projectName) => {
+  return User.getById(userId)
+    .then(() => {
+      return Project.model.findOne({
+        where: {
+          ownerId: userId,
+          name: projectName
+        }
+      });
+    })
+    .then((project) => {
+      return project ? project : Promise.reject('Project does not exist');
+    });
 };
 
 Project.addContributor = ({ownerId, contributorId, projectId}) => {
