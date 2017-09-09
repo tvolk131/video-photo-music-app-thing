@@ -87,8 +87,6 @@ Project.getByName = (name) => {
   });
 };
 
-// TODO - Implement this into GraphQL
-
 // Gets all projects owned by a particular user
 Project.getByUser = (userId) => {
   return User.getById(userId)
@@ -98,8 +96,6 @@ Project.getByUser = (userId) => {
       });
     });
 };
-
-// TODO - Implement this into GraphQL
 
 // Gets a particular project by a user given the userID and the project name
 Project.getByUserAndName = (userId, projectName) => {
