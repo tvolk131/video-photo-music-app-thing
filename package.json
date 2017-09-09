@@ -51,7 +51,9 @@
     "redux": "^3.7.2",
     "redux-axios-middleware": "^4.0.0",
     "sequelize": "^4.8.0",
-    "typeface-roboto": "0.0.35"
+    "typeface-roboto": "0.0.35",
+    "videojs-wavesurfer": "^1.3.3",
+    "wavesurfer": "^1.3.4"
   },
   "devDependencies": {
     "babel-jest": "^20.0.3",
@@ -78,6 +80,7 @@
     "react-test-renderer": "^15.6.1",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
+    "video.js": "^6.2.7",
     "webpack": "^2.3.2",
     "webpack-dev-server": "^2.4.2"
   },
