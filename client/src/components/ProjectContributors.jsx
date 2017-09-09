@@ -1,14 +1,14 @@
 import React from 'react';
-
+ 
 import Avatar from 'material-ui/Avatar';
 import Paper from 'material-ui/Paper';
 import Card, { CardContent, CardMedia, CardHeader } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import List, { ListItem, ListItemText, ListItemAvatar } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
-
+ 
 const ProjectContributors = ({ owner, contributors }) => {
-  
+   
   return (
     <Card>
       <CardHeader
@@ -18,7 +18,7 @@ const ProjectContributors = ({ owner, contributors }) => {
       <CardHeader
         avatar={
           <Avatar src={owner.avatarUrl} style={{width: 50, height: 50}}>
-            
+             
           </Avatar>
         }
         title={owner.name}
@@ -26,11 +26,12 @@ const ProjectContributors = ({ owner, contributors }) => {
         style={{textAlign: 'left'}}
       />
       <Divider />
-
+ 
       <List dense>
-        {contributors.map(contributor => {
+        {contributors.map((contributor, key) => {
+          var key = key++ || 0;
           return (
-            <ListItem button>
+            <ListItem button key={key}>
               <ListItemAvatar>
                 <Avatar src={contributor.avatarUrl}></Avatar>
               </ListItemAvatar>
@@ -47,5 +48,5 @@ const ProjectContributors = ({ owner, contributors }) => {
     </Card>
   );
 };
-
-export default ProjectContributors;
+ 
+export default ProjectContributors; 
