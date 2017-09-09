@@ -3,6 +3,7 @@ const User = require('./user');
 const Sequelize = require('sequelize');
 const Comment = require('./comment');
 const Like = require('./like');
+const Tag = require('./tag');
 
 const ProjectModel = db.define('projects', {
   id: {
@@ -133,13 +134,120 @@ Comment.addToClass(Project);
 Like.addToClass(Project);
 
 
-// TODO - Implement and test
-Project.addTag = (userId, projectId, tagText) => {};
+// TODO - Test this function
+Project.addTag = ({userId, projectId, text}) => {
+  if (!text || text.constructor !== String || text === '') {
+    return Promise.reject('Tag text cannot be blank');
+  }
+  return User.getById(userId)
+    .then(() => {
+      return Project.getById(projectId)
+        .then((project) => {
+          return Project.getContributors(project.id)
+            .then((contributors) => {
+              let contributorIds = [];
+              contributors.forEach((contributor) => { contributorIds.push(contributor.id); });
+              return contributorIds.includes(userId) || userId === project.ownerId ? true : Promise.reject('Must be a contributor or owner to add tags to this project');
+            })
+            .then(() => {
+              return Tag.model.findOrCreate({
+                where: {
+                  text
+                },
+                defaults: {}
+              })
+                .then((tag) => {
+                  return project.addTag(tag);
+                })
+                .catch(() => {
+                  return true;
+                });
+            });
+        })
+        .then(() => {
+          return true;
+        });
+    })
+};
 
-// TODO - Implement and test
-Project.removeTag = (userId, projectId, tagText) => {};
+// TODO - Test this function
+Project.removeTag = ({userId, projectId, text}) => {
+  if (!text || text.constructor !== String || text === '') {
+    return Promise.reject('Tag text cannot be blank');
+  }
+  return User.getById(userId)
+    .then(() => {
+      return Project.getById(projectId)
+        .then((project) => {
+          return Project.getContributors(project.id)
+            .then((contributors) => {
+              let contributorIds = [];
+              contributors.forEach((contributor) => { contributorIds.push(contributor.id); });
+              return contributorIds.includes(userId) || userId === project.ownerId ? true : Promise.reject('Must be a contributor or owner to remove tags from this project');
+            })
+            .then(() => {
+              Tag.model.findOne({
+                where: {
+                  text
+                }
+              });
+            })
+            .then((tag) => {
+              if (tag) {
+                return tag.removeProject(project);
+              } else {
+                return true;
+              }
+            });
+        })
+        .then(() => {
+          return true;
+        });
+    });
+};
 
-// TODO - Implement and test
-Project.getTags = (projectId) => {};
+// TODO - Test this function
+Project.getTags = (projectId) => {
+  return Project.model.findOne({
+    where: {
+      id: projectId,
+    },
+    include: [
+      {
+        model: Tag.model,
+        as: 'tag'
+      }
+    ]
+  })
+    .then((project) => {
+      return project ? project.tag : Promise.reject('Project does not exist');
+    })
+    .then((tagModels) => {
+      let tags = [];
+      tagModels.forEach((model) => {
+        tags.push(model.text);
+      });
+      return tags;
+    });
+};
+
+// TODO - Test this function
+Project.getByTag = (text) => {
+  if (!text || text.constructor !== String || text === '') {
+    return Promise.reject('Tag text cannot be blank');
+  }
+  return Tag.model.findOne({
+    where: {text},
+    include: [
+      {
+        model: Project.model, 
+        as: 'project'
+      }
+    ]
+  })
+    .then((tag) => {
+      return tag ? tag.project : [];
+    });
+};
 
 module.exports = Project;
