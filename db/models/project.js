@@ -134,7 +134,6 @@ Comment.addToClass(Project);
 Like.addToClass(Project);
 
 
-// TODO - Test this function
 Project.addTag = ({userId, projectId, text}) => {
   if (!text || text.constructor !== String || text === '') {
     return Promise.reject('Tag text cannot be blank');
@@ -142,35 +141,31 @@ Project.addTag = ({userId, projectId, text}) => {
   return User.getById(userId)
     .then(() => {
       return Project.getById(projectId)
-        .then((project) => {
-          return Project.getContributors(project.id)
-            .then((contributors) => {
-              let contributorIds = [];
-              contributors.forEach((contributor) => { contributorIds.push(contributor.id); });
-              return contributorIds.includes(userId) || userId === project.ownerId ? true : Promise.reject('Must be a contributor or owner to add tags to this project');
-            })
-            .then(() => {
-              return Tag.model.findOrCreate({
-                where: {
-                  text
-                },
-                defaults: {}
-              })
-                .then((tag) => {
-                  return project.addTag(tag);
-                })
-                .catch(() => {
-                  return true;
-                });
-            });
-        })
-        .then(() => {
-          return true;
-        });
     })
+    .then((project) => {
+      return Project.getContributors(project.id)
+      .then((contributors) => {
+        let contributorIds = [];
+        // TODO - Don't look for contributors if the owner is editing tags
+        contributors.forEach((contributor) => { contributorIds.push(contributor.id); });
+        return contributorIds.includes(userId) || userId === project.ownerId ? true : Promise.reject('Must be a contributor or owner to add tags to this project');
+      })
+      .then(() => {
+        return Tag.model.findOrCreate({
+          where: {text}
+        })
+          .then((tag) => {
+            return project.addTag(tag);
+          })
+          .catch(() => {
+          });
+      });
+    })
+    .then(() => {
+      return true;
+    });
 };
 
-// TODO - Test this function
 Project.removeTag = ({userId, projectId, text}) => {
   if (!text || text.constructor !== String || text === '') {
     return Promise.reject('Tag text cannot be blank');
@@ -206,7 +201,6 @@ Project.removeTag = ({userId, projectId, text}) => {
     });
 };
 
-// TODO - Test this function
 Project.getTags = (projectId) => {
   return Project.model.findOne({
     where: {
@@ -231,7 +225,6 @@ Project.getTags = (projectId) => {
     });
 };
 
-// TODO - Test this function
 Project.getByTag = (text) => {
   if (!text || text.constructor !== String || text === '') {
     return Promise.reject('Tag text cannot be blank');
