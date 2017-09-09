@@ -1,5 +1,5 @@
 const { connection, User } = require('../../db');
-const expect = require('chai').use(require('chai-as-promised')).expect;
+const expect = require('chai').use(require('chai-as-promised')).use(require('chai-string')).expect;
 
 describe('User Model', () => {
   beforeEach(() => {
@@ -16,13 +16,45 @@ describe('User Model', () => {
           expect(user).to.exist;
         });
     });
-    it('Should create oAuth user with all valid parameters', () => {
+    it('Should create oAuth user with all valid parameters and no username provided', () => {
       return User.create({
         oAuthUserId: 1,
         oAuthProvider: 'google'
       })
         .then((user) => {
           expect(user).to.exist;
+          expect(user.username).to.exist;
+        });
+    });
+    it('Should create oAuth user with all valid parameters and no username provided', () => {
+      return User.create({
+        oAuthUserId: 1,
+        oAuthProvider: 'google'
+      })
+        .then((user) => {
+          expect(user).to.exist;
+          expect(user.username).to.exist;
+        });
+    });
+    it('Should create user with oAuth and a username provided', () => {
+      return User.create({oAuthUserId: 1, oAuthProvider: 'google', username: 'test'})
+        .then((user) => {
+          expect(user.username).to.equal('test');
+        });
+    });
+    it('Should generate username for oAuth users that do not provide a username and have an email', () => {
+      return User.create({oAuthUserId: 1, oAuthProvider: 'google', email: 'test@example.com'})
+        .then((user) => {
+          expect(user.username).to.startsWith('test_');
+          if (user.username.includes('@')) {
+            throw new Error('Should not contain full email');
+          }
+        });
+    });
+    it('Should generate username for oAuth users that do not provide a username and do not have an email', () => {
+      return User.create({oAuthUserId: 1111, oAuthProvider: 'google'})
+        .then((user) => {
+          expect(user.username).to.startsWith('1111_');
         });
     });
     it('Should reject when creating a local auth user with an email field that is not an email', () => {
@@ -35,13 +67,10 @@ describe('User Model', () => {
     it('Should reject when creating user with no oAuth or local auth credentials', () => {
       return expect(User.create({})).to.be.rejectedWith('Cannot create account without neither oAuth nor local auth credentials');
     });
-    it('Should reject when creating user with oAuth and local auth credentials', () => {
-      return expect(User.create({oAuthUserId: 1, oAuthProvider: 'google', username: 'test'})).to.be.rejectedWith('Cannot create oAuth account with local username');
-    });
     it('Should reject when creating user local auth credentials and an oAuth ID', () => {
       return expect(User.create({oAuthUserId: 1, username: 'test', email: 'foo@gmail.com', password: 'test'})).to.be.rejectedWith('Cannot create local auth account with oAuth ID');
     });
-    it('Should reject when creating user local auth credentials and an oAuth provider', () => {
+    it('Should reject when creating user with local auth credentials and an oAuth provider', () => {
       return expect(User.create({oAuthProvider: 'google', username: 'test', email: 'foo@gmail.com', password: 'test'})).to.be.rejectedWith('Cannot create local auth account with oAuth provider');
     });
     it('Should reject when creating user with an email that is already registered', () => {
