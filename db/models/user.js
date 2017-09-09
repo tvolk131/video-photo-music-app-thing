@@ -90,6 +90,7 @@ User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, han
     description
   });
 };
+
 User.update = (userId, query) => {
   if (!query) {
     return Promise.reject('No update query was specified');
@@ -109,6 +110,75 @@ User.update = (userId, query) => {
         query.password = generateHash(query.password);
       }
       return user.update(query);
+    });
+};
+
+User.follow = (followerId, followeeId) => {
+  if (followerId === followeeId) {
+    return Promise.reject('Cannot follow yourself');
+  }
+  return User.getById(followerId)
+    .then((follower) => {
+      return User.getById(followeeId)
+        .then((followee) => {
+          followee.addFollower(follower);
+        });
+    })
+    .then((response) => {
+      return true;
+    });
+};
+
+User.unfollow = (followerId, followeeId) => {
+  return User.getById(followerId)
+    .then((follower) => {
+      return User.getById(followeeId)
+        .then((followee) => {
+          followee.removeFollower(follower);
+        });
+    })
+    .then((response) => {
+      return true;
+    });
+};
+
+User.getFollowers = (userId) => {
+  return User.model.findOne({
+    where: {
+      id: userId
+    },
+    include: [
+      {
+        model: User.model,
+        as: 'follower',
+        attributes: {
+          exclude: ['password']
+        }
+      }
+    ]
+  })
+    .then((user) => {
+      return user ? user.follower : Promise.reject('User does not exist');
+    });
+};
+
+User.getFollows = (userId) => {
+  return User.model.findOne({
+    where: {
+      id: userId
+    },
+    include: [
+      {
+        model: User.model,
+        as: 'followee',
+        attributes: {
+          exclude: ['password']
+        }
+      }
+    ]
+  })
+    .then((user) => {
+      return user ? user.followee : Promise.reject('User does not exist');
     });
 };
 
