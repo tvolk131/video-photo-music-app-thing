@@ -13,13 +13,15 @@ connection.clear = () => {
 User.model.belongsToMany(Project.model, {through: 'contributors', as: 'project', foreignKey: 'contributorId'});
 Project.model.belongsToMany(User.model, {through: 'contributors', as: 'contributor', foreignKey: 'projectId'});
 
+User.model.belongsToMany(User.model, {through: 'followers', as: 'follower', foreignKey: 'followeeId'});
+User.model.belongsToMany(User.model, {through: 'followers', as: 'followee', foreignKey: 'followerId'});
+
 Project.model.belongsToMany(Tag.model, {through: 'projectTags', as: 'tag', foreignKey: 'projectId'});
 Tag.model.belongsToMany(Project.model, {through: 'projectTags', as: 'project', foreignKey: 'tagId'});
 
 Like.model.belongsTo(User.model, {as: 'user'});
 
 Project.model.belongsTo(User.model, {as: 'owner'});
-Project.model.hasOne(ProjectComponent.model, {as: 'featuredComponent'});
 
 ProjectComponent.model.belongsTo(Project.model, {as: 'project'});
 ProjectComponent.model.belongsTo(User.model, {as: 'author'});

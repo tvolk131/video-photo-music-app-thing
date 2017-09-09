@@ -3,6 +3,7 @@ const User = require('./user');
 const Sequelize = require('sequelize');
 const Comment = require('./comment');
 const Like = require('./like');
+const Tag = require('./tag');
 
 const ProjectModel = db.define('projects', {
   id: {
@@ -28,7 +29,18 @@ let Project = {model: ProjectModel};
 Project.create = ({ownerId, name, description, tagline}) => {
   return User.getById(ownerId)
     .then(() => {
-      return Project.model.create({ownerId, name, description, tagline});
+      return Project.getByUserAndName(ownerId, name)
+        .then(() => {
+          // If it reached this 'then' block, then a project by this user and with this name already exists
+          return Promise.reject('Cannot create two projects with the same name');
+        });
+    })
+    .catch((e) => {
+      if (e === 'Project does not exist') {
+        return Project.model.create({ownerId, name, description, tagline});
+      } else {
+        return Promise.reject(e);
+      }
     });
 };
 Project.update = ({userId, projectId, options}) => {
@@ -73,6 +85,36 @@ Project.getByName = (name) => {
   return Project.model.findAll({
     where: {name}
   });
+};
+
+// TODO - Implement this into GraphQL
+
+// Gets all projects owned by a particular user
+Project.getByUser = (userId) => {
+  return User.getById(userId)
+    .then(() => {
+      return Project.model.findAll({
+        where: {ownerId: userId}
+      });
+    });
+};
+
+// TODO - Implement this into GraphQL
+
+// Gets a particular project by a user given the userID and the project name
+Project.getByUserAndName = (userId, projectName) => {
+  return User.getById(userId)
+    .then(() => {
+      return Project.model.findOne({
+        where: {
+          ownerId: userId,
+          name: projectName
+        }
+      });
+    })
+    .then((project) => {
+      return project ? project : Promise.reject('Project does not exist');
+    });
 };
 
 Project.addContributor = ({ownerId, contributorId, projectId}) => {
@@ -133,13 +175,114 @@ Comment.addToClass(Project);
 Like.addToClass(Project);
 
 
-// TODO - Implement and test
-Project.addTag = (userId, projectId, tagText) => {};
+Project.addTag = ({userId, projectId, text}) => {
+  if (!text || text.constructor !== String || text === '') {
+    return Promise.reject('Tag text cannot be blank');
+  }
+  return User.getById(userId)
+    .then(() => {
+      return Project.getById(projectId)
+    })
+    .then((project) => {
+      return Project.getContributors(project.id)
+      .then((contributors) => {
+        let contributorIds = [];
+        // TODO - Don't look for contributors if the owner is editing tags
+        contributors.forEach((contributor) => { contributorIds.push(contributor.id); });
+        return contributorIds.includes(userId) || userId === project.ownerId ? true : Promise.reject('Must be a contributor or owner to add tags to this project');
+      })
+      .then(() => {
+        return Tag.model.findOne({
+          where: {text}
+        })
+          .then((tag) => {
+            return tag ? tag : Tag.model.create({text});
+          })
+          .then((tag) => {
+            return project.addTag(tag);
+          });
+      });
+    })
+    .then(() => {
+      return true;
+    });
+};
 
-// TODO - Implement and test
-Project.removeTag = (userId, projectId, tagText) => {};
+Project.removeTag = ({userId, projectId, text}) => {
+  if (!text || text.constructor !== String || text === '') {
+    return Promise.reject('Tag text cannot be blank');
+  }
+  return User.getById(userId)
+    .then(() => {
+      return Project.getById(projectId)
+        .then((project) => {
+          return Project.getContributors(project.id)
+            .then((contributors) => {
+              let contributorIds = [];
+              contributors.forEach((contributor) => { contributorIds.push(contributor.id); });
+              return contributorIds.includes(userId) || userId === project.ownerId ? true : Promise.reject('Must be a contributor or owner to remove tags from this project');
+            })
+            .then(() => {
+              Tag.model.findOne({
+                where: {
+                  text
+                }
+              });
+            })
+            .then((tag) => {
+              if (tag) {
+                return project.removeTag(tag);
+              } else {
+                return true;
+              }
+            });
+        })
+        .then(() => {
+          return true;
+        });
+    });
+};
 
-// TODO - Implement and test
-Project.getTags = (projectId) => {};
+Project.getTags = (projectId) => {
+  return Project.model.findOne({
+    where: {
+      id: projectId,
+    },
+    include: [
+      {
+        model: Tag.model,
+        as: 'tag'
+      }
+    ]
+  })
+    .then((project) => {
+      return project ? project.tag : Promise.reject('Project does not exist');
+    })
+    .then((tagModels) => {
+      let tags = [];
+      tagModels.forEach((model) => {
+        tags.push(model.text);
+      });
+      return tags;
+    });
+};
+
+Project.getByTag = (text) => {
+  if (!text || text.constructor !== String || text === '') {
+    return Promise.reject('Tag text cannot be blank');
+  }
+  return Tag.model.findOne({
+    where: {text},
+    include: [
+      {
+        model: Project.model, 
+        as: 'project'
+      }
+    ]
+  })
+    .then((tag) => {
+      return tag ? tag.project : [];
+    });
+};
 
 module.exports = Project;

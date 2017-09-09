@@ -136,7 +136,9 @@ const getOrCreateOAuthProfile = (oAuthProvider, oAuthProfile, done) => {
     .catch(() => {
       let data = {
         oAuthUserId: oAuthProfile.id,
-        oAuthProvider
+        oAuthProvider,
+        email: oAuthProfile.emails[0].value,
+        name: oAuthProfile.name.givenName + ' ' + oAuthProfile.name.familyName,
       };
       User.create(data)
         .then((newUser) => {

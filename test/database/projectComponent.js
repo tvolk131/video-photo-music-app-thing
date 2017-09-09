@@ -18,7 +18,7 @@ describe('Project Component Model', () => {
   beforeEach(() => {
     return connection.reset()
       .then(() => {
-        return User.create(userTwo);
+        return User.create(userOne);
       })
       .then((newUser) => {
         userOne = newUser;
@@ -97,6 +97,12 @@ describe('Project Component Model', () => {
         });
     });
 
+    it('Should update as project owner when all parameters are valid', () => {
+      return ProjectComponent.update(userOne.id, component.id, {description: 'foo'})
+        .then((newComponent) => {
+          expect(newComponent.description).to.equal('foo');
+        });
+    });
     it('Should update as project owner when all parameters are valid', () => {
       return ProjectComponent.update(userOne.id, component.id, {description: 'foo'})
         .then((newComponent) => {

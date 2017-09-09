@@ -3,6 +3,13 @@ const Sequelize = require('sequelize');
 const bCrypt = require('bcryptjs');
 const defaultTheme = 1;
 
+const generateHash = (password) => {
+  return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
+};
+const generateUsername = (username) => {
+  return ((username ? username.split('@')[0] + '_' : '') + Math.floor(Math.random() * 100000000)).toString();
+};
+
 const UserModel = db.define('users', {
   id: {
     type: Sequelize.INTEGER,
@@ -24,7 +31,9 @@ const UserModel = db.define('users', {
   },
   username: {
     type: Sequelize.STRING(64),
-    unique: true
+    unique: true,
+    notEmpty: true,
+    allowNull: false
   },
   password: {
     type: Sequelize.STRING(64)
@@ -51,11 +60,6 @@ let User = {model: UserModel};
 
 User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, handle, avatarUrl, description}) => {
   if (oAuthUserId && oAuthProvider) {
-    if (username) {
-      return new Promise((resolve, reject) => {
-        reject('Cannot create oAuth account with local username');
-      });
-    }
     if (password) {
       return new Promise((resolve, reject) => {
         reject('Cannot create oAuth account with local password');
@@ -81,7 +85,7 @@ User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, han
     oAuthUserId,
     oAuthProvider,
     email,
-    username,
+    username: username || generateUsername((email || oAuthUserId.toString())),
     password,
     theme: defaultTheme,
     name,
@@ -90,6 +94,7 @@ User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, han
     description
   });
 };
+
 User.update = (userId, query) => {
   if (!query) {
     return Promise.reject('No update query was specified');
@@ -103,12 +108,78 @@ User.update = (userId, query) => {
         return Promise.reject('Cannot update username or password fields when signed in through oAuth provider');
       }
       if (query.password) {
-        let generateHash = (password) => {
-          return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
-        };
         query.password = generateHash(query.password);
       }
       return user.update(query);
+    });
+};
+
+User.follow = (followerId, followeeId) => {
+  if (followerId === followeeId) {
+    return Promise.reject('Cannot follow yourself');
+  }
+  return User.getById(followerId)
+    .then((follower) => {
+      return User.getById(followeeId)
+        .then((followee) => {
+          return followee.addFollower(follower);
+        });
+    })
+    .then((response) => {
+      return true;
+    });
+};
+
+User.unfollow = (followerId, followeeId) => {
+  return User.getById(followerId)
+    .then((follower) => {
+      return User.getById(followeeId)
+        .then((followee) => {
+          followee.removeFollower(follower);
+        });
+    })
+    .then((response) => {
+      return true;
+    });
+};
+
+User.getFollowers = (userId) => {
+  return User.model.findOne({
+    where: {
+      id: userId
+    },
+    include: [
+      {
+        model: User.model,
+        as: 'follower',
+        attributes: {
+          exclude: ['password']
+        }
+      }
+    ]
+  })
+    .then((user) => {
+      return user ? user.follower : Promise.reject('User does not exist');
+    });
+};
+
+User.getFollows = (userId) => {
+  return User.model.findOne({
+    where: {
+      id: userId
+    },
+    include: [
+      {
+        model: User.model,
+        as: 'followee',
+        attributes: {
+          exclude: ['password']
+        }
+      }
+    ]
+  })
+    .then((user) => {
+      return user ? user.followee : Promise.reject('User does not exist');
     });
 };
 

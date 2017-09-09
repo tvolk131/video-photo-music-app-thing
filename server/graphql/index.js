@@ -1,9 +1,12 @@
 const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLSchema, GraphQLList, GraphQLNonNull} = require('graphql');
 const db = require('../../db');
 
+// TODO - Implement finding projects by tag
+// TODO - Implement finding projects by user
+
 const UserType = new GraphQLObjectType({
   name: 'User',
-  fields: {
+  fields: () => ({
     id: {type: GraphQLInt},
     oAuthUserId: {type: GraphQLString},
     oAuthProvider: {type: GraphQLString},
@@ -14,8 +17,20 @@ const UserType = new GraphQLObjectType({
     name: {type: GraphQLString},
     handle: {type: GraphQLString},
     avatarUrl: {type: GraphQLString},
-    description: {type: GraphQLString}
-  }
+    description: {type: GraphQLString},
+    followers: {
+      type: new GraphQLList(UserType),
+      resolve(parentValue, args) {
+        return db.User.getFollowers(parentValue.id);
+      }
+    },
+    follows: {
+      type: new GraphQLList(UserType),
+      resolve(parentValue, args) {
+        return db.User.getFollows(parentValue.id);
+      }
+    }
+  })
 });
 
 const ProjectType = new GraphQLObjectType({
@@ -48,6 +63,18 @@ const ProjectType = new GraphQLObjectType({
       resolve(parentValue, args) {
         return db.Project.Comment.get(parentValue.id)
       }
+    },
+    likes: {
+      type: new GraphQLList(LikeType),
+      resolve(parentValue, args) {
+        return db.Project.Like.get(parentValue.id);
+      }
+    },
+    tags: {
+      type: new GraphQLList(GraphQLString),
+      resolve(parentValue, args) {
+        return db.Project.getTags(parentValue.id);
+      }
     }
   })
 });
@@ -78,15 +105,40 @@ const ProjectComponentType = new GraphQLObjectType({
       resolve(parentValue, args) {
         return db.ProjectComponent.Comment.get(parentValue.id)
       }
+    },
+    likes: {
+      type: new GraphQLList(LikeType),
+      resolve(parentValue, args) {
+        return db.ProjectComponent.Like.get(parentValue.id);
+      }
     }
   })
 });
 
 const CommentType = new GraphQLObjectType({
   name: 'Comment',
-  fields: {
+  fields: () => ({
     id: {type: GraphQLInt},
     text: {type: GraphQLString},
+    likes: {
+      type: new GraphQLList(LikeType),
+      resolve(parentValue, args) {
+        return db.Comment.Like.get(parentValue.id);
+      }
+    },
+    user: {
+      type: UserType,
+      resolve(parentValue, args) {
+        return db.User.getById(parentValue.userId);
+      }
+    }
+  })
+});
+
+const LikeType = new GraphQLObjectType({
+  name: 'Like',
+  fields: {
+    id: {type: GraphQLInt},
     user: {
       type: UserType,
       resolve(parentValue, args) {
@@ -127,7 +179,7 @@ const RootQuery = new GraphQLObjectType({
     },
     project: {
       type: ProjectType,
-      args: {id: {type: GraphQLInt}},
+      args: {id: {type: new GraphQLNonNull(GraphQLInt)}},
       resolve(parentValue, args) {
         return db.Project.getById(args.id);
       }
@@ -164,6 +216,30 @@ const mutation = new GraphQLObjectType({
         return db.User.update(request.user.id, args);
       }
     },
+    followUser: {
+      type: UserType,
+      args: {
+        userId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {userId}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot follow a user when you are not logged in');
+        }
+        return db.User.follow(request.user.id, userId);
+      }
+    },
+    unfollowUser: {
+      type: UserType,
+      args: {
+        userId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {userId}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot follow a user when you are not logged in');
+        }
+        return db.User.unfollow(request.user.id, userId);
+      }
+    },
     createProject: {
       type: ProjectType,
       args: {
@@ -191,6 +267,40 @@ const mutation = new GraphQLObjectType({
           return Promise.reject('Cannot edit a project when you are not logged in');
         }
         return db.Project.update({userId: request.user.id, projectId: id, options: {name, description, tagline}});
+      }
+    },
+    addProjectTag: {
+      type: GraphQLBoolean,
+      args: {
+        projectId: {type: new GraphQLNonNull(GraphQLInt)},
+        text: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve(parentValue, {projectId, text}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot add tag to project when you are not logged in');
+        }
+        return db.Project.addTag({
+          userId: request.user.id,
+          projectId,
+          text
+        });
+      }
+    },
+    removeProjectTag: {
+      type: GraphQLBoolean,
+      args: {
+        projectId: {type: new GraphQLNonNull(GraphQLInt)},
+        text: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve(parentValue, {projectId, text}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot remove tag to project when you are not logged in');
+        }
+        return db.Project.removeTag({
+          userId: request.user.id,
+          projectId,
+          text
+        });
       }
     },
     deleteProject: {
@@ -314,12 +424,60 @@ const mutation = new GraphQLObjectType({
         return db.Comment.delete({userId: request.user.id, commentId});
       }
     },
-    // likeProject: {},
-    // unlikeProject: {},
-    // likeComponent: {},
-    // unlikeComponent: {},
-    // likeComment: {},
-    // unlikeComment: {}
+    likeProject: {
+      type: LikeType,
+      args: {
+        projectId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {projectId}, request) {
+        return db.Project.Like.create({userId: request.user.id, projectId});
+      }
+    },
+    unlikeProject: {
+      type: LikeType,
+      args: {
+        projectId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {projectId}, request) {
+        return db.Project.Like.delete({userId: request.user.id, projectId});
+      }
+    },
+    likeComponent: {
+      type: LikeType,
+      args: {
+        projectComponentId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {projectComponentId}, request) {
+        return db.ProjectComponent.Like.create({userId: request.user.id, projectComponentId});
+      }
+    },
+    unlikeComponent: {
+      type: LikeType,
+      args: {
+        projectComponentId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {projectComponentId}, request) {
+        return db.ProjectComponent.Like.delete({userId: request.user.id, projectComponentId});
+      }
+    },
+    likeComment: {
+      type: LikeType,
+      args: {
+        commentId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {commentId}, request) {
+        return db.Comment.Like.create({userId: request.user.id, commentId});
+      }
+    },
+    unlikeComment: {
+      type: LikeType,
+      args: {
+        commentId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {commentId}, request) {
+        return db.Comment.Like.delete({userId: request.user.id, commentId});
+      }
+    }
   }
 });
 

@@ -50,6 +50,31 @@ describe('Project Model', () => {
           expect(project.name).to.equal('test project');
         });
     });
+    it('Should allow two users to create projects with the same name', () => {
+      // No expects because we're only testing whether this promise chain will be rejected
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.create({
+            ownerId: oAuthUser.id,
+            name: 'test project'
+          });
+        });
+    });
+    it('Should not allow a user to create two projects with the same name', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return expect(Project.create({
+            ownerId: localUser.id,
+            name: 'test project'
+          })).to.be.rejectedWith('Cannot create two projects with the same name');
+        });
+    });
     it('Should reject when creating a project without a name', () => {
       return expect(Project.create({
         ownerId: localUser.id
@@ -73,6 +98,18 @@ describe('Project Model', () => {
         })
         .then((project) => {
           expect(project.name).to.equal('updated project name');
+        });
+    });
+    it('Should only change parameters specified', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.update({userId: localUser.id, projectId: project.id, options: {name: 'updated project name'}});
+        })
+        .then((project) => {
+          expect(project.ownerId).to.equal(localUser.id);
         });
     });
     it('Should update a project with all-valid parameters as a contributor', () => {
@@ -178,7 +215,7 @@ describe('Project Model', () => {
       })
         .then((project) => {
           return Project.create({
-            ownerId: localUser.id,
+            ownerId: oAuthUser.id,
             name: 'test project'
           })
             .then((project2) => {
@@ -192,6 +229,59 @@ describe('Project Model', () => {
                 });
             });
         });
+    });
+  });
+
+  describe('getByUser()', () => {
+    it('Should resolve to empty array for a user that has no projects', () => {
+      return expect(Project.getByUser(localUser.id)).to.eventually.eql([]);
+    });
+    it('Should get projects for user that has existing projects', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.getByUser(localUser.id);
+        })
+        then((projects) => {
+          expect(projects).to.be.a('array');
+          expect(projects.length).to.equal(1);
+          expect(projects[0].id).to.equal(project.id);
+          expect(projects[0].name).to.equal(project.name);
+        });
+    });
+    it('Should reject when user does not exist', () => {
+      expect(Project.getByUser(1234321)).to.be.rejectedWith('User does not exist');
+    });
+  });
+
+  describe('getByUserAndName()', () => {
+    let project;
+    beforeEach(() => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((newProject) => {
+          project = newProject;
+        });
+    });
+
+    it('Should return project when it exists', () => {
+      return Project.getByUserAndName(localUser.id, 'test project')
+        .then((projectModel) => {
+          expect(projectModel.id).to.exist;
+          expect(projectModel.id).to.equal(project.id);
+          expect(projectModel.name).to.exist;
+          expect(projectModel.name).to.equal(project.name);
+        });
+    });
+    it('Should reject when use does not own a project with the given name', () => {
+      return expect(Project.getByUserAndName(oAuthUser.id, 'test project')).to.be.rejectedWith('Project does not exist');
+    });
+    it('Should reject when user does not exist', () => {
+      return expect(Project.getByUserAndName(1234, 'test project')).to.be.rejectedWith('User does not exist');
     });
   });
 
@@ -318,6 +408,172 @@ describe('Project Model', () => {
     });
     it('Should reject when retrieving contributors from a non-existent project', () => {
       return expect(Project.getContributors(1234)).to.be.rejectedWith('Project does not exist');
+    });
+  });
+
+  describe('Tags', () => {
+    let project;
+    beforeEach(() => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((newProject) => {
+          project = newProject;
+        });
+    });
+
+    describe('addTag()', () => {
+      it('Should add tag to project as owner', () => {
+        return expect(Project.addTag({userId: localUser.id, projectId: project.id, text: 'test tag'})).to.eventually.equal(true);
+      });
+      it('Should add tag to project as contributor', () => {
+        return Project.addContributor({
+          ownerId: localUser.id,
+          contributorId: oAuthUser.id,
+          projectId: project.id
+        })
+          .then(() => {
+            return expect(Project.addTag({userId: oAuthUser.id, projectId: project.id, text: 'test tag'})).to.eventually.equal(true);
+          });
+      });
+      it('Should reject when adding tag as neither an owner or contributor', () => {
+        return expect(Project.addTag({userId: oAuthUser.id, projectId: project.id, text: 'test tag'})).to.be.rejectedWith('Must be a contributor or owner to add tags to this project');
+      });
+      it('Should reject when user does not exist', () => {
+        return expect(Project.addTag({userId: 1234, projectId: project.id, text: 'test tag'})).to.be.rejectedWith('User does not exist');
+      });
+      it('Should reject when project does not exist', () => {
+        return expect(Project.addTag({userId: localUser.id, projectId: 1234, text: 'test tag'})).to.be.rejectedWith('Project does not exist');
+      });
+      it('Should reject when text is not a string', () => {
+        return expect(Project.addTag({userId: localUser.id, projectId: project.id, text: null})).to.be.rejectedWith('Tag text cannot be blank');
+      });
+      it('Should reject when text is an empty string', () => {
+        return expect(Project.addTag({userId: localUser.id, projectId: project.id, text: ''})).to.be.rejectedWith('Tag text cannot be blank');
+      });
+    });
+
+    describe('removeTag()', () => {
+      it('Should remove tag from project as owner', () => {
+        return expect(Project.removeTag({userId: localUser.id, projectId: project.id, text: 'test tag'})).to.eventually.equal(true);
+      });
+      it('Should remove tag from project as contributor', () => {
+        return Project.addContributor({
+          ownerId: localUser.id,
+          contributorId: oAuthUser.id,
+          projectId: project.id
+        })
+          .then(() => {
+            return expect(Project.removeTag({userId: oAuthUser.id, projectId: project.id, text: 'test tag'})).to.eventually.equal(true);
+          });
+      });
+      it('Should reject when removing tag as neither an owner or contributor', () => {
+        return expect(Project.removeTag({userId: oAuthUser.id, projectId: project.id, text: 'test tag'})).to.be.rejectedWith('Must be a contributor or owner to remove tags from this project');
+      });
+      it('Should reject when user does not exist', () => {
+        return expect(Project.removeTag({userId: 1234, projectId: project.id, text: 'test tag'})).to.be.rejectedWith('User does not exist');
+      });
+      it('Should reject when project does not exist', () => {
+        return expect(Project.removeTag({userId: localUser.id, projectId: 1234, text: 'test tag'})).to.be.rejectedWith('Project does not exist');
+      });
+      it('Should reject when text is not a string', () => {
+        return expect(Project.removeTag({userId: localUser.id, projectId: project.id, text: null})).to.be.rejectedWith('Tag text cannot be blank');
+      });
+      it('Should reject when text is an empty string', () => {
+        return expect(Project.removeTag({userId: localUser.id, projectId: project.id, text: ''})).to.be.rejectedWith('Tag text cannot be blank');
+      });
+    });
+
+    describe('getTags()', () => {
+      it('Should return empty array for project with no tags', () => {
+        return expect(Project.getTags(project.id)).to.eventually.eql([]);
+      });
+      it('Should return array of strings for projects that have tags', () => {
+        return Project.addTag({
+          userId: localUser.id,
+          projectId: project.id,
+          text: 'test tag'
+        })
+          .then(() => {
+            return Project.addTag({
+              userId: localUser.id,
+              projectId: project.id,
+              text: 'test tag2'
+            });
+          })
+          .then(() => {
+            return expect(Project.getTags(project.id)).to.eventually.eql(['test tag', 'test tag2']);
+          });
+      });
+      it('Should reject when project does not exist', () => {
+        return expect(Project.getTags(1234)).to.be.rejectedWith('Project does not exist');
+      });
+    });
+
+    describe('getByTag()', () => {
+      it('Should return empty array for tag that is not linked with any projects', () => {
+        return expect(Project.getByTag('faketag')).to.eventually.eql([]);
+      });
+      it('Should return array of projects that all have the tag (test one)', () => {
+        return Project.addTag({
+          userId: localUser.id,
+          projectId: project.id,
+          text: 'test tag'
+        })
+          .then(() => {
+            return Project.addTag({
+              userId: localUser.id,
+              projectId: project.id,
+              text: 'test tag2'
+            });
+          })
+          .then(() => {
+            return Project.getByTag('test tag')
+              .then((projects) => {
+                expect(projects.length).to.equal(1);
+                expect(projects[0].id).to.equal(project.id);
+              });
+          });
+      });
+      it('Should return array of projects that all have the tag (test two)', () => {
+        let project2;
+        return Project.addTag({
+          userId: localUser.id,
+          projectId: project.id,
+          text: 'test tag1234'
+        })
+          .then(() => {
+            return Project.create({
+              ownerId: localUser.id,
+              name: 'test project12'
+            })
+              .then((newProject) => {
+                project2 = newProject;
+              });
+          })
+          .then(() => {
+            return Project.addTag({
+              userId: localUser.id,
+              projectId: project2.id,
+              text: 'test tag1234'
+            });
+          })
+          .then(() => {
+            return Project.getByTag('test tag1234')
+              .then((projects) => {
+                expect(projects.length).to.equal(2);
+                expect(projects[0].id).to.equal(project.id);
+                expect(projects[1].id).to.equal(project2.id);
+              });
+          });
+      });
+      it('Should reject when text is not a string', () => {
+        return expect(Project.getByTag(null)).to.be.rejectedWith('Tag text cannot be blank');
+      });
+      it('Should reject when text is an empty string', () => {
+        return expect(Project.getByTag('')).to.be.rejectedWith('Tag text cannot be blank');
+      });
     });
   });
 

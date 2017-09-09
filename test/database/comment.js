@@ -18,7 +18,7 @@ describe('Comment Model', () => {
   beforeEach(() => {
     return connection.reset()
       .then(() => {
-        return User.create(userTwo);
+        return User.create(userOne);
       })
       .then((newUser) => {
         userOne = newUser;
@@ -67,6 +67,15 @@ describe('Comment Model', () => {
         })
         .then((comment) => {
           expect(comment.text).to.equal('new comment text');
+        });
+    });
+    it('Should not modify other values when changing comment text', () => {
+      return Comment.create({userId: userOne.id, parentClass: Project, parentId: project.id, text: 'this is a comment'})
+        .then((comment) => {
+          return Comment.edit({userId: userOne.id, commentId: comment.id, text: 'new comment text'});
+        })
+        .then((comment) => {
+          expect(comment.userId).to.equal(userOne.id);
         });
     });
     it('Should reject when attempting to edit another user\'s comment', () => {

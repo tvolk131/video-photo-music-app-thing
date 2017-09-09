@@ -18,7 +18,7 @@ describe('Like Model', () => {
   beforeEach(() => {
     return connection.reset()
       .then(() => {
-        return User.create(userTwo);
+        return User.create(userOne);
       })
       .then((newUser) => {
         userOne = newUser;
