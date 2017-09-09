@@ -67,6 +67,12 @@ const ProjectType = new GraphQLObjectType({
         return db.Project.Like.get(parentValue.id);
       }
     },
+    tags: {
+      type: new GraphQLList(GraphQLString),
+      resolve(parentValue, args) {
+        return db.Project.getTags(parentValue.id);
+      }
+    }
   })
 });
 
@@ -170,7 +176,7 @@ const RootQuery = new GraphQLObjectType({
     },
     project: {
       type: ProjectType,
-      args: {id: {type: GraphQLInt}},
+      args: {id: {type: new GraphQLNonNull(GraphQLInt)}},
       resolve(parentValue, args) {
         return db.Project.getById(args.id);
       }
@@ -258,6 +264,40 @@ const mutation = new GraphQLObjectType({
           return Promise.reject('Cannot edit a project when you are not logged in');
         }
         return db.Project.update({userId: request.user.id, projectId: id, options: {name, description, tagline}});
+      }
+    },
+    addProjectTag: {
+      type: GraphQLBoolean,
+      args: {
+        projectId: {type: new GraphQLNonNull(GraphQLInt)},
+        text: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve(parentValue, {projectId, text}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot add tag to project when you are not logged in');
+        }
+        return db.Project.addTag({
+          userId: request.user.id,
+          projectId,
+          text
+        });
+      }
+    },
+    removeProjectTag: {
+      type: GraphQLBoolean,
+      args: {
+        projectId: {type: new GraphQLNonNull(GraphQLInt)},
+        text: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve(parentValue, {projectId, text}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot remove tag to project when you are not logged in');
+        }
+        return db.Project.removeTag({
+          userId: request.user.id,
+          projectId,
+          text
+        });
       }
     },
     deleteProject: {

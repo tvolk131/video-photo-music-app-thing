@@ -151,13 +151,14 @@ Project.addTag = ({userId, projectId, text}) => {
         return contributorIds.includes(userId) || userId === project.ownerId ? true : Promise.reject('Must be a contributor or owner to add tags to this project');
       })
       .then(() => {
-        return Tag.model.findOrCreate({
+        return Tag.model.findOne({
           where: {text}
         })
           .then((tag) => {
-            return project.addTag(tag);
+            return tag ? tag : Tag.model.create({text});
           })
-          .catch(() => {
+          .then((tag) => {
+            return project.addTag(tag);
           });
       });
     })
@@ -189,7 +190,7 @@ Project.removeTag = ({userId, projectId, text}) => {
             })
             .then((tag) => {
               if (tag) {
-                return tag.removeProject(project);
+                return project.removeTag(tag);
               } else {
                 return true;
               }
