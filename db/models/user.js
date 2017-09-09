@@ -121,7 +121,7 @@ User.follow = (followerId, followeeId) => {
     .then((follower) => {
       return User.getById(followeeId)
         .then((followee) => {
-          followee.addFollower(follower);
+          return followee.addFollower(follower);
         });
     })
     .then((response) => {
