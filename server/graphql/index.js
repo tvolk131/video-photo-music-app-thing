@@ -3,7 +3,7 @@ const db = require('../../db');
 
 const UserType = new GraphQLObjectType({
   name: 'User',
-  fields: {
+  fields: () => ({
     id: {type: GraphQLInt},
     oAuthUserId: {type: GraphQLString},
     oAuthProvider: {type: GraphQLString},
@@ -14,8 +14,20 @@ const UserType = new GraphQLObjectType({
     name: {type: GraphQLString},
     handle: {type: GraphQLString},
     avatarUrl: {type: GraphQLString},
-    description: {type: GraphQLString}
-  }
+    description: {type: GraphQLString},
+    followers: {
+      type: new GraphQLList(UserType),
+      resolve(parentValue, args) {
+        return db.User.getFollowers(parentValue.id);
+      }
+    },
+    follows: {
+      type: new GraphQLList(UserType),
+      resolve(parentValue, args) {
+        return db.User.getFollows(parentValue.id);
+      }
+    }
+  })
 });
 
 const ProjectType = new GraphQLObjectType({
@@ -193,6 +205,30 @@ const mutation = new GraphQLObjectType({
           return Promise.reject('You are not logged in');
         }
         return db.User.update(request.user.id, args);
+      }
+    },
+    followUser: {
+      type: UserType,
+      args: {
+        userId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {userId}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot follow a user when you are not logged in');
+        }
+        return db.User.follow(request.user.id, userId);
+      }
+    },
+    unfollowUser: {
+      type: UserType,
+      args: {
+        userId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {userId}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot follow a user when you are not logged in');
+        }
+        return db.User.unfollow(request.user.id, userId);
       }
     },
     createProject: {
