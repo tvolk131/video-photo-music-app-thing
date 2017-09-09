@@ -159,9 +159,15 @@ const RootQuery = new GraphQLObjectType({
         email: {type: GraphQLString},
         username: {type: GraphQLString}
       },
-      resolve(parentValue, args) {
-        if (Object.keys(args).length !== 1) {
-          return Promise.reject('Needs one argument but got ' + Object.keys(args).length);
+      resolve(parentValue, args, request) {
+        if (Object.keys(args).length > 1) {
+          return Promise.reject('Needs zero or one arguments but got ' + Object.keys(args).length);
+        }
+        if (Object.keys(args).length === 0) {
+          if (!request.user) {
+            return Promise.reject('You are not logged in');
+          }
+          return db.User.getById(request.user.id);
         }
         if (args.id) {
           return db.User.getById(args.id);
