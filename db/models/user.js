@@ -7,7 +7,7 @@ const generateHash = (password) => {
   return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
 };
 const generateUsername = (username) => {
-  return username.split('@')[0] + '_' + Math.floor(Math.random() * 100000000);
+  return ((username ? username.split('@')[0] + '_' : '') + Math.floor(Math.random() * 100000000)).toString();
 };
 
 const UserModel = db.define('users', {
@@ -85,7 +85,7 @@ User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, han
     oAuthUserId,
     oAuthProvider,
     email,
-    username: username ? username : generateUsername((email ? email : oAuthUserId).toString()),
+    username: username || generateUsername((email || oAuthUserId.toString())),
     password,
     theme: defaultTheme,
     name,
