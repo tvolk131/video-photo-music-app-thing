@@ -1,6 +1,9 @@
 const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLSchema, GraphQLList, GraphQLNonNull} = require('graphql');
 const db = require('../../db');
 
+// TODO - Implement finding projects by tag
+// TODO - Implement finding projects by user
+
 const UserType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
