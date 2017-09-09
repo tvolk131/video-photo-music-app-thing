@@ -114,6 +114,160 @@ describe('User Model', () => {
     });
   });
 
+  describe('follow()', () => {
+    let userOne;
+    let userTwo;
+    beforeEach(() => {
+      return User.create({
+        username: 'test',
+        password: 'test'
+      })
+        .then((user) => {
+          userOne = user;
+          return User.create({
+            username: 'test2',
+            password: 'test2'
+          })
+        })
+        .then((user) => {
+          userTwo = user;
+        });
+    });
+    it('Should be able to follow users', () => {
+      return expect(User.follow(userOne.id, userTwo.id)).to.eventually.equal(true);
+    });
+    it('Should reject when following a user that does not exist', () => {
+      return expect(User.follow(userOne.id, 1234)).to.be.rejectedWith('User does not exist');
+    });
+    it('Should reject when following as a user that does not exist', () => {
+      return expect(User.follow(1234, userTwo.id)).to.be.rejectedWith('User does not exist');
+    });
+    it('Should reject when following yourself', () => {
+      return expect(User.follow(userTwo.id, userTwo.id)).to.be.rejectedWith('Cannot follow yourself');
+    });
+  });
+
+  describe('unfollow()', () => {
+    let userOne;
+    let userTwo;
+    beforeEach(() => {
+      return User.create({
+        username: 'test',
+        password: 'test'
+      })
+        .then((user) => {
+          userOne = user;
+          return User.create({
+            username: 'test2',
+            password: 'test2'
+          })
+        })
+        .then((user) => {
+          userTwo = user;
+        });
+    });
+    it('Should successfully unfollow a valid user', () => {
+      return User.follow(userOne.id, userTwo.id)
+        .then(() => {
+          return expect(User.unfollow(userOne.id, userTwo.id)).to.eventually.equal(true);
+        });
+    });
+    it('Should reject when unfollower does not exist', () => {
+      return expect(User.unfollow(1234, userTwo.id)).to.be.rejectedWith('User does not exist');
+    });
+    it('Should reject when unfollowee does not exist', () => {
+      return expect(User.unfollow(userOne.id, 1234)).to.be.rejectedWith('User does not exist');
+    });
+  });
+
+  describe('getFollowers()', () => {
+    let userOne;
+    let userTwo;
+    beforeEach(() => {
+      return User.create({
+        username: 'test',
+        password: 'test'
+      })
+        .then((user) => {
+          userOne = user;
+          return User.create({
+            username: 'test2',
+            password: 'test2'
+          })
+        })
+        .then((user) => {
+          userTwo = user;
+        })
+        .then(() => {
+          return User.follow(userOne.id, userTwo.id);
+        });
+    });
+    it('Should return empty array for user with no followers', () => {
+      return expect(User.getFollowers(userOne.id)).to.eventually.eql([]);
+    });
+    it('Should return array of users when the user has followers', () => {
+      return User.getFollowers(userTwo.id)
+        .then((followers) => {
+          expect(followers.length).to.equal(1);
+          expect(followers[0].id).to.equal(userOne.id);
+        });
+    });
+    it('Returned followers should not contain password hashes', () => {
+      return User.getFollowers(userTwo.id)
+        .then((followers) => {
+          expect(followers.length).to.equal(1);
+          expect(followers[0].password).to.not.exist;
+        });
+    });
+    it('Should reject if user does not exist', () => {
+      return expect(User.getFollowers(1234)).to.be.rejectedWith('User does not exist');
+    });
+  });
+
+  describe('getFollows()', () => {
+    let userOne;
+    let userTwo;
+    beforeEach(() => {
+      return User.create({
+        username: 'test',
+        password: 'test'
+      })
+        .then((user) => {
+          userOne = user;
+          return User.create({
+            username: 'test2',
+            password: 'test2'
+          })
+        })
+        .then((user) => {
+          userTwo = user;
+        })
+        .then(() => {
+          return User.follow(userOne.id, userTwo.id);
+        });
+    });
+    it('Should return empty array for user that does not follow anyone', () => {
+      return expect(User.getFollows(userTwo.id)).to.eventually.eql([]);
+    });
+    it('Should return array of users when the user is following people', () => {
+      return User.getFollows(userOne.id)
+        .then((follows) => {
+          expect(follows.length).to.equal(1);
+          expect(follows[0].id).to.equal(userTwo.id);
+        });
+    });
+    it('Returned follows should not contain password hashes', () => {
+      return User.getFollows(userOne.id)
+        .then((follows) => {
+          expect(follows.length).to.equal(1);
+          expect(follows[0].password).to.not.exist;
+        });
+    });
+    it('Should reject if user does not exist', () => {
+      return expect(User.getFollows(1234)).to.be.rejectedWith('User does not exist');
+    });
+  });
+
   describe('getByEmail()', () => {
     it('Should get user by ID if the user exists', () => {
       return User.create({
