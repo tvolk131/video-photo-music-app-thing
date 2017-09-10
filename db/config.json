@@ -1,7 +1,7 @@
 {
   "development": {
-      "username": "root",
-      "password": null,
+      "username": "student",
+      "password": "student",
       "database": "thesis",
       "host": "localhost",
       "dialect": "mysql",
