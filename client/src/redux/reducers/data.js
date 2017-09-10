@@ -33,7 +33,7 @@ const initialState = {
       tagline: 'This is the tagline.',
       featuredComponent: {
         name: 'Tears of Steel',
-        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k-1920.mp4',
+        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k.mp4',
         description: 'Tears of Steel was part of blender\'s 2012 open movie project. It\'s purpose was to show how powerful the free 3D rendering program truly was.',
         type: 'video',
         isDownloadable: false,
@@ -164,6 +164,18 @@ const initialState = {
         }
       },
       {
+        name: 'Robo Arm concept',
+        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/Robo+Arm+4.jpg',
+        description: null,
+        type: 'photo',
+        isDownloadable: false,
+        author: {  
+          name: 'Some guy',
+          avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
+          jobTitle: 'Web Developer'
+        }
+      },
+      {
         name: 'Robo Arm Final',
         resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/Robo+Arm+3.jpg',
         description: null,
@@ -176,50 +188,38 @@ const initialState = {
         }
       },
       {
-        name: 'Tears of Steel',
-        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k-1920.mp4',
-        description: 'Tears of Steel was part of blender\'s 2012 open movie project. It\'s purpose was to show how powerful the free 3D rendering program truly was.',
+        name: 'Big Buck Bunny',
+        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/bbb_sunflower_1080p_60fps_normal.mp4',
+        description: 'Big Buck Bunny is one of blender\'s older open projects.',
         type: 'video',
         isDownloadable: false,
         author: {  
-          name: 'Ian Hubert',
-          avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/Ian_bw.jpg',
+          name: 'John Doe',
+          avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
           jobTitle: 'Visual Effects Artist'
         }
       },
       {
-        name: 'Tears of Steel',
-        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k-1920.mp4',
-        description: 'Tears of Steel was part of blender\'s 2012 open movie project. It\'s purpose was to show how powerful the free 3D rendering program truly was.',
+        name: 'Elephant Dream',
+        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ed_hd_512kb.mp4',
+        description: 'Elephant Dream is the first blender open project released.',
         type: 'video',
         isDownloadable: false,
         author: {  
-          name: 'Ian Hubert',
-          avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/Ian_bw.jpg',
+          name: 'John Doe',
+          avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
           jobTitle: 'Visual Effects Artist'
         }
       },
       {
-        name: 'Tears of Steel',
-        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k-1920.mp4',
-        description: 'Tears of Steel was part of blender\'s 2012 open movie project. It\'s purpose was to show how powerful the free 3D rendering program truly was.',
+        name: 'Sintel',
+        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/sintel-2048-surround.mp4',
+        description: 'Sintel is more recent than Big Buck Bunny but older than Tears of Steal.',
         type: 'video',
         isDownloadable: false,
         author: {  
-          name: 'Ian Hubert',
-          avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/Ian_bw.jpg',
-          jobTitle: 'Visual Effects Artist'
-        }
-      },
-      {
-        name: 'Tears of Steel',
-        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k-1920.mp4',
-        description: 'Tears of Steel was part of blender\'s 2012 open movie project. It\'s purpose was to show how powerful the free 3D rendering program truly was.',
-        type: 'video',
-        isDownloadable: false,
-        author: {  
-          name: 'Ian Hubert',
-          avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/Ian_bw.jpg',
+          name: 'John Doe',
+          avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
           jobTitle: 'Visual Effects Artist'
         }
       }]

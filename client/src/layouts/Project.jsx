@@ -26,6 +26,20 @@ class Project extends Component {
         let currentType = componentArray[i].type;
         if (lastType === currentType) {
           count++;
+          if (count === 3 && currentType === 'photo') {
+            console.log('3 pics');
+            for (var j = 0; j < 3; j++) {
+              groups.push(count);
+            }
+            count = 0;
+          }
+          if (count === 2 && currentType === 'video') {
+            console.log('2 vids');
+            for (var j = 0; j < 2; j++) {
+              groups.push(count);
+            }
+            count = 0;
+          }
           if (i === componentArray.length - 1) {
             for (var j = 0; j < count; j++) {
               groups.push(count);
@@ -45,6 +59,7 @@ class Project extends Component {
     
     const generateFeaturedComponent = (component) => {
       if (component.type === 'video') {
+        console.log(component.resourceUrl)
         return (
           <VideoComponent component={component} />
         );
