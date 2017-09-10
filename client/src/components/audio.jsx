@@ -7,9 +7,8 @@ export default class AudioPlayer extends React.Component {
     // instantiate video.js
     this.player = videojs(this.videoNode, this.props, function onPlayerReady() {
       console.log('onPlayerReady', this);
-      console.log('dimensions', this.currentDimensions());
-      console.log(this.aspectRatio());
-      console.log('dimensions', this.currentDimensions());
+      // this.bigPlayButton.hide();
+      this.controlBar.fullscreenToggle.hide();
     });
   }
 

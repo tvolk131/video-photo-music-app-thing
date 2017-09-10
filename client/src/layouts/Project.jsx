@@ -16,6 +16,32 @@ import TextComponent from '../components/TextComponent.jsx';
 class Project extends Component {
   render() {
     const { currentProject } = this.props;
+
+    const groupingPreCheck = (componentArray) => {
+      let lastType = componentArray[0].type;
+      let groups = [];
+      let count = 1;
+
+      for (var i = 1; i < componentArray.length; i++) {
+        let currentType = componentArray[i].type;
+        if (lastType === currentType) {
+          count++;
+          if (i === componentArray.length - 1) {
+            for (var j = 0; j < count; j++) {
+              groups.push(count);
+            }
+          }
+        } else {
+          for (var j = 0; j < count; j++) {
+            groups.push(count);
+          }
+          count = 1;
+        }
+        lastType = currentType;
+      }
+      console.log(groups);
+      return groups;
+    };
     
     const generateFeaturedComponent = (component) => {
       if (component.type === 'video') {
@@ -36,6 +62,8 @@ class Project extends Component {
         );
       }
     };
+
+    let groups = groupingPreCheck(currentProject.project.projectComponents);
 
     return (
       <div>
@@ -76,14 +104,14 @@ class Project extends Component {
               width: '100%'
             }}>
               {currentProject.project.projectComponents.map((component, key) => {
-                var key = key++ || 0;
+
                 if (component.type === 'video') {
                   return (
-                    <VideoComponent key={key} component={component} />
+                    <VideoComponent key={key} component={component} group={groups[key]}/>
                   );
                 } if (component.type === 'photo') {
                   return (
-                    <PhotoComponent key={key} component={component} />
+                    <PhotoComponent key={key} component={component} group={groups[key]} />
                   );
                 } if (component.type === 'audio') {
                   return (

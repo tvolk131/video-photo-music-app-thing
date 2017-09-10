@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import SearchResultsItem from '../components/SearchResultsItem.jsx';
+import ListingItem from '../components/ListingItem.jsx';
 
 const SearchResults = ({ searchResults }) => {
-  const searchResultsItems = searchResults.map((project) => {
+  const searchResultsItems = searchResults.map((project, key) => {
     return (
-      <SearchResultsItem project={project}/>
+      <ListingItem content={project} type='project' key={key} />
     );
   });
 
