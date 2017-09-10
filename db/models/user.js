@@ -86,7 +86,7 @@ User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, han
     oAuthProvider,
     email,
     username: username || generateUsername((email || oAuthUserId.toString())),
-    password,
+    password: password ? generateHash(password): undefined,
     theme: defaultTheme,
     name,
     handle,

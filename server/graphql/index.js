@@ -29,6 +29,19 @@ const UserType = new GraphQLObjectType({
       resolve(parentValue, args) {
         return db.User.getFollows(parentValue.id);
       }
+    },
+    projects: {
+      type: new GraphQLList(ProjectType),
+      resolve(parentValue, args) {
+        return db.Project.getByUser(parentValue.id);
+      }
+    },
+    project: {
+      type: ProjectType,
+      args: {name: {type: new GraphQLNonNull(GraphQLString)}},
+      resolve(parentValue, args) {
+        return db.Project.getByUserAndName(parentValue.id, args.name);
+      }
     }
   })
 });

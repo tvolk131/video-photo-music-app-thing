@@ -51,12 +51,9 @@ passport.use('local-signup', new LocalStrategy({
       });
     })
     .catch(() => {
-      let generateHash = (password) => {
-        return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
-      };
       let data = {
         username,
-        password: generateHash(password),
+        password,
         firstname: req.body.firstname,
         lastname: req.body.lastname
       };
