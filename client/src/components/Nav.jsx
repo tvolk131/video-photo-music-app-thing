@@ -23,11 +23,10 @@ import {
 
 import { toggleNavDrawer } from '../redux/actions/controlActions';
 
-
 class Nav extends Component {
 
   render() {
-    const { navDrawerOpen, toggleNavDrawer } = this.props;
+    const { navDrawerOpen, toggleNavDrawer, currentUser } = this.props;
     const navItemStyle = {textDecoration: 'none'};
     
     return (
@@ -87,7 +86,7 @@ class Nav extends Component {
               </NavLink>
 
               <NavLink
-                to='/profile'
+                to={`/user/${currentUser.username}`}
                 onClick={toggleNavDrawer}
                 style={navItemStyle}
               >
@@ -159,7 +158,12 @@ class Nav extends Component {
   }
 }
 
-const mapStateToProps = state => state.control;
+const mapStateToProps = state => {
+  return {
+    currentUser: state.session.currentUser,
+    navDrawerOpen: state.control.navDrawerOpen
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
