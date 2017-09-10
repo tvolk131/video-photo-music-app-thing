@@ -7,7 +7,8 @@
     "start-client": "react-scripts start",
     "test": "grunt test",
     "test-client": "jest",
-    "build": "webpack --watch"
+    "build": "webpack --watch",
+    "inject-mock-data": "node db/mock"
   },
   "author": "Hack Reactor",
   "license": "MIT",
