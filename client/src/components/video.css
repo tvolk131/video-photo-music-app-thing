@@ -1426,3 +1426,11 @@ video::-webkit-media-text-track-display {
     visibility: hidden;
   }
 }
+
+.audio.vjs-fullscreen-control { 
+    display: none; 
+} 
+
+.audio.vjs-default-skin .vjs-volume-control { 
+    margin-right: 20px; 
+}

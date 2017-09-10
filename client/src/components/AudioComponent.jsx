@@ -15,7 +15,6 @@ import AudioPlayer from './audio.jsx';
 // import videojsWavesurfer from 'videojs-wavesurfer';
 
 const AudioComponent = ({component}) => {
-
   return (
     <Grid item xs={12}>
       <Paper elevation={4}>
