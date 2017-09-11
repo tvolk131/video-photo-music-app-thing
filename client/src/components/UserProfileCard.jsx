@@ -33,7 +33,7 @@ class UserProfileCard extends Component {
         <Paper>
           <img src='https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg' style={{width: '100%'}}/>
           <div style={{textAlign: 'left', padding: 10}}>
-            <h3>{username}</h3>
+            <h3>{name}</h3>
             <Typography>{username}</Typography>
             <Typography>Bio:</Typography>
             <Typography>{description}</Typography>
