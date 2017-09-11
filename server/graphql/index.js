@@ -1,8 +1,15 @@
 const {GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLSchema, GraphQLList, GraphQLNonNull} = require('graphql');
 const db = require('../../db');
 
+clearUndefinedVals = (obj) => {
+  Object.keys(obj).forEach((key) => {
+    if (obj[key] === undefined) {
+      delete obj[key];
+    }
+  });
+};
+
 // TODO - Implement finding projects by tag
-// TODO - Implement finding projects by user
 
 const UserType = new GraphQLObjectType({
   name: 'User',
@@ -239,6 +246,7 @@ const mutation = new GraphQLObjectType({
         if (!request.user) {
           return Promise.reject('You are not logged in');
         }
+        clearUndefinedVals(args);
         return db.User.update(request.user.id, args);
       }
     },
@@ -292,7 +300,9 @@ const mutation = new GraphQLObjectType({
         if (!request.user) {
           return Promise.reject('Cannot edit a project when you are not logged in');
         }
-        return db.Project.update({userId: request.user.id, projectId: id, options: {name, description, tagline}});
+        let args = {name, description, tagline}
+        clearUndefinedVals(args);
+        return db.Project.update({userId: request.user.id, projectId: id, options: args});
       }
     },
     addProjectTag: {
@@ -372,7 +382,9 @@ const mutation = new GraphQLObjectType({
         if (!request.user) {
           return Promise.reject('Cannot edit a project component when you are not logged in');
         }
-        return db.ProjectComponent.update(request.user.id, id, {name, type, resourceUrl, description, isDownloadable});
+        let args = {name, type, resourceUrl, description, isDownloadable};
+        clearUndefinedVals(args);
+        return db.ProjectComponent.update(request.user.id, id, args);
       }
     },
     deleteProjectComponent: {
