@@ -4,7 +4,7 @@ import axios from 'axios';
 import reducer from './reducers';
 
 const client = axios.create({
-  baseURL: window.location.hostname,
+  baseURL: window.location.host,
   responseType: 'json'
 });
 
