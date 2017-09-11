@@ -12,11 +12,11 @@ import ShareIcon from 'material-ui-icons/Share';
 import CommentIcon from 'material-ui-icons/Comment';
 
 
-const TextComponent = ({component}) => {
+const TextComponent = ({component, elevation}) => {
 
   return (
     <Grid item xs={12}>
-      <Paper elevation={4}>
+      <Paper elevation={elevation}>
         <Grid container justify="space-between" align="center">
           <Grid item>
             <CardHeader

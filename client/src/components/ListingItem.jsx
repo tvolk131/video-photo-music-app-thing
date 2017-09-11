@@ -50,7 +50,7 @@ const ListingItem = ({ content, id}) => {
       return (<TextFieldsIcon style={large} />);
     } else if (type === 'audio') {
       return (<AudiotrackIcon style={large} />);
-    } else if (type === 'photo') {
+    } else if (type === 'image') {
       return (<ImageIcon style={large} />);
     } else if (type === 'video') {
       return (<TheatersIcon style={large} />);
@@ -58,12 +58,12 @@ const ListingItem = ({ content, id}) => {
   };
 
   const randomCount = () => {
-    return Math.floor(Math.random() * 1000)
+    return Math.floor(Math.random() * 1000);
   };
 
   const incrementCount = () => {
     count = count++;
-  }
+  };
 
   const getButtons = (type) => {
     if (type === 'project' || type === 'component') {
@@ -109,11 +109,11 @@ const ListingItem = ({ content, id}) => {
         </Grid>
       );
     }
-  }
+  };
 
   if (content.contentType === 'component') {
     title = content.name;
-    relation = 'Author: '
+    relation = 'Author: ';
     person = content.author.name;
     avatar = (<Avatar src={content.author.avatarUrl} style={smallIcon} />);
     image = setIcon(content.type, content);
@@ -128,7 +128,7 @@ const ListingItem = ({ content, id}) => {
     buttons = getButtons(content.contentType);
   } else {
     title = content.name;
-    relation = 'Owner: '
+    relation = 'Owner: ';
     person = content.owner.name;
     avatar = (<Avatar src={content.owner.avatarUrl} style={smallIcon} />);
     image = setIcon(content.featuredComponent.type, content);
@@ -141,7 +141,7 @@ const ListingItem = ({ content, id}) => {
       <Grid item sm />
       <Grid item style={{paddingBottom: 0}} xs={12} sm={10} md={8}>
         <Route render={({history}) => (
-          <ListItem button onClick={() => { history.push('/project/'+content.owner.username+'/'+content.name.split(' ').join('_'))}} style={{width: '100%', padding: 0}}> 
+          <ListItem button onClick={() => { history.push('/project/' + content.owner.username + '/' + content.name.split(' ').join('_')); }} style={{width: '100%', padding: 0}}> 
             <Grid container>
               <Grid item xs={3} style={{marginTop: 'auto', marginBottom: 'auto', align: 'right'}}>
                 {image}
