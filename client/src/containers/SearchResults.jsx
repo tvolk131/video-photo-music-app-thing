@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import ListingItem from '../components/ListingItem.jsx';
 
 const SearchResults = ({ searchResults }) => {
-  const searchResultsItems = searchResults.map((project, key) => {
+  const searchResultsItems = searchResults.map((content, key) => {
     return (
-      <ListingItem content={project} type='project' key={key} />
+      <ListingItem content={content} key={key} />
     );
   });
 
