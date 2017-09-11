@@ -11,8 +11,8 @@ const Upload = () => {
   const dropzoneStyles = {
     margin: 15, 
     border: 'dashed', 
-    'border-color': 'grey', 
-    'border-radius': 10, 
+    borderColor: 'grey', 
+    borderRadius: 10, 
     width: '100%', 
     height: 200
   };
@@ -35,6 +35,7 @@ const Upload = () => {
     'audio/ogg',
     'audio/webm'
   ];
+
   dropzoneFileTypes = dropzoneFileTypes.join(',');
 
   const handleFinishedUpload = info => {
@@ -53,8 +54,7 @@ const Upload = () => {
       <Grid item xs={12} sm={10} md={8}>
         <Card style={{display: 'flex'}}>
           <DropzoneS3Uploader style={dropzoneStyles} accept={dropzoneFileTypes} onFinish={handleFinishedUpload} s3Url={s3Url} upload={uploadOptions}>
-            <AddIcon style={{width: 60, height: 60, 'margin-top': 50}}/>
-            <div>Drag files from desktop or click to upload.</div>
+          
           </DropzoneS3Uploader>
         </Card>
       </Grid>
