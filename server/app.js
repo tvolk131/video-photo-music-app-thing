@@ -6,6 +6,8 @@ const routes = require('./routes');
 const graphQLSchema = require('./graphql');
 const expressGraphQL = require('express-graphql');
 
+require('dotenv').config();
+
 const app = express();
 
 app.use(middleware.morgan('dev'));
@@ -19,6 +21,12 @@ app.use(middleware.passport.session());
 
 app.use('/', routes.auth);
 app.use('/api', routes.api);
+
+//temporary location for s3 upload route, refactor soon
+app.use('/s3', require('react-dropzone-s3-uploader/s3router')({
+  bucket: 'qraft-uploads',
+  ACL: 'public-read'
+}));
 
 app.use('/graphql', expressGraphQL((request, response, graphQLParams) => ({schema: graphQLSchema, graphiql: true})));
 

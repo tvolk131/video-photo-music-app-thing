@@ -13,6 +13,7 @@ import CommentIcon from 'material-ui-icons/Comment';
 
 const PhotoComponent = ({component, group}) => {
   let size = 12;
+  let headerSize = 0;
   let set = 1;
   let cover = {
     'object-fit': 'cover',
@@ -21,6 +22,7 @@ const PhotoComponent = ({component, group}) => {
   
   if (group === 2) {
     size = 6;
+    headerSize = 12;
     set = 2;
     cover = {
       'object-fit': 'cover',
@@ -29,6 +31,7 @@ const PhotoComponent = ({component, group}) => {
     };
   } else if (group > 2) {
     size = 4;
+    headerSize = 12;
     set = 3;
     cover = {
       'object-fit': 'cover',
@@ -39,21 +42,21 @@ const PhotoComponent = ({component, group}) => {
   }
 
   return (
-    <Grid item xs={12} sm={size}>
+    <Grid item xs={12} md={size}>
       <Paper elevation={4}>
         <img src={component.resourceUrl} width="100%" style={cover}/>
         <Grid container justify="space-between" align="center">
-          <Grid item>
+          <Grid item xs={headerSize}>
             <CardHeader
               avatar={
                 <Avatar src={component.author.avatarUrl} style={{width: 50, height: 50}} />
               }
               title={component.name}
               subheader={component.author.name}
-              style={{textAlign: 'left', paddingBottom: 12}}
+              style={{textAlign: 'left', paddingBottom: 12, 'max-width': '100%'}}
             />
           </Grid>
-          <Grid item>
+          <Grid item xs={headerSize}>
             <IconButton aria-label="Add to favorites">
               <FavoriteIcon />
             </IconButton>
