@@ -67,8 +67,9 @@ const ProjectType = new GraphQLObjectType({
     },
     components: {
       type: new GraphQLList(ProjectComponentType),
+      args: {includeFeatured: {type: GraphQLBoolean}},
       resolve(parentValue, args) {
-        return db.ProjectComponent.getByProject(parentValue.id);
+        return db.ProjectComponent.getByProject(parentValue.id, args.includeFeatured === undefined ? false : args.includeFeatured);
       }
     },
     featuredComponent: {

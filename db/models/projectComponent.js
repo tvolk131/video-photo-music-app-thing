@@ -175,11 +175,15 @@ ProjectComponent.getFeatured = (projectId) => {
     });
 };
 
-ProjectComponent.getByProject = (projectId) => {
+ProjectComponent.getByProject = (projectId, includeFeatured = true) => {
   return Project.getById(projectId)
     .then(() => {
+      let query = {projectId};
+      if (!includeFeatured) {
+        query.isFeatured = false;
+      }
       return ProjectComponent.model.findAll({
-        where: {projectId}
+        where: query
       });
     });
 };

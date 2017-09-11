@@ -284,10 +284,30 @@ describe('Project Component Model', () => {
           expect(components).to.be.a('array');
           expect(components.length).to.equal(1);
           expect(components[0].name).to.equal('test component');
-          return ProjectComponent.getByProject(project.id);
         });
     });
-    it('Should reject if userId does not map to an existing project', () => {
+    it('Should include featured components by default', () => {
+      return ProjectComponent.setAsFeatured({userId: userOne.id, componentId: component.id})
+        .then(() => {
+          return ProjectComponent.getByProject(project.id);
+        })
+        .then((components) => {
+          expect(components).to.be.a('array');
+          expect(components.length).to.equal(1);
+          expect(components[0].name).to.equal('test component');
+        });
+    });
+    it('Should exclude featured components if specified', () => {
+      return ProjectComponent.setAsFeatured({userId: userOne.id, componentId: component.id})
+        .then(() => {
+          return ProjectComponent.getByProject(project.id, false);
+        })
+        .then((components) => {
+          expect(components).to.be.a('array');
+          expect(components.length).to.equal(0);
+        });
+    });
+    it('Should reject if projectId does not map to an existing project', () => {
       return expect(ProjectComponent.getByProject(1234)).to.be.rejectedWith('Project does not exist');
     });
   });
