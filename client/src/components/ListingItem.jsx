@@ -9,6 +9,7 @@ import ImageIcon from 'material-ui-icons/Image';
 import AudiotrackIcon from 'material-ui-icons/Audiotrack';
 import TextFieldsIcon from 'material-ui-icons/TextFields';
 import Avatar from 'material-ui/Avatar';
+import List, { ListItem, ListItemText, ListItemAvatar } from 'material-ui/List';
 
 
 const ListingItem = ({ content, type }) => {
@@ -34,11 +35,7 @@ const ListingItem = ({ content, type }) => {
     }
   };
 
-  if (content.contentType === 'project') {
-    title = content.name;
-    person = 'Owner: ' + content.owner.name;
-    image = setIcon(content.featuredComponent.type, content);
-  } else if (content.contentType === 'component') {
+  if (content.contentType === 'component') {
     title = content.name;
     person = 'Author: ' + content.author.name;
     image = setIcon(content.type, content);
@@ -46,6 +43,10 @@ const ListingItem = ({ content, type }) => {
     title = content.name;
     person = content.jobTitle;
     image = (<Avatar src={content.avatarUrl} style={{width: 100, height: 100, margin: 10}} />);
+  } else {
+    title = content.name;
+    person = 'Owner: ' + content.owner.name;
+    image = setIcon(content.featuredComponent.type, content);
   }
 
   return (
@@ -53,18 +54,20 @@ const ListingItem = ({ content, type }) => {
       <Grid item sm />
       <Grid item xs={12} sm={10} md={8}>
         <Card style={{display: 'flex'}}>
-          {image}
-          <CardContent>
-            <Typography style={{textAlign: 'left'}}>
-              <h2>{title}</h2>
-              <h3>{person}</h3>
-            </Typography>
-          </CardContent>
-          <CardContent>
-            <Icon>
-              
-            </Icon>
-          </CardContent>
+          <ListItem button style={{width: '100%'}}> 
+            {image}
+            <CardContent>
+              <Typography style={{textAlign: 'left'}}>
+                <h2>{title}</h2>
+                <h3>{person}</h3>
+              </Typography>
+            </CardContent>
+            <CardContent>
+              <Icon>
+                
+              </Icon>
+            </CardContent>
+          </ListItem>
         </Card>
       </Grid>
       <Grid item sm></Grid>
