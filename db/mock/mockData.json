@@ -1,0 +1,84 @@
+{
+  "users": [
+    {
+      "username": "BrettKirk23",
+      "name": "Brett Kirk",
+      "password": "password"
+    },
+    {
+      "username": "tvolk131",
+      "name": "Tommy Volk",
+      "password": "password"
+    },
+    {
+      "username": "spoonlanding",
+      "name": "Spencer Mitchell",
+      "password": "password"
+    },
+    {
+      "username": "Fredx",
+      "name": "Fred Zirdung",
+      "password": "password"
+    }
+  ],
+  "projects": [
+    {
+      "ownerId": 4,
+      "name": "Fred's Awesome Project!",
+      "description": "A really awesome project made by me, Fred Zirdung!"
+    }
+  ],
+  "projectContributors": [
+    {
+      "ownerId": 4,
+      "contributorId": 1,
+      "projectId": 1
+    }
+  ],
+  "projectComponents": [
+    {
+      "userId": 4,
+      "projectId": 1,
+      "type": "image",
+      "name": "Awesome Image",
+      "resourceUrl": "FILL_ME_IN",
+      "description": "This is a rlly cool pic",
+      "isDownloadable": true
+    },
+    {
+      "userId": 1,
+      "projectId": 1,
+      "type": "image",
+      "name": "Another Epic Image",
+      "resourceUrl": "FILL_ME_IN",
+      "description": "Hi this is Brett! I took dank picture too, but you can't download it",
+      "isDownloadable": false
+    }
+  ],
+  "projectComments": [
+    {
+      "userId": 2,
+      "projectId": 1,
+      "text": "dang man this is fly!"
+    },
+    {
+      "userId": 4,
+      "projectId": 1,
+      "text": "thanks, cuh"
+    }
+  ],
+  "projectComponentComments": [
+    {
+      "userId": 2,
+      "projectComponentId": 1,
+      "text": "I like Brett's picture better"
+    },
+    {
+      "userId": 4,
+      "projectComponentId": 1,
+      "text": "Wow, fine!"
+    }
+  ],
+  "projectLikes": [],
+  "projectComponentLikes": []
+}

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { gql, graphql } from 'react-apollo';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
 import Card, { CardContent, CardMedia } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import Hidden from 'material-ui/Hidden';
+import { CircularProgress } from 'material-ui/Progress';
 
 import ProjectContributors from '../components/ProjectContributors.jsx';
 import VideoComponent from '../components/VideoComponent.jsx';
@@ -15,7 +17,21 @@ import TextComponent from '../components/TextComponent.jsx';
 
 class Project extends Component {
   render() {
-    const { currentProject } = this.props;
+    console.log(this.props);
+
+    if (this.props.data.loading) {
+      return (
+        <Paper style={{padding: 25}}>
+          <CircularProgress/>
+        </Paper>
+      );
+    }
+
+    const {
+      components,
+      owner,
+      contributors
+    } = this.props.data.user.project;
 
     const groupingPreCheck = (componentArray) => {
       let lastType = componentArray[0].type;
@@ -27,14 +43,12 @@ class Project extends Component {
         if (lastType === currentType) {
           count++;
           if (count === 3 && currentType === 'photo') {
-            console.log('3 pics');
             for (var j = 0; j < 3; j++) {
               groups.push(count);
             }
             count = 0;
           }
           if (count === 2 && currentType === 'video') {
-            console.log('2 vids');
             for (var j = 0; j < 2; j++) {
               groups.push(count);
             }
@@ -53,13 +67,11 @@ class Project extends Component {
         }
         lastType = currentType;
       }
-      console.log(groups);
       return groups;
     };
-    
+    // TODO: refactor to accept all components and iterate to find featured
     const generateFeaturedComponent = (component) => {
       if (component.type === 'video') {
-        console.log(component.resourceUrl);
         return (
           <VideoComponent component={component} />
         );
@@ -78,7 +90,7 @@ class Project extends Component {
       }
     };
 
-    let groups = groupingPreCheck(currentProject.project.projectComponents);
+    let groups = groupingPreCheck(components);
 
     return (
       <div>
@@ -92,14 +104,17 @@ class Project extends Component {
             <Grid item sm lg/>
           </Hidden>
           <Grid item xs={12} sm={12} md={8} lg={6}>
-            {generateFeaturedComponent(currentProject.project.featuredComponent)}
+            {
+              // TODO: refactor
+              generateFeaturedComponent(components[0])
+            }
             <Divider style={{}}/>
           </Grid>
           
           <Grid item xs={12} sm={12} md={4} lg={3}>
             <ProjectContributors
-              owner={currentProject.owner}
-              contributors={currentProject.contributors}
+              owner={owner}
+              contributors={contributors}
             />
           </Grid>
           <Hidden only={['md']}>
@@ -118,7 +133,7 @@ class Project extends Component {
               margin: 0,
               width: '100%'
             }}>
-              {currentProject.project.projectComponents.map((component, key) => {
+              {components.map((component, key) => {
 
                 if (component.type === 'video') {
                   return (
@@ -148,6 +163,43 @@ class Project extends Component {
   }
 }
 
-const mapStateToProps = state => state.data;
+const projectQuery = gql`
+  query projectQuery($projectName: String! $username: String!) {
+    user(username: $username) {
+      project(name: $projectName) {
+        name
+        description
+        tagline
+        contributors {
+          name
+          avatarUrl
+        }
+        owner {
+          name
+          username
+          avatarUrl
+        }
+        components {
+          name
+          resourceUrl
+          description
+          type
+          author {
+            name
+            username
+            avatarUrl
+          }
+        }
+      }
+    }
+  }
+`;
 
-export default connect(mapStateToProps)(Project);
+export default graphql(projectQuery, {
+  options: ({ match }) => {
+    return {variables: {
+      projectName: match.params.projectName.split('_').join(' '),
+      username: match.params.username
+    }
+    };
+  }})(Project);

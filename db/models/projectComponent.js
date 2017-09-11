@@ -40,6 +40,11 @@ const ProjectComponentModel = db.define('components', {
     type: Sequelize.BOOLEAN,
     notEmpty: true,
     allowNull: false
+  },
+  isFeatured: {
+    type: Sequelize.BOOLEAN,
+    notEmpty: true,
+    allowNull: false
   }
 });
 
@@ -72,7 +77,8 @@ ProjectComponent.create = ({userId, projectId, type, name, resourceUrl, descript
         resourceUrl,
         description,
         type,
-        isDownloadable: isDownloadable === true ? true : false
+        isDownloadable: isDownloadable === true ? true : false,
+        isFeatured: false
       });
     });
 };
@@ -124,11 +130,60 @@ ProjectComponent.delete = (userId, componentId) => {
     });
 };
 
-ProjectComponent.getByProject = (projectId) => {
+ProjectComponent.setAsFeatured = ({userId, componentId}) => {
+  return User.getById(userId)
+    .then(() => {
+      return ProjectComponent.getById(componentId);
+    })
+    .then((component) => {
+      return Project.getById(component.projectId)
+        .then((project) => {
+          if (project.ownerId !== userId) {
+            return Promise.reject('Cannot set featured component in a project you do not own');
+          }
+          return ProjectComponent.getByProject(component.projectId)
+            .then((componentList) => {
+              for (let i = 0; i < componentList.length; i++) {
+                if (componentList[i].isFeatured) {
+                  if (componentList[i].id === component.id) {
+                    return Promise.reject('Component is already featured');
+                  }
+                  return componentList[i].update({isFeatured: false});
+                }
+              }
+            });
+        })
+        .then(() => {
+          return component.update({isFeatured: true});
+        });
+    })
+    .then(() => {
+      return true;
+    });
+};
+
+// TODO - Somehow move this function into the project model
+ProjectComponent.getFeatured = (projectId) => {
   return Project.getById(projectId)
     .then(() => {
+      return ProjectComponent.model.findOne({
+        where: {projectId, isFeatured: true}
+      });
+    })
+    .then((featuredComponent) => {
+      return featuredComponent || Promise.reject('Project does not have a featured component');
+    });
+};
+
+ProjectComponent.getByProject = (projectId, includeFeatured = true) => {
+  return Project.getById(projectId)
+    .then(() => {
+      let query = {projectId};
+      if (!includeFeatured) {
+        query.isFeatured = false;
+      }
       return ProjectComponent.model.findAll({
-        where: {projectId}
+        where: query
       });
     });
 };

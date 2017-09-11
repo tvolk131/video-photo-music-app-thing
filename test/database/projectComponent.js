@@ -164,6 +164,105 @@ describe('Project Component Model', () => {
     });
   });
 
+  describe('setAsFeatured()', () => {
+    let component;
+    let componentTwo;
+    beforeEach(() => {
+      return ProjectComponent.create({
+        userId: userOne.id,
+        projectId: project.id,
+        name: 'test component',
+        type: 'image',
+        resourceUrl: 'google.com'
+      })
+        .then((projectComponent) => {
+          component = projectComponent;
+          return ProjectComponent.create({
+            userId: userOne.id,
+            projectId: project.id,
+            name: 'test component2',
+            type: 'image',
+            resourceUrl: 'google.com'
+          });
+        })
+        .then((projectComponent) => {
+          componentTwo = projectComponent;
+        });
+    });
+
+    it('Should succeed when all parameters are valid', () => {
+      return ProjectComponent.setAsFeatured({userId: userOne.id, componentId: component.id})
+        .then((response) => {
+          expect(response).to.equal(true);
+        });
+    });
+    it('Should reject if user does not exist', () => {
+      return expect(ProjectComponent.setAsFeatured({userId: 1234, componentId: component.id})).to.be.rejectedWith('User does not exist');
+    });
+    it('Should reject if component does not exist', () => {
+      return expect(ProjectComponent.setAsFeatured({userId: userOne.id, componentId: 1234})).to.be.rejectedWith('Component does not exist');
+    });
+    it('Should reject if user does not own the project that the component is a part of', () => {
+      return expect(ProjectComponent.setAsFeatured({userId: userTwo.id, componentId: component.id})).to.be.rejectedWith('Cannot set featured component in a project you do not own');
+    });
+    it('Should erase current featured component when setting a new one', () => {
+      return ProjectComponent.setAsFeatured({userId: userOne.id, componentId: component.id})
+        .then(() => {
+          return ProjectComponent.getFeatured(project.id);
+        })
+        .then((featuredComponent) => {
+          expect(featuredComponent.id).to.equal(component.id);
+          return ProjectComponent.setAsFeatured({userId: userOne.id, componentId: componentTwo.id})
+            .then(() => {
+              return ProjectComponent.getFeatured(project.id);
+            });
+        })
+        .then((featuredComponent) => {
+          expect(featuredComponent.id).to.equal(componentTwo.id);
+          return ProjectComponent.setAsFeatured({userId: userOne.id, componentId: component.id})
+            .then(() => {
+              return ProjectComponent.getFeatured(project.id);
+            });
+        })
+        .then((featuredComponent) => {
+          expect(featuredComponent.id).to.equal(component.id);
+        });
+    });
+    it('Should reject when setting a component as featured when it is already featured', () => {
+      return ProjectComponent.setAsFeatured({userId: userOne.id, componentId: component.id})
+        .then((featuredComponent) => {
+          return expect(ProjectComponent.setAsFeatured({userId: userOne.id, componentId: component.id})).to.be.rejectedWith('Component is already featured');
+        });
+    });
+  });
+
+  describe('getFeatured()', () => {
+    it('Should succeed when all parameters are valid', () => {
+      return ProjectComponent.create({
+        userId: userOne.id,
+        projectId: project.id,
+        name: 'test component',
+        type: 'image',
+        resourceUrl: 'google.com'
+      })
+        .then((component) => {
+          return ProjectComponent.setAsFeatured({userId: userOne.id, componentId: component.id})
+            .then(() => {
+              return ProjectComponent.getFeatured(project.id)
+            })
+            .then((featuredComponent) => {
+              expect(featuredComponent.id).to.equal(component.id);
+            });
+        });
+    });
+    it('Should reject if project does not exist', () => {
+      return expect(ProjectComponent.getFeatured(1234)).to.be.rejectedWith('Project does not exist');
+    });
+    it('Should reject if project does not have a featured component', () => {
+      return expect(ProjectComponent.getFeatured(project.id)).to.be.rejectedWith('Project does not have a featured component');
+    });
+  });
+
   describe('getByProject()', () => {
     let component;
     beforeEach(() => {
@@ -185,10 +284,30 @@ describe('Project Component Model', () => {
           expect(components).to.be.a('array');
           expect(components.length).to.equal(1);
           expect(components[0].name).to.equal('test component');
-          return ProjectComponent.getByProject(project.id);
         });
     });
-    it('Should reject if userId does not map to an existing project', () => {
+    it('Should include featured components by default', () => {
+      return ProjectComponent.setAsFeatured({userId: userOne.id, componentId: component.id})
+        .then(() => {
+          return ProjectComponent.getByProject(project.id);
+        })
+        .then((components) => {
+          expect(components).to.be.a('array');
+          expect(components.length).to.equal(1);
+          expect(components[0].name).to.equal('test component');
+        });
+    });
+    it('Should exclude featured components if specified', () => {
+      return ProjectComponent.setAsFeatured({userId: userOne.id, componentId: component.id})
+        .then(() => {
+          return ProjectComponent.getByProject(project.id, false);
+        })
+        .then((components) => {
+          expect(components).to.be.a('array');
+          expect(components.length).to.equal(0);
+        });
+    });
+    it('Should reject if projectId does not map to an existing project', () => {
       return expect(ProjectComponent.getByProject(1234)).to.be.rejectedWith('Project does not exist');
     });
   });
