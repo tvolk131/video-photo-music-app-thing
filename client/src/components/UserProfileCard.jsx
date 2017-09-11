@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { match } from 'react-router';
+import { gql, graphql } from 'react-apollo';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
@@ -8,7 +9,6 @@ import Card, { CardContent, CardMedia, CardTitle } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
 
-import { gql, graphql } from 'react-apollo';
 
 class UserProfileCard extends Component {
 
@@ -45,9 +45,8 @@ class UserProfileCard extends Component {
 }
 
 const userQuery = gql`
-  query userProjectsQuery($username: String!) {
+  query userQuery($username: String!) {
     user(username: $username) {
-      id
       name
       username
       description
