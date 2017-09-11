@@ -6,7 +6,6 @@ import Typography from 'material-ui/Typography';
 import DropzoneS3Uploader from 'react-dropzone-s3-uploader';
 import AddIcon from 'material-ui-icons/Add';
 
-
 const Upload = () => {
   const dropzoneStyles = {
     margin: 15, 
@@ -44,7 +43,7 @@ const Upload = () => {
   };
 
   const uploadOptions = {
-    server: 'http://localhost:3000'
+    server: 'http://' + window.location.host
   };
   const s3Url = 'https://qraft-uploads.s3.amazonaws.com';
 
