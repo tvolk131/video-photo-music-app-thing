@@ -28,7 +28,7 @@ app.use('/s3', require('react-dropzone-s3-uploader/s3router')({
   ACL: 'public-read'
 }));
 
-app.use('/graphql', expressGraphQL((request, response, graphQLParams) => ({schema: graphQLSchema, graphiql: true})));
+app.use('/graphql', expressGraphQL((request, response, graphQLParams) => ({schema: graphQLSchema, graphiql: !(process.env.NODE_ENV === 'production')})));
 
 // Serve static files
 app.get('*/bundle.js', (req, res) => {
