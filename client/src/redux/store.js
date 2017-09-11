@@ -4,13 +4,13 @@ import axios from 'axios';
 import reducer from './reducers';
 
 const client = axios.create({
-  baseURL:'http://localhost:3000/',
+  baseURL: window.location.hostname,
   responseType: 'json'
 });
 
 const store = createStore(
   reducer,
-  applyMiddleware(axiosMiddleware),
+  applyMiddleware(axiosMiddleware(client)),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
