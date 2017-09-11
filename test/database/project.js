@@ -112,7 +112,7 @@ describe('Project Model', () => {
           expect(project.ownerId).to.equal(localUser.id);
         });
     });
-    it('Should update a project with all-valid parameters as a contributor', () => {
+    it('Should reject when updating a project that you are a contributor to but not the owner of', () => {
       return Project.create({
         ownerId: localUser.id,
         name: 'test project'
@@ -120,20 +120,17 @@ describe('Project Model', () => {
         .then((project) => {
           return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
             .then(() => {
-              return Project.update({userId: oAuthUser.id, projectId: project.id, options: {name: 'updated project name'}});
+              return expect(Project.update({userId: oAuthUser.id, projectId: project.id, options: {name: 'updated project name'}})).to.be.rejectedWith('Must be owner to edit project');
             });
-        })
-        .then((project) => {
-          expect(project.name).to.equal('updated project name');
         });
     });
-    it('Should reject when updating a project that you are not the owner or contributor of', () => {
+    it('Should reject when updating a project that you are not the owner of', () => {
       return Project.create({
         ownerId: localUser.id,
         name: 'test project'
       })
         .then((project) => {
-          return expect(Project.update({userId: oAuthUser.id, projectId: project.id, options: {name: 'updated project name'}})).to.be.rejectedWith('Must be a contributor or owner to edit project');
+          return expect(Project.update({userId: oAuthUser.id, projectId: project.id, options: {name: 'updated project name'}})).to.be.rejectedWith('Must be owner to edit project');
         });
     });
     it('Should reject when attempting to change the ownership of a project that you are a contributor to', () => {

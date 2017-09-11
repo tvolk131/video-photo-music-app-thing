@@ -49,12 +49,7 @@ Project.update = ({userId, projectId, options}) => {
       if (options.ownerId && project.ownerId !== userId) {
         return Promise.reject('Only the project owner can set another user as the owner');
       }
-      return Project.getContributors(project.id)
-        .then((contributors) => {
-          let contributorIds = [];
-          contributors.forEach((contributor) => { contributorIds.push(contributor.id); });
-          return contributorIds.includes(userId) || userId === project.ownerId ? project.update(options) : Promise.reject('Must be a contributor or owner to edit project');
-        });
+      return userId === project.ownerId ? project.update(options) : Promise.reject('Must be owner to edit project');
     });
 };
 
