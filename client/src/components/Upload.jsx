@@ -7,8 +7,8 @@ import DropzoneS3Uploader from 'react-dropzone-s3-uploader';
 import AddIcon from 'material-ui-icons/Add';
 
 const Upload = () => {
-  const dropzoneStyles = {
-    margin: 15, 
+  const dropzoneStyles = { 
+    marginBottom: 30,
     border: 'dashed', 
     borderColor: 'grey', 
     borderRadius: 10, 
@@ -52,9 +52,14 @@ const Upload = () => {
       <Grid item sm />
       <Grid item xs={12} sm={10} md={8}>
         <Card style={{display: 'flex'}}>
-          <DropzoneS3Uploader style={dropzoneStyles} accept={dropzoneFileTypes} onFinish={handleFinishedUpload} s3Url={s3Url} upload={uploadOptions}>
-          
-          </DropzoneS3Uploader>
+          <Grid container spacing={0} justify="center">
+            <Grid item xs={12}>
+              <div style={{width: '100%', margin: 15}}>Drag files from desktop or click to upload.</div>
+            </Grid>
+            <Grid item xs={10}>
+              <DropzoneS3Uploader style={dropzoneStyles} accept={dropzoneFileTypes} onFinish={handleFinishedUpload} s3Url={s3Url} upload={uploadOptions} />
+            </Grid>
+          </Grid>
         </Card>
       </Grid>
       <Grid item sm></Grid>
