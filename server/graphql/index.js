@@ -71,6 +71,12 @@ const ProjectType = new GraphQLObjectType({
         return db.ProjectComponent.getByProject(parentValue.id);
       }
     },
+    featuredComponent: {
+      type: ProjectComponentType,
+      resolve(parentValue, args) {
+        return db.ProjectComponent.getFeatured(parentValue.id);
+      }
+    },
     comments: {
       type: new GraphQLList(CommentType),
       resolve(parentValue, args) {
@@ -378,6 +384,18 @@ const mutation = new GraphQLObjectType({
           return Promise.reject('Cannot delete a project component when you are not logged in');
         }
         return db.ProjectComponent.delete(request.user.id, id);
+      }
+    },
+    setFeaturedProjectComponent: {
+      type: GraphQLBoolean,
+      args: {
+        projectComponentId: {type: new GraphQLNonNull(GraphQLInt)}
+      },
+      resolve(parentValue, {projectComponentId}, request) {
+        if (!request.user) {
+          return Promise.reject('Cannot set featured component when you are not logged in');
+        }
+        return db.ProjectComponent.setAsFeatured({userId: request.user.id, componentId: projectComponentId});
       }
     },
     addProjectContributor: {
