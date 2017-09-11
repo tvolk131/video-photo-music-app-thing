@@ -26,7 +26,7 @@ class Project extends Component {
       );
     }
 
-    const {
+    let {
       components,
       owner,
       contributors
@@ -41,7 +41,7 @@ class Project extends Component {
         let currentType = componentArray[i].type;
         if (lastType === currentType) {
           count++;
-          if (count === 3 && currentType === 'photo') {
+          if (count === 3 && currentType === 'image') {
             for (var j = 0; j < 3; j++) {
               groups.push(count);
             }
@@ -72,22 +72,26 @@ class Project extends Component {
     const generateFeaturedComponent = (component) => {
       if (component.type === 'video') {
         return (
-          <VideoComponent component={component} />
+          <VideoComponent component={component} elevation={8} />
         );
-      } if (component.type === 'photo') {
+      } if (component.type === 'image') {
         return (
-          <PhotoComponent component={component} />
+          <PhotoComponent component={component} elevation={8} />
         );
       } if (component.type === 'audio') {
         return (
-          <AudioComponent component={component} />
+          <AudioComponent component={component} elevation={8} />
         );
       } if (component.type === 'text') {
         return (
-          <TextComponent component={component} />
+          <TextComponent component={component} elevation={8} />
         );
       }
     };
+
+    //until we have isFeatured working
+    let featuredComponent = components[0];
+    components = components.slice(1, components.length);
 
     let groups = groupingPreCheck(components);
 
@@ -105,7 +109,7 @@ class Project extends Component {
           <Grid item xs={12} sm={12} md={8} lg={6}>
             {
               // TODO: refactor
-              generateFeaturedComponent(components[0])
+              generateFeaturedComponent(featuredComponent)
             }
             <Divider style={{}}/>
           </Grid>
@@ -136,19 +140,19 @@ class Project extends Component {
 
                 if (component.type === 'video') {
                   return (
-                    <VideoComponent key={key} component={component} group={groups[key]}/>
+                    <VideoComponent key={key} component={component} group={groups[key]} elevation={4} />
                   );
-                } if (component.type === 'photo') {
+                } if (component.type === 'image') {
                   return (
-                    <PhotoComponent key={key} component={component} group={groups[key]} />
+                    <PhotoComponent key={key} component={component} group={groups[key]} elevation={4} />
                   );
                 } if (component.type === 'audio') {
                   return (
-                    <AudioComponent key={key} component={component} />
+                    <AudioComponent key={key} component={component} elevation={4} />
                   );
                 } if (component.type === 'text') {
                   return (
-                    <TextComponent key={key} component={component} />
+                    <TextComponent key={key} component={component} elevation={4} />
                   );
                 }
               })}

@@ -11,7 +11,7 @@ import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
 import CommentIcon from 'material-ui-icons/Comment';
 
-const PhotoComponent = ({component, group}) => {
+const PhotoComponent = ({component, group, elevation}) => {
   let size = 12;
   let headerSize = 0;
   let set = 1;
@@ -43,7 +43,7 @@ const PhotoComponent = ({component, group}) => {
 
   return (
     <Grid item xs={12} md={size}>
-      <Paper elevation={4}>
+      <Paper elevation={elevation}>
         <img src={component.resourceUrl} width="100%" style={cover}/>
         <Grid container justify="space-between" align="center">
           <Grid item xs={headerSize}>

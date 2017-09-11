@@ -228,12 +228,34 @@ const initialState = {
   searchResults: [
     {
       contentType: 'project',
-      name: 'Some cool project',
+      name: 'Fred\'s Awesome Project!',
       thumbnailUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
       owner: {
-        name: 'John Doe',
-        username: 'XxXjohndoeXxX420',
-        avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg'
+        name: 'Fred Zirdung',
+        username: 'FredX',
+        avatarUrl: 'https://static1.squarespace.com/static/ta/522a22cbe4b04681b0bff826/3027/assets/images/photos/staff/fred.jpg'
+      },
+      featuredComponent: {
+        name: 'Example',
+        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
+        description: 'This is an example project with an image as its featured component',
+        type: 'image',
+        isDownloadable: false,
+        author: {  
+          name: 'Fred Zirdung',
+          avatarUrl: 'https://static1.squarespace.com/static/ta/522a22cbe4b04681b0bff826/3027/assets/images/photos/staff/fred.jpg',
+          jobTitle: 'Software Engineer'
+        }
+      }
+    },
+    {
+      contentType: 'project',
+      name: 'Tears of Steel',
+      thumbnailUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
+      owner: {
+        name: 'Brett Kirk',
+        username: 'Brett_Kirk',
+        avatarUrl: 'https://avatars0.githubusercontent.com/u/29087063?v=4&s=460'
       },
       featuredComponent: {
         name: 'Tears of Steel',
@@ -250,12 +272,12 @@ const initialState = {
     },
     {
       contentType: 'project',
-      name: 'Some cool project',
+      name: 'Get Shwifty',
       thumbnailUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
       owner: {
-        name: 'John Doe',
-        username: 'XxXjohndoeXxX420',
-        avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg'
+        name: 'Rick Sanchez',
+        username: 'PickleRick4Evar',
+        avatarUrl: 'https://vignette3.wikia.nocookie.net/deathbattlefanon/images/0/08/2816096-thumbnail_1992608045960713568.jpg'
       },
       featuredComponent: {
         name: 'Tears of Steel',
@@ -272,12 +294,34 @@ const initialState = {
     },
     {
       contentType: 'project',
-      name: 'Some cool project',
+      name: 'Happy Forrest',
       thumbnailUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
       owner: {
-        name: 'John Doe',
-        username: 'XxXjohndoeXxX420',
-        avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg'
+        name: 'Bob Ross',
+        username: 'HappyAccidnnnts420',
+        avatarUrl: 'https://yt3.ggpht.com/-uJh4oSQAwak/AAAAAAAAAAI/AAAAAAAAAAA/AMGKfKvDP3w/s900-c-k-no-mo-rj-c0xffffff/photo.jpg'
+      },
+      featuredComponent: {
+        name: 'Tears of Steel',
+        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k-1920.mp4',
+        description: 'Tears of Steel was part of blender\'s 2012 open movie project. It\'s purpose was to show how powerful the free 3D rendering program truly was.',
+        type: 'image',
+        isDownloadable: false,
+        author: {  
+          name: 'Ian Hubert',
+          avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/Ian_bw.jpg',
+          jobTitle: 'Visual Effects Artist'
+        }
+      }
+    },
+    {
+      contentType: 'project',
+      name: 'Hamlet\'s Revenge',
+      thumbnailUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
+      owner: {
+        name: 'William Shakespeare',
+        username: '2BorNot2B',
+        avatarUrl: 'https://s3-us-west-2.amazonaws.com/find-a-grave-prod/photos/2017/179/1450_1498741918.jpg'
       },
       featuredComponent: {
         name: 'Tears of Steel',
@@ -291,86 +335,6 @@ const initialState = {
           jobTitle: 'Visual Effects Artist'
         }
       }
-    },
-    {
-      contentType: 'project',
-      name: 'Some cool project',
-      thumbnailUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
-      owner: {
-        name: 'John Doe',
-        username: 'XxXjohndoeXxX420',
-        avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg'
-      },
-      featuredComponent: {
-        name: 'Tears of Steel',
-        resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k-1920.mp4',
-        description: 'Tears of Steel was part of blender\'s 2012 open movie project. It\'s purpose was to show how powerful the free 3D rendering program truly was.',
-        type: 'photo',
-        isDownloadable: false,
-        author: {  
-          name: 'Ian Hubert',
-          avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/Ian_bw.jpg',
-          jobTitle: 'Visual Effects Artist'
-        }
-      }
-    },
-    {
-      contentType: 'component',
-      name: 'Some Cool component',
-      resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k-1920.mp4',
-      description: 'Tears of Steel was part of blender\'s 2012 open movie project. It\'s purpose was to show how powerful the free 3D rendering program truly was.',
-      type: 'video',
-      isDownloadable: false,
-      author: {  
-        name: 'John Doe',
-        avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
-        jobTitle: 'Visual Effects Artist'
-      }
-    },
-    {
-      contentType: 'component',
-      name: 'Some Cool component',
-      resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k-1920.mp4',
-      description: 'Tears of Steel was part of blender\'s 2012 open movie project. It\'s purpose was to show how powerful the free 3D rendering program truly was.',
-      type: 'audio',
-      isDownloadable: false,
-      author: {  
-        name: 'John Doe',
-        avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
-        jobTitle: 'Visual Effects Artist'
-      }
-    },
-    {
-      contentType: 'component',
-      name: 'Some Cool component',
-      resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k-1920.mp4',
-      description: 'Tears of Steel was part of blender\'s 2012 open movie project. It\'s purpose was to show how powerful the free 3D rendering program truly was.',
-      type: 'text',
-      isDownloadable: false,
-      author: {  
-        name: 'John Doe',
-        avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
-        jobTitle: 'Visual Effects Artist'
-      }
-    },
-    {
-      contentType: 'component',
-      name: 'Some Cool component',
-      resourceUrl: 'https://s3-us-west-1.amazonaws.com/qraft-video-files/ToS-4k-1920.mp4',
-      description: 'Tears of Steel was part of blender\'s 2012 open movie project. It\'s purpose was to show how powerful the free 3D rendering program truly was.',
-      type: 'photo',
-      isDownloadable: false,
-      author: {  
-        name: 'John Doe',
-        avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
-        jobTitle: 'Visual Effects Artist'
-      }
-    },
-    {
-      contentType: 'user',
-      name: 'John Doe',
-      avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
-      jobTitle: 'Visual Effects Artist'
     }
   ]
 };

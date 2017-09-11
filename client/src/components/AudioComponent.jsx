@@ -14,10 +14,10 @@ import CommentIcon from 'material-ui-icons/Comment';
 import AudioPlayer from './audio.jsx';
 // import videojsWavesurfer from 'videojs-wavesurfer';
 
-const AudioComponent = ({component}) => {
+const AudioComponent = ({component, elevation}) => {
   return (
     <Grid item xs={12}>
-      <Paper elevation={4}>
+      <Paper elevation={elevation}>
         <AudioPlayer height="90" aspectRatio="8:1" fluid="true" controls="true" sources={[{src: component.resourceUrl, type: 'audio/mp3'}]} />
         <Grid container justify="space-between" align="center">
           <Grid item>

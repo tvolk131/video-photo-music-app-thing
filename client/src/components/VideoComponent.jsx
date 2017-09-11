@@ -13,7 +13,7 @@ import CommentIcon from 'material-ui-icons/Comment';
 
 import VideoPlayer from './video.jsx';
 
-const VideoComponent = ({component, group}) => {
+const VideoComponent = ({component, group, elevation}) => {
   let size = 12;
   let headerSize = 0;
   
@@ -24,7 +24,7 @@ const VideoComponent = ({component, group}) => {
 
   return (
     <Grid item xs={12} md={size}>
-      <Paper elevation={4}>
+      <Paper elevation={elevation}>
         <VideoPlayer fluid="true" controls="true" sources={[{src: component.resourceUrl}]} />
         <Grid container spacing={0} justify="space-between" align="center">
           <Grid item xs={headerSize}>
