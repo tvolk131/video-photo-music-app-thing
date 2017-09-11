@@ -17,7 +17,6 @@ import TextComponent from '../components/TextComponent.jsx';
 
 class Project extends Component {
   render() {
-    console.log(this.props);
 
     if (this.props.data.loading) {
       return (
