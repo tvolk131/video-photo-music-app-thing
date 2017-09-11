@@ -15,17 +15,19 @@ import VideoPlayer from './video.jsx';
 
 const VideoComponent = ({component, group}) => {
   let size = 12;
+  let headerSize = 0;
   
   if (group > 1) {
     size = 6;
+    headerSize = 12; //you can set this to 6, but it will cause the buttons to turn into a triangle format on small formats
   }
 
   return (
-    <Grid item xs={12} sm={size}>
+    <Grid item xs={12} md={size}>
       <Paper elevation={4}>
         <VideoPlayer fluid="true" controls="true" sources={[{src: component.resourceUrl}]} />
-        <Grid container justify="space-between" align="center">
-          <Grid item>
+        <Grid container spacing={0} justify="space-between" align="center">
+          <Grid item xs={headerSize}>
             <CardHeader
               avatar={
                 <Avatar src={component.author.avatarUrl} style={{width: 50, height: 50}} />
@@ -35,7 +37,7 @@ const VideoComponent = ({component, group}) => {
               style={{textAlign: 'left', paddingBottom: 12}}
             />
           </Grid>
-          <Grid item>
+          <Grid item xs={headerSize}>
             <IconButton aria-label="Add to favorites">
               <FavoriteIcon />
             </IconButton>

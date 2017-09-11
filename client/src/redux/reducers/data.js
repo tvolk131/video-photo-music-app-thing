@@ -12,9 +12,9 @@ const initialState = {
         jobTitle: 'Actor - Thom'
       },
       {
-        name: 'Some guy',
-        avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
-        jobTitle: 'Web Developer'
+        name: 'Test upload image',
+        avatarUrl: 'https://qraft-image-files.s3.amazonaws.com/59456401-acd9-451c-bbae-5d6775814265_ScreenShot2017-09-02at11.31.48AM.png',
+        jobTitle: 'did it work?'
       },
       {
         name: 'Some guy',

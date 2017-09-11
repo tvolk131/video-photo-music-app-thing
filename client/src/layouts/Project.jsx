@@ -59,7 +59,7 @@ class Project extends Component {
     
     const generateFeaturedComponent = (component) => {
       if (component.type === 'video') {
-        console.log(component.resourceUrl)
+        console.log(component.resourceUrl);
         return (
           <VideoComponent component={component} />
         );
