@@ -8,7 +8,6 @@ import List, { ListItem, ListItemText, ListItemAvatar } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
  
 const ProjectContributors = ({ owner, contributors }) => {
-   
   return (
     <Card>
       <CardHeader
@@ -37,7 +36,6 @@ const ProjectContributors = ({ owner, contributors }) => {
               </ListItemAvatar>
               <ListItemText
                 primary={contributor.name}
-                secondary={contributor.jobTitle}
                 style={{textAlign: 'left'}}
               />
               <Divider inset />
