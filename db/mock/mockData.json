@@ -55,8 +55,30 @@
       "isDownloadable": false
     }
   ],
-  "projectComments": [],
-  "pronectComponentComments": [],
+  "projectComments": [
+    {
+      "userId": 2,
+      "projectId": 1,
+      "text": "dang man this is fly!"
+    },
+    {
+      "userId": 4,
+      "projectId": 1,
+      "text": "thanks, cuh"
+    }
+  ],
+  "projectComponentComments": [
+    {
+      "userId": 2,
+      "projectComponentId": 1,
+      "text": "I like Brett's picture better"
+    },
+    {
+      "userId": 4,
+      "projectComponentId": 1,
+      "text": "Wow, fine!"
+    }
+  ],
   "projectLikes": [],
-  "pronectComponentLikes": []
+  "projectComponentLikes": []
 }
