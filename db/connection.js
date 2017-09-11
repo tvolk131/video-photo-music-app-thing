@@ -9,7 +9,7 @@ if (process.env.DB_USERNAME && process.env.DB_PASSWORD && process.env.DB_NAME &&
     host: process.env.DB_HOST,
     dialect: process.env.DB_DIALECT,
     logging: process.env.DB_LOGGING === undefined ? false : process.env.DB_LOGGING
-  }
+  };
 } else {
   config = require('./config.json')[env];
 }

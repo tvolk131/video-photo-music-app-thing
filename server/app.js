@@ -1,4 +1,5 @@
 'use strict';
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const middleware = require('./middleware');
@@ -6,7 +7,6 @@ const routes = require('./routes');
 const graphQLSchema = require('./graphql');
 const expressGraphQL = require('express-graphql');
 
-require('dotenv').config();
 
 const app = express();
 
