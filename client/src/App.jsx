@@ -15,18 +15,26 @@ import './App.css';
 
 import {
   ApolloClient,
-  ApolloProvider
+  ApolloProvider,
+  createNetworkInterface
 } from 'react-apollo';
 
-const client = new ApolloClient();
+const networkInterface = createNetworkInterface({
+  uri: '/graphql',
+  opts: {
+    credentials: 'same-origin',
+  },
+});
+
+const client = new ApolloClient({networkInterface});
 
 class App extends Component {
   render() {
-
     return (
       <ApolloProvider client={client}>
         <div className="App">
           <Nav />
+          <Route exact path='/' component={Search}/>
           <Route exact path='/search' component={Search}/>
           <Route
             exact
