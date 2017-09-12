@@ -10,6 +10,11 @@ import Login from './layouts/Login.jsx';
 import Signup from './layouts/Signup.jsx';
 import Logout from './layouts/Logout.jsx';
 
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import purple from 'material-ui/colors/purple';
+import green from 'material-ui/colors/green';
+import red from 'material-ui/colors/red';
+
 import logo from './logo.svg';
 import './App.css';
 
@@ -30,22 +35,32 @@ const client = new ApolloClient({networkInterface});
 
 class App extends Component {
   render() {
+    let theme = createMuiTheme({
+      palette: {
+        primary: purple,
+        secondary: green,
+        error: red
+      }
+    });
+
     return (
       <ApolloProvider client={client}>
-        <div className="App">
-          <Nav />
-          <Route exact path='/' component={Search}/>
-          <Route exact path='/search' component={Search}/>
-          <Route
-            exact
-            path='/project/:username/:projectName' component={Project}
-          />
-          <Route exact path='/user/:username' component={UserProfile}/>
-          <Route exact path='/settings' component={Settings}/>
-          <Route exact path='/login' component={Login}/>
-          <Route exact path='/signup' component={Signup}/>
-          <Route exact path='/logout' component={Logout}/>
-        </div>
+        <MuiThemeProvider theme={theme}>
+          <div className="App">
+            <Nav />
+            <Route exact path='/' component={Search}/>
+            <Route exact path='/search' component={Search}/>
+            <Route
+              exact
+              path='/project/:username/:projectName' component={Project}
+            />
+            <Route exact path='/user/:username' component={UserProfile}/>
+            <Route exact path='/settings' component={Settings}/>
+            <Route exact path='/login' component={Login}/>
+            <Route exact path='/signup' component={Signup}/>
+            <Route exact path='/logout' component={Logout}/>
+          </div>
+        </MuiThemeProvider>
       </ApolloProvider>
     );
   }
