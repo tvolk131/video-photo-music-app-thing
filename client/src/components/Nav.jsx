@@ -66,7 +66,10 @@ class Nav extends Component {
           </IconButton>
           <div style={{width: 250}}>
             <List>
-              <NavHeader data={this.props.data} {...toggleNavDrawer}/>
+              <NavHeader
+                data={this.props.data}
+                toggleNavDrawer={toggleNavDrawer}
+              />
 
               <NavLink
                 to='/search'

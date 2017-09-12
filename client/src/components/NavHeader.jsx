@@ -20,6 +20,7 @@ const NavHeader = ({ data: { user, loading, error }, toggleNavDrawer }) => (
   <NavLink
     to='/login'
     onClick={toggleNavDrawer}
+    style={{textDecoration: 'none'}}
   >
     <ListItem>
       <ListItemIcon>
