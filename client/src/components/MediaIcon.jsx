@@ -10,8 +10,8 @@ const MediaIcon = ({ type }) => {
   const style = {
     height: 30,
     width: 30,
-    margin: 5,
-    margin: 0
+    margin: 0,
+    color: '#3F51B5'
   };
  
   if (type === 'text') {
