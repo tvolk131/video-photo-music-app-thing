@@ -8,8 +8,8 @@ import themes from '../../themes';
 
 const styles = {
   menu: {
-    width: '100%',
-    maxWidth: 360
+    maxWidth: '200px',
+    margin: 'auto'
   },
   button: {
     margin: 10
@@ -37,7 +37,6 @@ class ThemeChanger extends Component {
   }
 
   handleMenuItemClick (event, themeIndex) {
-    console.log(themeIndex);
     this.setState({selectedIndex: themeIndex, menuOpen: false});
   }
 
@@ -46,6 +45,7 @@ class ThemeChanger extends Component {
   }
 
   saveTheme (index) {
+    // TODO - Let apollo update the user's theme and also change the theme within the redux store
     console.log(this.state.selectedIndex);
   }
 
@@ -56,7 +56,7 @@ class ThemeChanger extends Component {
           <Typography type="headline" component="h3">
             Set Theme
           </Typography>
-          <List>
+          <List style={styles.menu}>
             <ListItem
               button
               aria-haspopup='true'
@@ -69,7 +69,6 @@ class ThemeChanger extends Component {
             </ListItem>
           </List>
           <Menu
-            style={styles.menu}
             open={this.state.menuOpen}
             anchorEl={this.state.anchorEl}
             onRequestClose={this.handleRequestClose}
