@@ -3,6 +3,8 @@ import { Paper, Typography, Button } from 'material-ui';
 import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import Menu, { MenuItem } from 'material-ui/Menu';
+import { MuiThemeProvider } from 'material-ui/styles';
+import themes from '../../themes';
 
 const styles = {
   menu: {
@@ -14,11 +16,7 @@ const styles = {
   }
 };
 
-const themeOptions = [
-  'Dark',
-  'Light',
-  'Spiffy'
-];
+const themeOptions = themes.getList();
 
 class ThemeChanger extends Component {
   constructor (props) {
@@ -53,7 +51,7 @@ class ThemeChanger extends Component {
 
   render () {
     return (
-      <div>
+      <MuiThemeProvider theme={themes.get(this.state.selectedIndex)}>
         <Paper style={this.props.style}>
           <Typography type="headline" component="h3">
             Set Theme
@@ -66,7 +64,7 @@ class ThemeChanger extends Component {
             >
               <ListItemText
                 primary='Theme'
-                secondary={themeOptions[this.state.selectedIndex]}
+                secondary={themeOptions[this.state.selectedIndex].name}
               />
             </ListItem>
           </List>
@@ -82,7 +80,7 @@ class ThemeChanger extends Component {
                 selected={index === this.state.selectedIndex}
                 onClick={event => this.handleMenuItemClick(event, index)}
               >
-                {option}
+                {option.name}
               </MenuItem>
             ))}
           </Menu>
@@ -90,7 +88,7 @@ class ThemeChanger extends Component {
             Save
           </Button>
         </Paper>
-      </div>
+      </MuiThemeProvider>
     );
   }
 }
