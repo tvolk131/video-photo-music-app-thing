@@ -12,15 +12,12 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import Drawer from 'material-ui/Drawer';
-import Divider from 'material-ui/Divider';
 import Input from 'material-ui/Input';
 import Paper from 'material-ui/Paper';
-import { CircularProgress } from 'material-ui/Progress';
 import List, {
   ListItem,
   ListItemIcon,
-  ListItemText,
-  ListItemAvatar
+  ListItemText
 } from 'material-ui/List';
 
 import {
@@ -31,66 +28,15 @@ import {
   ExitToApp
 } from 'material-ui-icons';
 
+import NavHeader from './NavHeader.jsx';
+
 import { toggleNavDrawer } from '../redux/actions/controlActions';
 import { logout } from '../redux/actions/sessionActions';
 
 class Nav extends Component {
-
   render() {
     const { navDrawerOpen, toggleNavDrawer } = this.props;
-    const navItemStyle = {textDecoration: 'none'};
-    
-    const generateUserHeader = () => {
-      const { user } = this.props.data;
-
-      if (this.props.data.error) {
-        return (
-          <NavLink
-            to='/login'
-            onClick={toggleNavDrawer}
-            style={navItemStyle}
-          >
-            <ListItem>
-              <ListItemIcon>
-                <ExitToApp />
-              </ListItemIcon>
-              <ListItemText primary='Login / Signup'/>
-            </ListItem>
-          </NavLink>
-        );
-      } else if (this.props.data.loading) {
-        return (
-          <Paper style={{padding: 5}}>
-            <CircularProgress/>
-          </Paper>
-        );
-      } else {
-        return (
-          <ListItem divider>
-            <ListItemAvatar>
-              {user.avatarUrl ?
-                <Avatar src={user.avatarUrl}></Avatar>
-                :
-                <Avatar style={{
-                  margin: 0,
-                  padding: 2,
-                  color: '#fff',
-                  backgroundColor: '#3f51b5',
-                }}>
-                  {user.name.split(' ')[0][0] + user.name.split(' ')[1][0]}
-                </Avatar>
-              }
-            </ListItemAvatar>
-            <ListItemText
-              primary={user.name}
-              secondary={user.email}
-              style={{textAlign: 'left'}}
-            />
-            <Divider inset />
-          </ListItem>
-        );
-      }
-    };
+    const style = {textDecoration: 'none'};
 
     return (
       <div>
@@ -120,12 +66,12 @@ class Nav extends Component {
           </IconButton>
           <div style={{width: 250}}>
             <List>
-              {generateUserHeader()}
+              <NavHeader data={this.props.data} {...toggleNavDrawer}/>
 
               <NavLink
                 to='/search'
                 onClick={toggleNavDrawer}
-                style={navItemStyle}
+                style={style}
               >
                 <ListItem>
                   <ListItemIcon>
@@ -140,7 +86,7 @@ class Nav extends Component {
                   <NavLink
                     to={`/user/${this.props.data.user.username}`}
                     onClick={toggleNavDrawer}
-                    style={navItemStyle}
+                    style={style}
                   >
                     <ListItem>
                       <ListItemIcon>
@@ -153,7 +99,7 @@ class Nav extends Component {
                   <NavLink
                     to={`/user/${this.props.data.user.username}`}
                     onClick={toggleNavDrawer}
-                    style={navItemStyle}
+                    style={style}
                   >
                     <ListItem>
                       <ListItemIcon>
@@ -166,7 +112,7 @@ class Nav extends Component {
                   <NavLink
                     to='/settings'
                     onClick={toggleNavDrawer}
-                    style={navItemStyle}
+                    style={style}
                   >
                     <ListItem>
                       <ListItemIcon>
@@ -179,7 +125,7 @@ class Nav extends Component {
                   <NavLink
                     to='/logout'
                     onClick={this.props.logout}
-                    style={navItemStyle}
+                    style={style}
                   >
                     <ListItem>
                       <ListItemIcon>
