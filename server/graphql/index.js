@@ -23,6 +23,7 @@ const UserType = new GraphQLObjectType({
     theme: {type: GraphQLInt},
     name: {type: GraphQLString},
     handle: {type: GraphQLString},
+    profession: {type: GraphQLString},
     avatarUrl: {type: GraphQLString},
     description: {type: GraphQLString},
     followers: {
@@ -239,6 +240,7 @@ const mutation = new GraphQLObjectType({
         theme: {type: GraphQLInt},
         name: {type: GraphQLString},
         handle: {type: GraphQLString},
+        profession: {type: GraphQLString},
         avatar: {type: GraphQLString},
         description: {type: GraphQLString}
       },

@@ -48,6 +48,9 @@ const UserModel = db.define('users', {
     type: Sequelize.STRING(32),
     unique: true
   },
+  profession: {
+    type: Sequelize.STRING(64)
+  },
   avatarUrl: {
     type: Sequelize.STRING(64)
   },
@@ -58,7 +61,7 @@ const UserModel = db.define('users', {
 
 let User = {model: UserModel};
 
-User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, handle, avatarUrl, description}) => {
+User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, handle, profession, avatarUrl, description}) => {
   if (oAuthUserId && oAuthProvider) {
     if (password) {
       return new Promise((resolve, reject) => {
@@ -90,6 +93,7 @@ User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, han
     theme: defaultTheme,
     name,
     handle,
+    profession,
     avatarUrl,
     description
   });
