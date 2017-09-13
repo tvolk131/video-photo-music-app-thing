@@ -10,10 +10,9 @@ import Login from './layouts/Login.jsx';
 import Signup from './layouts/Signup.jsx';
 import Logout from './layouts/Logout.jsx';
 
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import purple from 'material-ui/colors/purple';
-import green from 'material-ui/colors/green';
-import red from 'material-ui/colors/red';
+import themes from './themes';
+
+import { MuiThemeProvider } from 'material-ui/styles';
 
 import logo from './logo.svg';
 import './App.css';
@@ -35,17 +34,9 @@ const client = new ApolloClient({networkInterface});
 
 class App extends Component {
   render() {
-    let theme = createMuiTheme({
-      palette: {
-        primary: purple,
-        secondary: green,
-        error: red
-      }
-    });
-
     return (
       <ApolloProvider client={client}>
-        <MuiThemeProvider theme={theme}>
+        <MuiThemeProvider theme={themes.get(1)}>
           <div className="App">
             <Nav />
             <Route exact path='/' component={Search}/>
