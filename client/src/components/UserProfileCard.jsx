@@ -8,41 +8,47 @@ import Paper from 'material-ui/Paper';
 import Card, { CardContent, CardMedia, CardTitle } from 'material-ui/Card';
 import { CircularProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
+import Button from 'material-ui/Button';
+import ModeEditIcon from 'material-ui-icons/ModeEdit';
 
+const UserProfileCard = ({ session, data, data: { user, loading, error } }) => (
+  loading &&
+  <Paper style={{padding: 25}}>
+    <CircularProgress/>
+  </Paper>
 
-class UserProfileCard extends Component {
+  ||
 
-  render() {
+  error &&
+  <Paper style={{padding: 25}}>
+    <h2>User not found</h2>
+  </Paper>
 
-    if (this.props.data.loading) {
-      return (
-        <Paper style={{padding: 25}}>
-          <CircularProgress/>
-        </Paper>
-      );
-    } else {
+  ||
 
-      const {
-        avatarUrl,
-        name,
-        username,
-        description
-      } = this.props.data.user;
-    
-      return (
-        <Paper>
-          <img src='https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg' style={{width: '100%'}}/>
-          <div style={{textAlign: 'left', padding: 10}}>
-            <h3>{name}</h3>
-            <Typography>{username}</Typography>
-            <Typography>Bio:</Typography>
-            <Typography>{description}</Typography>
-          </div>
-        </Paper>
-      );
-    }
-  }
-}
+  user &&
+  <Paper>
+    <img src={user.avatarUrl} style={{width: '100%'}}/>
+    <div style={{textAlign: 'left', padding: 10}}>
+      {
+        session.currentUser &&
+        session.currentUser.username === user.username &&
+        <Button fab color="accent" aria-label="edit" style={{
+          textAlign: 'right',
+          float: 'right',
+          top: '-35'
+        }}>
+          <ModeEditIcon />
+        </Button>
+      }
+      <Typography>{user.name}</Typography>
+      <Typography>{user.username}</Typography>
+      <Typography>{user.email}</Typography>
+      <Typography>Bio:</Typography>
+      <Typography>{user.description}</Typography>
+    </div>
+  </Paper>
+);
 
 const userQuery = gql`
   query userQuery($username: String!) {
@@ -50,11 +56,16 @@ const userQuery = gql`
       name
       username
       description
+      email
       avatarUrl
     }
   }
 `;
 
-export default graphql(userQuery, {
+const UserProfileCardWithData =  graphql(userQuery, {
   options: ({ username }) => ({variables: { username }})
 })(UserProfileCard);
+
+export default connect(
+  ({ data, session }) => ({ data, session })
+)(UserProfileCardWithData);

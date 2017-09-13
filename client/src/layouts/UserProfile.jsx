@@ -35,7 +35,7 @@ class UserProfile extends Component {
           margin: 0,
           width: '100%'
         }}>
-          <Grid item lg />
+          <Grid item lg />  
           <Grid item md={4} lg={3} />
           <Grid item xs={12} sm={12} md={12} lg={6}>
             <Paper style={{height: 400}} />
