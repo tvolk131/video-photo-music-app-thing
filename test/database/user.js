@@ -10,7 +10,8 @@ describe('User Model', () => {
     it('Should create local auth user with all valid parameters', () => {
       return User.create({
         username: 'test',
-        password: 'test'
+        password: 'test',
+        name: 'test'
       })
         .then((user) => {
           expect(user).to.exist;
@@ -19,7 +20,8 @@ describe('User Model', () => {
     it('Should create oAuth user with all valid parameters and no username provided', () => {
       return User.create({
         oAuthUserId: 1,
-        oAuthProvider: 'google'
+        oAuthProvider: 'google',
+        name: 'test2'
       })
         .then((user) => {
           expect(user).to.exist;
@@ -29,7 +31,8 @@ describe('User Model', () => {
     it('Should create oAuth user with all valid parameters and no username provided', () => {
       return User.create({
         oAuthUserId: 1,
-        oAuthProvider: 'google'
+        oAuthProvider: 'google',
+        name: 'test'
       })
         .then((user) => {
           expect(user).to.exist;
@@ -37,13 +40,13 @@ describe('User Model', () => {
         });
     });
     it('Should create user with oAuth and a username provided', () => {
-      return User.create({oAuthUserId: 1, oAuthProvider: 'google', username: 'test'})
+      return User.create({oAuthUserId: 1, oAuthProvider: 'google', username: 'test', name: 'test'})
         .then((user) => {
           expect(user.username).to.equal('test');
         });
     });
     it('Should generate username for oAuth users that do not provide a username and have an email', () => {
-      return User.create({oAuthUserId: 1, oAuthProvider: 'google', email: 'test@example.com'})
+      return User.create({oAuthUserId: 1, oAuthProvider: 'google', email: 'test@example.com', name: 'test'})
         .then((user) => {
           expect(user.username).to.startsWith('test_');
           if (user.username.includes('@')) {
@@ -52,7 +55,7 @@ describe('User Model', () => {
         });
     });
     it('Should generate username for oAuth users that do not provide a username and do not have an email', () => {
-      return User.create({oAuthUserId: 1111, oAuthProvider: 'google'})
+      return User.create({oAuthUserId: 1111, oAuthProvider: 'google', name: 'test'})
         .then((user) => {
           expect(user.username).to.startsWith('1111_');
         });
@@ -61,28 +64,29 @@ describe('User Model', () => {
       return expect(User.create({
         oAuthUserId: 1,
         oAuthProvider: 'google',
-        email: 'not an email'
+        email: 'not an email',
+        name: 'test'
       })).to.be.rejectedWith('Validation error: Validation isEmail on email failed');
     });
     it('Should reject when creating user with no oAuth or local auth credentials', () => {
       return expect(User.create({})).to.be.rejectedWith('Cannot create account without neither oAuth nor local auth credentials');
     });
     it('Should reject when creating user local auth credentials and an oAuth ID', () => {
-      return expect(User.create({oAuthUserId: 1, username: 'test', email: 'foo@gmail.com', password: 'test'})).to.be.rejectedWith('Cannot create local auth account with oAuth ID');
+      return expect(User.create({oAuthUserId: 1, username: 'test', email: 'foo@gmail.com', password: 'test', name: 'test'})).to.be.rejectedWith('Cannot create local auth account with oAuth ID');
     });
     it('Should reject when creating user with local auth credentials and an oAuth provider', () => {
-      return expect(User.create({oAuthProvider: 'google', username: 'test', email: 'foo@gmail.com', password: 'test'})).to.be.rejectedWith('Cannot create local auth account with oAuth provider');
+      return expect(User.create({oAuthProvider: 'google', username: 'test', email: 'foo@gmail.com', password: 'test', name: 'test'})).to.be.rejectedWith('Cannot create local auth account with oAuth provider');
     });
     it('Should reject when creating user with an email that is already registered', () => {
-      return User.create({username: 'test', email: 'foo@gmail.com', password: 'test'})
+      return User.create({username: 'test', email: 'foo@gmail.com', password: 'test', name: 'test'})
         .then(() => {
-          return expect(User.create({username: 'test', email: 'foo@gmail.com', password: 'test'})).to.be.rejected;
+          return expect(User.create({username: 'test', email: 'foo@gmail.com', password: 'test', name: 'test'})).to.be.rejected;
         });
     });
     it('Should reject when creating user with a handle that is already registered', () => {
-      return User.create({username: 'test', email: 'foo@gmail.com', password: 'test', handle: 'Macho Man Randy Savage'})
+      return User.create({username: 'test', email: 'foo@gmail.com', password: 'test', name: 'test'})
         .then(() => {
-          return expect(User.create({username: 'test', email: 'bar@gmail.com', password: 'test', handle: 'Macho Man Randy Savage'})).to.be.rejected;
+          return expect(User.create({username: 'test', email: 'bar@gmail.com', password: 'test', name: 'test'})).to.be.rejected;
         });
     });
   });
@@ -90,11 +94,13 @@ describe('User Model', () => {
   describe('update()', () => {
     let localUser = {
       username: 'test',
-      password: 'test'
+      password: 'test',
+      name: 'test'
     };
     let oAuthUser = {
       oAuthUserId: 1234,
-      oAuthProvider: 'facebook'
+      oAuthProvider: 'facebook',
+      name: 'test'
     };
 
     beforeEach(() => {
@@ -149,13 +155,15 @@ describe('User Model', () => {
     beforeEach(() => {
       return User.create({
         username: 'test',
-        password: 'test'
+        password: 'test',
+        name: 'test'
       })
         .then((user) => {
           userOne = user;
           return User.create({
             username: 'test2',
-            password: 'test2'
+            password: 'test2',
+            name: 'test'
           })
         })
         .then((user) => {
@@ -182,13 +190,15 @@ describe('User Model', () => {
     beforeEach(() => {
       return User.create({
         username: 'test',
-        password: 'test'
+        password: 'test',
+        name: 'test'
       })
         .then((user) => {
           userOne = user;
           return User.create({
             username: 'test2',
-            password: 'test2'
+            password: 'test2',
+            name: 'test'
           })
         })
         .then((user) => {
@@ -215,13 +225,15 @@ describe('User Model', () => {
     beforeEach(() => {
       return User.create({
         username: 'test',
-        password: 'test'
+        password: 'test',
+        name: 'test'
       })
         .then((user) => {
           userOne = user;
           return User.create({
             username: 'test2',
-            password: 'test2'
+            password: 'test2',
+            name: 'test'
           })
         })
         .then((user) => {
@@ -259,13 +271,15 @@ describe('User Model', () => {
     beforeEach(() => {
       return User.create({
         username: 'test',
-        password: 'test'
+        password: 'test',
+        name: 'test'
       })
         .then((user) => {
           userOne = user;
           return User.create({
             username: 'test2',
-            password: 'test2'
+            password: 'test2',
+            name: 'test'
           })
         })
         .then((user) => {
@@ -302,7 +316,8 @@ describe('User Model', () => {
       return User.create({
         email: 'foo@bar.com',
         username: 'test',
-        password: 'test'
+        password: 'test',
+        name: 'test'
       })
         .then((user) => {
           return User.getByEmail(user.email);
@@ -322,7 +337,8 @@ describe('User Model', () => {
     it('Should get user by ID if the user exists', () => {
       return User.create({
         username: 'test',
-        password: 'test'
+        password: 'test',
+        name: 'test'
       })
         .then((user) => {
           return User.getByUsername('test');
@@ -342,7 +358,8 @@ describe('User Model', () => {
       return User.create({
         handle: '@fred',
         username: 'test',
-        password: 'test'
+        password: 'test',
+        name: 'test'
       })
         .then((user) => {
           return User.getByHandle(user.handle);
@@ -362,7 +379,8 @@ describe('User Model', () => {
     it('Should get user by ID if the user exists', () => {
       return User.create({
         username: 'test',
-        password: 'test'
+        password: 'test',
+        name: 'test'
       })
         .then((user) => {
           return User.getById(user.id);

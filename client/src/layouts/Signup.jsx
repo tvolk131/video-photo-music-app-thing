@@ -9,6 +9,7 @@ class Signup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      name: '',
       username: '',
       password: '',
       errorMessage: '',
@@ -34,10 +35,11 @@ class Signup extends React.Component {
   }
 
   sendSignupRequest () {
-    if (this.state.username && this.state.password) {
+    if (this.state.name && this.state.username && this.state.password) {
       axios.post('/signup', {
         username: this.state.username,
-        password: this.state.password
+        password: this.state.password,
+        name: this.state.name
       })
       .then((res) => {
         window.location.replace(res.request.responseURL); // Performs redirect to proper page
@@ -49,6 +51,9 @@ class Signup extends React.Component {
       });
     } else {
       let missingVals = [];
+      if (!this.state.name) {
+        missingVals.push('name');
+      }
       if (!this.state.username) {
         missingVals.push('username');
       }
@@ -82,6 +87,7 @@ class Signup extends React.Component {
     return (
       <div className='signup center'>
         <h1>Signup</h1>
+        <TextField onKeyPress={this.handleKeyPress} placeholder='Spoonlanding' label='Name' type='text' value={this.state.name} onChange={this.handleInputChange.bind(this, 'name')} /><br/>
         <TextField onKeyPress={this.handleKeyPress} placeholder='joeswanson@familyguy.com' label='Username' type='text' value={this.state.email} onChange={this.handleInputChange.bind(this, 'username')} /><br/>
         <TextField onKeyPress={this.handleKeyPress} label='Password' type='password' value={this.state.password} onChange={this.handleInputChange.bind(this, 'password')} /><br/>
         <Button raised className='btn' onClick={this.sendSignupRequest}>Signup</Button>
