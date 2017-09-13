@@ -9,4 +9,9 @@ const toggleNavDrawer = () => {
   };
 };
 
-export { toggleNavDrawer };
+const setCurrentUser = (user) => ({
+  type: 'SET_CURRENT_USER',
+  user
+});
+
+export { toggleNavDrawer, setCurrentUser };

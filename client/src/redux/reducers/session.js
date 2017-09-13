@@ -9,7 +9,9 @@ const initialState = {
 
 const session = (state = initialState, action) => {
   
-
+  if (action.type === 'SET_CURRENT_USER') {
+    return {...state, currentUser: action.user};
+  }
 
   return state;
 };
