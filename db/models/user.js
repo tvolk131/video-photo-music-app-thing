@@ -1,7 +1,7 @@
 const db = require('../connection');
 const Sequelize = require('sequelize');
 const bCrypt = require('bcryptjs');
-const defaultTheme = 0;
+const defaultTheme = 1;
 
 const generateHash = (password) => {
   return bCrypt.hashSync(password, bCrypt.genSaltSync(8), null);
