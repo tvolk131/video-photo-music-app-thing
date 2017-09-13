@@ -19,10 +19,10 @@ class ImageButton extends React.Component {
 
   onClick () {
     this.props.onClick();
-    this.setState({imageSrc: props.pressedImage});
+    this.setState({imageSrc: this.props.pressedImage});
   }
   clickRelease () {
-    this.setState({imageSrc: props.unpressedImage});
+    this.setState({imageSrc: this.props.unpressedImage});
   }
 
   render () {
