@@ -159,6 +159,7 @@ const currentUserQuery = gql`
       username
       avatarUrl
       email
+      theme
     }
   }
 `;

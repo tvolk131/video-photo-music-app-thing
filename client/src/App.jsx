@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route} from 'react-router';
+import { connect } from 'react-redux';
 
 import Nav from './components/Nav.jsx';
 import Search from './layouts/Search.jsx';
@@ -36,7 +37,7 @@ class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <MuiThemeProvider theme={themes.get(1)}>
+        <MuiThemeProvider theme={themes.get(this.props.theme)}>
           <div className="App">
             <Nav />
             <Route exact path='/' component={Search}/>
@@ -57,4 +58,6 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => state.session.currentUser;
+
+export default connect(mapStateToProps)(App);
