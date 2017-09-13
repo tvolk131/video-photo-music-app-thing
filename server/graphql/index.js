@@ -22,7 +22,6 @@ const UserType = new GraphQLObjectType({
     username: {type: GraphQLString},
     theme: {type: GraphQLInt},
     name: {type: GraphQLString},
-    handle: {type: GraphQLString},
     profession: {type: GraphQLString},
     avatarUrl: {type: GraphQLString},
     description: {type: GraphQLString},
@@ -183,7 +182,6 @@ const RootQuery = new GraphQLObjectType({
       type: UserType,
       args: {
         id: {type: GraphQLInt},
-        handle: {type: GraphQLString},
         email: {type: GraphQLString},
         username: {type: GraphQLString}
       },
@@ -199,9 +197,6 @@ const RootQuery = new GraphQLObjectType({
         }
         if (args.id) {
           return db.User.getById(args.id);
-        }
-        if (args.handle) {
-          return db.User.getByHandle(args.handle);
         }
         if (args.email) {
           return db.User.getByEmail(args.email);
@@ -239,7 +234,6 @@ const mutation = new GraphQLObjectType({
         password: {type: GraphQLString},
         theme: {type: GraphQLInt},
         name: {type: GraphQLString},
-        handle: {type: GraphQLString},
         profession: {type: GraphQLString},
         avatar: {type: GraphQLString},
         description: {type: GraphQLString}

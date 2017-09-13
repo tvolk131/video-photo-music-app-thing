@@ -31,9 +31,13 @@ import {
 import NavHeader from './NavHeader.jsx';
 
 import { toggleNavDrawer } from '../redux/actions/controlActions';
-import { logout } from '../redux/actions/sessionActions';
+import { logout, setCurrentUser } from '../redux/actions/sessionActions';
 
 class Nav extends Component {
+  componentWillReceiveProps({ setCurrentUser, data: { user }}) {
+    setCurrentUser(user);
+  }
+
   render() {
     const { navDrawerOpen, toggleNavDrawer } = this.props;
     const style = {textDecoration: 'none'};
@@ -164,6 +168,7 @@ const mapStateToProps = state => state.control;
 const mapDispatchToProps = dispatch => {
   return {
     toggleNavDrawer: () => dispatch(toggleNavDrawer()),
+    setCurrentUser: (user) => dispatch(setCurrentUser(user)),
     logout: () => dispatch(logout())
   };
 };
