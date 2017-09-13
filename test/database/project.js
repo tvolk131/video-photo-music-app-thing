@@ -4,11 +4,13 @@ const expect = require('chai').use(require('chai-as-promised')).expect;
 describe('Project Model', () => {
   let localUser = {
     username: 'test',
-    password: 'test'
+    password: 'test',
+    name: 'test'
   };
   let oAuthUser = {
     oAuthUserId: 1234,
-    oAuthProvider: 'facebook'
+    oAuthProvider: 'facebook',
+    name: 'test2'
   };
 
   beforeEach(() => {

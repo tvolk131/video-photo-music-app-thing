@@ -4,11 +4,13 @@ const expect = require('chai').use(require('chai-as-promised')).expect;
 describe('Like Model', () => {
   let userOne = {
     username: 'test',
-    password: 'test'
+    password: 'test',
+    name: 'test'
   };
   let userTwo = {
     oAuthUserId: 1234,
-    oAuthProvider: 'facebook'
+    oAuthProvider: 'facebook',
+    name: 'test2'
   };
   let project = {
     name: 'test project',

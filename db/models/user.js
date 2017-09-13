@@ -42,7 +42,9 @@ const UserModel = db.define('users', {
     type: Sequelize.INTEGER(4)
   },
   name: {
-    type: Sequelize.STRING(64)
+    type: Sequelize.STRING(64),
+    notEmpty: true,
+    allowNull: false
   },
   profession: {
     type: Sequelize.STRING(64)

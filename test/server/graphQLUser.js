@@ -8,7 +8,7 @@ describe('/graphql user', () => {
   beforeEach(() => {
     return db.connection.clear()
       .then(() => {
-        return db.User.create({email: 'foo@bar.com', username: 'foo', password: 'bar'});
+        return db.User.create({email: 'foo@bar.com', username: 'foo', password: 'bar', name: 'test person'});
       });
   });
   it('Should return an error when retrieving a user by an ID that does not exist', (done) => {
