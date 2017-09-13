@@ -16,8 +16,8 @@ const PhotoComponent = ({component, group, elevation}) => {
   let headerSize = 0;
   let set = 1;
   let cover = {
-    'object-fit': 'cover',
-    'max-height': '400px'
+    objectFit: 'cover',
+    maxHeight: '400px'
   };
   
   if (group === 2) {
@@ -25,17 +25,17 @@ const PhotoComponent = ({component, group, elevation}) => {
     headerSize = 12;
     set = 2;
     cover = {
-      'object-fit': 'cover',
-      'min-height': '300px',
-      'max-height': '400px'
+      objectFit: 'cover',
+      minHeight: '300px',
+      maxHeight: '400px'
     };
   } else if (group > 2) {
     size = 4;
     headerSize = 12;
     set = 3;
     cover = {
-      'object-fit': 'cover',
-      'height': '250px',
+      objectFit: 'cover',
+      height: '250px'
       // 'min-height': '200px',
       // 'max-height': '250px'
     };
@@ -53,7 +53,7 @@ const PhotoComponent = ({component, group, elevation}) => {
               }
               title={component.name}
               subheader={component.author.name}
-              style={{textAlign: 'left', paddingBottom: 12, 'max-width': '100%'}}
+              style={{textAlign: 'left', paddingBottom: 12, 'maxWidth': '100%'}}
             />
           </Grid>
           <Grid item xs={headerSize}>
