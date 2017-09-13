@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route} from 'react-router';
 
+import { client } from './redux/reducers';
+import store from './redux/store.js';
+
 import Nav from './components/Nav.jsx';
 import Search from './layouts/Search.jsx';
 import Project from './layouts/Project.jsx';
@@ -19,23 +22,13 @@ import './App.css';
 
 import {
   ApolloClient,
-  ApolloProvider,
-  createNetworkInterface
+  ApolloProvider
 } from 'react-apollo';
-
-const networkInterface = createNetworkInterface({
-  uri: '/graphql',
-  opts: {
-    credentials: 'same-origin',
-  },
-});
-
-const client = new ApolloClient({networkInterface});
 
 class App extends Component {
   render() {
     return (
-      <ApolloProvider client={client}>
+      <ApolloProvider client={client} store={store}>
         <MuiThemeProvider theme={themes.get(1)}>
           <div className="App">
             <Nav />

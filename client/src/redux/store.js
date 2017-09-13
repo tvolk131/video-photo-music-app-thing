@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import axiosMiddleware from 'redux-axios-middleware';
 import axios from 'axios';
-import reducer from './reducers';
+import { reducer } from './reducers';
 
 const client = axios.create({
   baseURL: window.location.host,
