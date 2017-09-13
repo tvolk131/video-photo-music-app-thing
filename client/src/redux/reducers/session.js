@@ -3,7 +3,8 @@ const initialState = {
     name: 'Some guy',
     avatarUrl: 'https://s3-us-west-1.amazonaws.com/qraft-image-files/stock+male+1.jpeg',
     description: 'Web Developer',
-    username: 'test'
+    username: 'test',
+    theme: 0
   }
 };
 
