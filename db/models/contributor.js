@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 
 const ContributorModel = db.define('contributors', {
   role: {
-    type: Sequelize.STRING(32),
+    type: Sequelize.STRING(128),
     notEmpty: true,
     allowNull: false
   }

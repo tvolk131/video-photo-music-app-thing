@@ -19,20 +19,20 @@ const ProjectComponentModel = db.define('components', {
     primaryKey: true
   },
   name: {
-    type: Sequelize.STRING(32),
+    type: Sequelize.STRING(64),
     notEmpty: true,
     allowNull: false
   },
   resourceUrl: {
-    type: Sequelize.STRING(256),
+    type: Sequelize.STRING(512),
     notEmpty: true,
     allowNull: false
   },
   description: {
-    type: Sequelize.STRING(256)
+    type: Sequelize.STRING(512)
   },
   type: {
-    type: Sequelize.STRING(16),
+    type: Sequelize.STRING(32),
     notEmpty: true,
     allowNull: false
   },

@@ -20,7 +20,7 @@ const CommentModel = db.define('comments', {
     allowNull: false
   },
   text: {
-    type: Sequelize.STRING(255),
+    type: Sequelize.STRING(512),
     notEmpty: true,
     allowNull: false
   }
