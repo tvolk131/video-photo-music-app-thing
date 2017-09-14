@@ -25,6 +25,7 @@ const UserType = new GraphQLObjectType({
     profession: {type: GraphQLString},
     avatarUrl: {type: GraphQLString},
     description: {type: GraphQLString},
+    role: {type: GraphQLString},
     followers: {
       type: new GraphQLList(UserType),
       resolve(parentValue, args) {
@@ -411,13 +412,14 @@ const mutation = new GraphQLObjectType({
       type: UserType,
       args: {
         userId: {type: new GraphQLNonNull(GraphQLInt)},
-        projectId: {type: new GraphQLNonNull(GraphQLInt)}
+        projectId: {type: new GraphQLNonNull(GraphQLInt)},
+        role: {type: new GraphQLNonNull(GraphQLString)}
       },
-      resolve(parentValue, {userId, projectId}, request) {
+      resolve(parentValue, {userId, projectId, role}, request) {
         if (!request.user) {
           return Promise.reject('Cannot add contributor when you are not logged in');
         }
-        return db.Project.addContributor({ownerId: request.user.id, contributorId: userId, projectId});
+        return db.Project.addContributor({ownerId: request.user.id, contributorId: userId, projectId, role});
       }
     },
     removeProjectContributor: {

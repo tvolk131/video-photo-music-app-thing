@@ -50,7 +50,7 @@ describe('Project Component Model', () => {
         });
     });
     it('Should create project component when all parameters are valid and you are a contributor to the project', () => {
-      return Project.addContributor({ownerId: userOne.id, contributorId: userTwo.id, projectId: project.id})
+      return Project.addContributor({ownerId: userOne.id, contributorId: userTwo.id, projectId: project.id, role: 'contributor'})
         .then(() => {
           return ProjectComponent.create({
             userId: userTwo.id,
@@ -112,7 +112,7 @@ describe('Project Component Model', () => {
         });
     });
     it('Should update as project contributor when all parameters are valid', () => {
-      return Project.addContributor({ownerId: userOne.id, contributorId: userTwo.id, projectId: project.id})
+      return Project.addContributor({ownerId: userOne.id, contributorId: userTwo.id, projectId: project.id, role: 'contributor'})
         .then(() => {
           return ProjectComponent.update(userTwo.id, component.id, {description: 'foo'})
             .then((newComponent) => {
@@ -150,7 +150,7 @@ describe('Project Component Model', () => {
         });
     });
     it('Should delete as project contributor when all parameters are valid', () => {
-      return Project.addContributor({ownerId: userOne.id, contributorId: userTwo.id, projectId: project.id})
+      return Project.addContributor({ownerId: userOne.id, contributorId: userTwo.id, projectId: project.id, role: 'contributor'})
         .then(() => {
           return ProjectComponent.delete(userTwo.id, component.id)
             .then((response) => {
