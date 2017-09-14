@@ -33,7 +33,7 @@ const ListingItem = ({ content }) => {
         <Route render={({history}) => (
           <ListItem
             button
-            onClick={() => { history.push('/project/' + content.owner.username + '/' + content.name.split(' ').join('_')); }}
+            onClick={() => history.push(`/project/${content.owner.username}/${content.name}`)}
             style={{width: '100%', padding: 0}}
           > 
             <Grid container>

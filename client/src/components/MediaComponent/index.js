@@ -1,9 +1,8 @@
 import React from 'react';
-import VideoComponent from '../components/VideoComponent.jsx';
-import AudioComponent from '../components/AudioComponent.jsx';
-import PhotoComponent from '../components/PhotoComponent.jsx';
-import TextComponent from '../components/TextComponent.jsx';
-
+import VideoComponent from './VideoComponent.jsx';
+import AudioComponent from './AudioComponent.jsx';
+import PhotoComponent from './PhotoComponent.jsx';
+import TextComponent from './TextComponent.jsx';
 
 const MediaComponent = ({ content, group, elevation }) => {
   const COMPONENT_ELEVATION = 4;
