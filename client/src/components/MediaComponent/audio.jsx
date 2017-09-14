@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import videojs from 'video.js';
 import './video.css';
 
-export default class AudioPlayer extends React.Component {
+export default class AudioPlayer extends Component {
   componentDidMount() {
     // instantiate video.js
     this.player = videojs(this.videoNode, this.props, function onPlayerReady() {

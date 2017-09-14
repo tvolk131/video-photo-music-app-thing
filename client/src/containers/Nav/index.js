@@ -30,8 +30,8 @@ import {
 
 import NavHeader from './NavHeader.jsx';
 
-import { toggleNavDrawer } from '../redux/actions/controlActions';
-import { logout, setCurrentUser } from '../redux/actions/sessionActions';
+import { toggleNavDrawer } from '../../actions/controlActions';
+import { setCurrentUser } from '../../actions/sessionActions';
 
 class Nav extends Component {
   componentWillReceiveProps({ setCurrentUser, data: { user }}) {

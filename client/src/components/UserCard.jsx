@@ -11,19 +11,18 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
 
-const UserProfileCard = ({ session, data, data: { user, loading, error } }) => (
+const UserCard = ({ session, data: { user, loading, error } }) => (
+
   loading &&
   <Paper style={{padding: 25}}>
     <CircularProgress/>
   </Paper>
-
   ||
 
   error &&
   <Paper style={{padding: 25}}>
     <h2>User not found</h2>
   </Paper>
-
   ||
 
   user &&
@@ -64,7 +63,7 @@ const userQuery = gql`
 
 const UserProfileCardWithData =  graphql(userQuery, {
   options: ({ username }) => ({variables: { username }})
-})(UserProfileCard);
+})(UserCard);
 
 export default connect(
   ({ data, session }) => ({ data, session })

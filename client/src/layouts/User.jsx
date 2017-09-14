@@ -7,9 +7,9 @@ import Paper from 'material-ui/Paper';
 import Card, { CardContent, CardMedia } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 
-import UserProfileCard from '../components/UserProfileCard.jsx';
+import UserCard from '../components/UserCard.jsx';
 
-class UserProfile extends Component {
+class User extends Component {
   render() {
     const { username } = this.props.match.params;
     return (
@@ -21,7 +21,7 @@ class UserProfile extends Component {
         }}>
           <Grid sm lg/>
           <Grid item xs={12} sm={12} md={4} lg={3}>
-            <UserProfileCard username={username}/>
+            <UserCard username={username}/>
           </Grid>
 
           <Grid item xs={12} sm={12} md={8} lg={6}>
@@ -49,4 +49,4 @@ class UserProfile extends Component {
 
 const mapStateToProps = state => state.session.currentUser;
 
-export default connect(mapStateToProps)(UserProfile);
+export default connect(mapStateToProps)(User);

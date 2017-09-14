@@ -7,7 +7,7 @@ import Paper from 'material-ui/Paper';
 import { CircularProgress } from 'material-ui/Progress';
 
 import ProjectContributors from '../components/ProjectContributors.jsx';
-import MediaComponent from '../components/MediaComponent.jsx';
+import MediaComponent from '../components/MediaComponent';
 import Spacer from '../components/Spacer.jsx';
 
 ////////////////////////////////////////
@@ -21,8 +21,6 @@ import Spacer from '../components/Spacer.jsx';
 // select * from components where isFeatured=true;
 
 const Project = ({ data }) => {
-// class Project extends Component {
-//   render() {
 
   if (data.loading) {
     return (
