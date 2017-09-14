@@ -14,9 +14,9 @@ import {
 
 import { ExitToApp } from 'material-ui-icons';
 
-const NavHeader = ({ data: { user, loading, error }, toggleNavDrawer }) => (
+const NavHeader = ({ user, toggleNavDrawer }) => (
 
-  error &&
+  !user &&
   <NavLink
     to='/login'
     onClick={toggleNavDrawer}
@@ -29,13 +29,6 @@ const NavHeader = ({ data: { user, loading, error }, toggleNavDrawer }) => (
       <ListItemText primary='Login / Signup'/>
     </ListItem>
   </NavLink>
-
-  ||
-
-  loading &&
-  <Paper style={{padding: 5}}>
-    <CircularProgress/>
-  </Paper>
 
   ||
 

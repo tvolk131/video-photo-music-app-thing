@@ -31,13 +31,8 @@ import {
 import NavHeader from './NavHeader.jsx';
 
 import { toggleNavDrawer } from '../../actions/controlActions';
-import { setCurrentUser } from '../../actions/sessionActions';
 
 class Nav extends Component {
-  componentWillReceiveProps({ setCurrentUser, data: { user }}) {
-    setCurrentUser(user);
-  }
-
   render() {
     const { navDrawerOpen, toggleNavDrawer } = this.props;
     const style = {textDecoration: 'none'};
@@ -71,7 +66,7 @@ class Nav extends Component {
           <div style={{width: 250}}>
             <List>
               <NavHeader
-                data={this.props.data}
+                user={this.props.currentUser}
                 toggleNavDrawer={toggleNavDrawer}
               />
 
@@ -88,10 +83,10 @@ class Nav extends Component {
                 </ListItem>
               </NavLink>
 
-              {this.props.data.user &&
+              {this.props.currentUser &&
                 <div>
                   <NavLink
-                    to={`/user/${this.props.data.user.username}`}
+                    to={`/user/${this.props.currentUser.username}`}
                     onClick={toggleNavDrawer}
                     style={style}
                   >
@@ -104,7 +99,7 @@ class Nav extends Component {
                   </NavLink>
 
                   <NavLink
-                    to={`/user/${this.props.data.user.username}`}
+                    to={`/user/${this.props.currentUser.username}`}
                     onClick={toggleNavDrawer}
                     style={style}
                   >
@@ -129,18 +124,12 @@ class Nav extends Component {
                     </ListItem>
                   </NavLink>
 
-                  <NavLink
-                    to='/logout'
-                    onClick={this.props.logout}
-                    style={style}
-                  >
-                    <ListItem>
+                    <ListItem onClick={() => {window.location.href = '/logout'}}>
                       <ListItemIcon>
                         <ExitToApp />
                       </ListItemIcon>
                       <ListItemText primary='Logout'/>
                     </ListItem>
-                  </NavLink>
                 </div>
               }
 
@@ -152,30 +141,20 @@ class Nav extends Component {
   }
 }
 
-const currentUserQuery = gql`
-  query currentUserQuery {
-    user {
-      name
-      username
-      avatarUrl
-      email
-    }
-  }
-`;
-
-const mapStateToProps = state => state.control;
-
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = state => {
   return {
-    toggleNavDrawer: () => dispatch(toggleNavDrawer()),
-    setCurrentUser: (user) => dispatch(setCurrentUser(user)),
-    logout: () => dispatch(logout())
+    currentUser: state.session.currentUser,
+    navDrawerOpen: state.control.navDrawerOpen
   };
 };
 
-const NavWithState = connect(
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleNavDrawer: () => dispatch(toggleNavDrawer())
+  };
+};
+
+export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Nav);
-
-export default graphql(currentUserQuery)(NavWithState);
