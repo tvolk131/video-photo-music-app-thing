@@ -1,11 +1,10 @@
-import React from 'react';
-import pressed from './pressed.png';
-import unpressed from './unpressed.png';
+import React, { Component } from 'react';
+import image from './button.png';
 import ImageButton from '../ImageButton.jsx';
 
-class FacebookButton extends React.Component {
+class FacebookButton extends Component {
   render () {
-    return <ImageButton onClick={this.props.onClick} pressedImage={pressed} unpressedImage={unpressed} />
+    return <ImageButton onClick={this.props.onClick} image={image} />
   }
 }
 
