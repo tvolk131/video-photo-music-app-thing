@@ -120,7 +120,7 @@ describe('Project Model', () => {
         name: 'test project'
       })
         .then((project) => {
-          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id, role: 'contributor'})
             .then(() => {
               return expect(Project.update({userId: oAuthUser.id, projectId: project.id, options: {name: 'updated project name'}})).to.be.rejectedWith('Must be owner to edit project');
             });
@@ -141,7 +141,7 @@ describe('Project Model', () => {
         name: 'test project'
       })
         .then((project) => {
-          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id, role: 'contributor'})
             .then(() => {
               return expect(Project.update({userId: oAuthUser.id, projectId: project.id, options: {ownerId: oAuthUser.id}})).to.be.rejectedWith('Only the project owner can set another user as the owner');
             });
@@ -153,7 +153,7 @@ describe('Project Model', () => {
         name: 'test project'
       })
         .then((project) => {
-          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id, role: 'contributor'})
             .then(() => {
               return Project.update({userId: localUser.id, projectId: project.id, options: {ownerId: oAuthUser.id}});
             });
@@ -291,10 +291,19 @@ describe('Project Model', () => {
         name: 'test project'
       })
         .then((project) => {
-          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id});
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id, role: 'contributor'});
         })
         .then((response) => {
           expect(response).to.equal(true);
+        });
+    });
+    it('Should reject when adding a contributor without a role', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return expect(Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})).to.be.rejectedWith('Role must be a non-empty string');
         });
     });
     it('Should reject when adding contributors as someone other than the project owner', () => {
@@ -303,7 +312,7 @@ describe('Project Model', () => {
         name: 'test project'
       })
         .then((project) => {
-          return expect(Project.addContributor({ownerId: oAuthUser.id, contributorId: localUser.id, projectId: project.id})).to.be.rejectedWith('Cannot add contributors to a project you do not own');
+          return expect(Project.addContributor({ownerId: oAuthUser.id, contributorId: localUser.id, projectId: project.id, role: 'contributor'})).to.be.rejectedWith('Cannot add contributors to a project you do not own');
         });
     });
     it('Should reject when adding a user that is already a contributor', () => {
@@ -312,9 +321,9 @@ describe('Project Model', () => {
         name: 'test project'
       })
         .then((project) => {
-          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id, role: 'contributor'})
             .then(() => {
-              return expect(Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})).to.be.rejectedWith('User is already a contributor to this project');
+              return expect(Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id, role: 'contributor'})).to.be.rejectedWith('User is already a contributor to this project');
             });
         });
     });
@@ -324,7 +333,7 @@ describe('Project Model', () => {
         name: 'test project'
       })
         .then((project) => {
-          return expect(Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id + 1})).to.be.rejectedWith('Project does not exist');
+          return expect(Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id + 1, role: 'contributor'})).to.be.rejectedWith('Project does not exist');
         });
     });
     it('Should reject when adding project owner as a contributor', () => {
@@ -333,25 +342,43 @@ describe('Project Model', () => {
         name: 'test project'
       })
         .then((project) => {
-          return expect(Project.addContributor({ownerId: localUser.id, contributorId: localUser.id, projectId: project.id})).to.be.rejectedWith('Owner cannot be added as a contributor');
+          return expect(Project.addContributor({ownerId: localUser.id, contributorId: localUser.id, projectId: project.id, role: 'contributor'})).to.be.rejectedWith('Owner cannot be added as a contributor');
         });
     });
   });
 
   describe('removeContributor()', () => {
-    it('Should remove existing contributors when doing so as the project owner', () => {
+    it('Should return true when removal is successful', () => {
       return Project.create({
         ownerId: localUser.id,
         name: 'test project'
       })
         .then((project) => {
-          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id, role: 'contributor'})
             .then(() => {
               return Project.removeContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id});
             });
         })
         .then((response) => {
           expect(response).to.equal(true);
+        });
+    });
+    it('Should remove existing contributors when doing so as the project owner', () => {
+      return Project.create({
+        ownerId: localUser.id,
+        name: 'test project'
+      })
+        .then((project) => {
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id, role: 'contributor'})
+            .then(() => {
+              return Project.removeContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id});
+            })
+            .then(() => {
+              return Project.getContributors(project.id);
+            });
+        })
+        .then((contributors) => {
+          expect(contributors.length).to.equal(0);
         });
     });
     it('Should reject when removing a contributor that is not listed as a contributor to the project', () => {
@@ -369,7 +396,7 @@ describe('Project Model', () => {
         name: 'test project'
       })
         .then((project) => {
-          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id, role: 'contributor'})
             .then(() => {
               return expect(Project.removeContributor({ownerId: oAuthUser.id, contributorId: oAuthUser.id, projectId: project.id})).to.be.rejectedWith('Cannot remove contributors from a project you do not own');
             });
@@ -393,7 +420,7 @@ describe('Project Model', () => {
         name: 'test project'
       })
         .then((project) => {
-          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id})
+          return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id, role: 'contributor'})
             .then(() => {
               return Project.getContributors(project.id);
             });
@@ -403,6 +430,7 @@ describe('Project Model', () => {
           expect(contributors).to.be.a('array');
           expect(contributors.length).to.equal(1);
           expect(contributors[0].id).to.equal(oAuthUser.id);
+          expect(contributors[0].role).to.equal('contributor');
         });
     });
     it('Should reject when retrieving contributors from a non-existent project', () => {
@@ -430,7 +458,8 @@ describe('Project Model', () => {
         return Project.addContributor({
           ownerId: localUser.id,
           contributorId: oAuthUser.id,
-          projectId: project.id
+          projectId: project.id,
+          role: 'contributor'
         })
           .then(() => {
             return expect(Project.addTag({userId: oAuthUser.id, projectId: project.id, text: 'test tag'})).to.eventually.equal(true);
@@ -461,7 +490,8 @@ describe('Project Model', () => {
         return Project.addContributor({
           ownerId: localUser.id,
           contributorId: oAuthUser.id,
-          projectId: project.id
+          projectId: project.id,
+          role: 'contributor'
         })
           .then(() => {
             return expect(Project.removeTag({userId: oAuthUser.id, projectId: project.id, text: 'test tag'})).to.eventually.equal(true);
