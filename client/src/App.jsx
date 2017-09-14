@@ -11,7 +11,6 @@ import UserProfile from './layouts/UserProfile.jsx';
 import Settings from './layouts/Settings.jsx';
 import Login from './layouts/Login.jsx';
 import Signup from './layouts/Signup.jsx';
-import Logout from './layouts/Logout.jsx';
 
 import themes from './themes';
 
@@ -25,29 +24,25 @@ import {
   ApolloProvider
 } from 'react-apollo';
 
-class App extends Component {
-  render() {
-    return (
-      <ApolloProvider client={client} store={store}>
-        <MuiThemeProvider theme={themes.get(1)}>
-          <div className="App">
-            <Nav />
-            <Route exact path='/' component={Search}/>
-            <Route exact path='/search' component={Search}/>
-            <Route
-              exact
-              path='/project/:username/:projectName' component={Project}
-            />
-            <Route exact path='/user/:username' component={UserProfile}/>
-            <Route exact path='/settings' component={Settings}/>
-            <Route exact path='/login' component={Login}/>
-            <Route exact path='/signup' component={Signup}/>
-            <Route exact path='/logout' component={Logout}/>
-          </div>
-        </MuiThemeProvider>
-      </ApolloProvider>
-    );
-  }
-}
+const App = () => (
+  <ApolloProvider client={client} store={store}>
+    <MuiThemeProvider theme={themes.get(1)}>
+      <div className="App">
+        <Nav />
+        <Route exact path='/' component={Search}/>
+        <Route exact path='/search' component={Search}/>
+        <Route
+          exact
+          path='/project/:username/:projectName'
+          component={Project}
+        />
+        <Route exact path='/user/:username' component={UserProfile}/>
+        <Route exact path='/settings' component={Settings}/>
+        <Route exact path='/login' component={Login}/>
+        <Route exact path='/signup' component={Signup}/>
+      </div>
+    </MuiThemeProvider>
+  </ApolloProvider>
+);
 
 export default App;
