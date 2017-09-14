@@ -23,7 +23,7 @@ const UserModel = db.define('users', {
     type: Sequelize.STRING(32)
   },
   email: {
-    type: Sequelize.STRING(64),
+    type: Sequelize.STRING(128),
     unique: true,
     validate: {
       isEmail: true
@@ -50,10 +50,10 @@ const UserModel = db.define('users', {
     type: Sequelize.STRING(64)
   },
   avatarUrl: {
-    type: Sequelize.STRING(64)
+    type: Sequelize.STRING(512)
   },
   description: {
-    type: Sequelize.STRING(256)
+    type: Sequelize.STRING(512)
   }
 });
 

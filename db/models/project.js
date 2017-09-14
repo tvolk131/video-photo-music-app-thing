@@ -13,12 +13,12 @@ const ProjectModel = db.define('projects', {
     primaryKey: true
   },
   name: {
-    type: Sequelize.STRING(64),
+    type: Sequelize.STRING(128),
     notEmpty: true,
     allowNull: false
   },
   description: {
-    type: Sequelize.STRING(256)
+    type: Sequelize.STRING(512)
   },
   tagline: {
     type: Sequelize.STRING(256)
