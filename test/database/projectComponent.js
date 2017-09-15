@@ -73,6 +73,32 @@ describe('Project Component Model', () => {
         resourceUrl: 'google.com'
       })).to.be.rejectedWith('Cannot create a component in a project you are not a part of');
     });
+    it('Should successfully set a featured component upon creation as the project owner', () => {
+      return ProjectComponent.create({
+        userId: userOne.id,
+        projectId: project.id,
+        name: 'test component',
+        type: 'image',
+        resourceUrl: 'google.com',
+        isFeatured: true
+      })
+        .then((newComponent) => {
+          expect(newComponent.isFeatured).to.equal(true);
+        });
+    });
+    it('Should reject when adding a featured component as a project contributor', () => {
+      return expect(Project.addContributor({ownerId: userOne.id, contributorId: userTwo.id, projectId: project.id, role: 'contributor'})
+      .then(() => {
+        return ProjectComponent.create({
+          userId: userTwo.id,
+          projectId: project.id,
+          name: 'test component',
+          type: 'image',
+          resourceUrl: 'google.com',
+          isFeatured: true
+        });
+      })).to.be.rejectedWith('Cannot set featured component in a project you do not own');
+    });
     it('Should reject when userId does not map to an existing user', () => {
       return expect(ProjectComponent.create({userId: 1234, type: 'file'})).to.be.rejectedWith('User does not exist');
     });

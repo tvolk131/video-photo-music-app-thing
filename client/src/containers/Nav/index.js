@@ -3,23 +3,25 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { graphql, gql } from 'react-apollo';
 
-import AppBar from 'material-ui/AppBar';
-import Avatar from 'material-ui/Avatar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import MenuIcon from 'material-ui-icons/Menu';
-import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
-import Drawer from 'material-ui/Drawer';
-import Input from 'material-ui/Input';
-import Paper from 'material-ui/Paper';
+import {
+  AppBar,
+  Avatar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Drawer,
+  Input,
+  Paper
+} from 'material-ui';
 import List, {
   ListItem,
   ListItemIcon,
   ListItemText
 } from 'material-ui/List';
 
+import MenuIcon from 'material-ui-icons/Menu';
+import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import {
   AccountCircle,
   Search,
@@ -29,117 +31,111 @@ import {
 } from 'material-ui-icons';
 
 import NavHeader from './NavHeader.jsx';
-
 import { toggleNavDrawer } from '../../actions/controlActions';
 
-class Nav extends Component {
-  render() {
-    const { navDrawerOpen, toggleNavDrawer } = this.props;
-    const style = {textDecoration: 'none'};
+const style = {textDecoration: 'none'};
 
-    return (
-      <div>
-        <AppBar position='static'>
-          <Toolbar disableGutters>
-            <IconButton
-              color='contrast'
-              aria-label='Menu'
-              onClick={toggleNavDrawer}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Input
-              autoFocus
-              placeholder='Search for projects'
-              style={{color: 'white'}}
-            />
-          </Toolbar>
-        </AppBar>
-
-        <Drawer
-          open={navDrawerOpen}
-          elevation={1}  
+const Nav = (props) => (
+  <div>
+    <AppBar position='static'>
+      <Toolbar disableGutters>
+        <IconButton
+          color='contrast'
+          aria-label='Menu'
+          onClick={props.toggleNavDrawer}
         >
-          <IconButton onClick={toggleNavDrawer}>
-            <ChevronLeftIcon />
-          </IconButton>
-          <div style={{width: 250}}>
-            <List>
-              <NavHeader
-                user={this.props.currentUser}
-                toggleNavDrawer={toggleNavDrawer}
-              />
+          <MenuIcon />
+        </IconButton>
+        <Input
+          autoFocus
+          placeholder='Search for projects'
+          style={{color: 'white'}}
+        />
+      </Toolbar>
+    </AppBar>
 
+    <Drawer
+      open={props.navDrawerOpen}
+      elevation={1}  
+    >
+      <IconButton onClick={props.toggleNavDrawer}>
+        <ChevronLeftIcon />
+      </IconButton>
+      <div style={{width: 250}}>
+        <List>
+          <NavHeader
+            user={props.currentUser}
+            toggleNavDrawer={props.toggleNavDrawer}
+          />
+
+          <NavLink
+            to='/search'
+            onClick={props.toggleNavDrawer}
+            style={style}
+          >
+            <ListItem>
+              <ListItemIcon>
+                <Search />
+              </ListItemIcon>
+              <ListItemText primary='Search'/>
+            </ListItem>
+          </NavLink>
+
+          {props.currentUser &&
+            <div>
               <NavLink
-                to='/search'
-                onClick={toggleNavDrawer}
+                to={`/user/${props.currentUser.username}`}
+                onClick={props.toggleNavDrawer}
                 style={style}
               >
                 <ListItem>
                   <ListItemIcon>
-                    <Search />
+                    <PermMedia />
                   </ListItemIcon>
-                  <ListItemText primary='Search'/>
+                  <ListItemText primary='My Projects'/>
                 </ListItem>
               </NavLink>
 
-              {this.props.currentUser &&
-                <div>
-                  <NavLink
-                    to={`/user/${this.props.currentUser.username}`}
-                    onClick={toggleNavDrawer}
-                    style={style}
-                  >
-                    <ListItem>
-                      <ListItemIcon>
-                        <PermMedia />
-                      </ListItemIcon>
-                      <ListItemText primary='My Projects'/>
-                    </ListItem>
-                  </NavLink>
+              <NavLink
+                to={`/user/${props.currentUser.username}`}
+                onClick={props.toggleNavDrawer}
+                style={style}
+              >
+                <ListItem>
+                  <ListItemIcon>
+                    <AccountCircle />
+                  </ListItemIcon>
+                  <ListItemText primary='My profile'/>
+                </ListItem>
+              </NavLink>
 
-                  <NavLink
-                    to={`/user/${this.props.currentUser.username}`}
-                    onClick={toggleNavDrawer}
-                    style={style}
-                  >
-                    <ListItem>
-                      <ListItemIcon>
-                        <AccountCircle />
-                      </ListItemIcon>
-                      <ListItemText primary='My profile'/>
-                    </ListItem>
-                  </NavLink>
+              <NavLink
+                to='/settings'
+                onClick={props.toggleNavDrawer}
+                style={style}
+              >
+                <ListItem>
+                  <ListItemIcon>
+                    <Settings />
+                  </ListItemIcon>
+                  <ListItemText primary='Settings'/>
+                </ListItem>
+              </NavLink>
 
-                  <NavLink
-                    to='/settings'
-                    onClick={toggleNavDrawer}
-                    style={style}
-                  >
-                    <ListItem>
-                      <ListItemIcon>
-                        <Settings />
-                      </ListItemIcon>
-                      <ListItemText primary='Settings'/>
-                    </ListItem>
-                  </NavLink>
+                <ListItem onClick={() => {window.location.href = '/logout'}}>
+                  <ListItemIcon>
+                    <ExitToApp />
+                  </ListItemIcon>
+                  <ListItemText primary='Logout'/>
+                </ListItem>
+            </div>
+          }
 
-                    <ListItem onClick={() => {window.location.href = '/logout'}}>
-                      <ListItemIcon>
-                        <ExitToApp />
-                      </ListItemIcon>
-                      <ListItemText primary='Logout'/>
-                    </ListItem>
-                </div>
-              }
-
-            </List> 
-          </div>
-        </Drawer>
+        </List> 
       </div>
-    );
-  }
-}
+    </Drawer>
+  </div>
+);
 
 const mapStateToProps = state => {
   return {
