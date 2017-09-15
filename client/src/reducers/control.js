@@ -25,6 +25,12 @@ const control = (state = initialState, action) => {
   if (action.type === 'CLOSE_PASSWORD_DIALOG') {
     return {...state, settings: {...state.settings, password: {...state.settings.password, dialogOpen: false}}};
   }
+  // TODO - Have this action actually change the user's password
+  // TODO - Show something on screen when password change is complete
+  if (action.type === 'CHANGE_PASSWORD') {
+    console.log(action.payload);
+    return {...state, settings: {...state.settings, password: {...state.settings.password, current: '', new: '', dialogOpen: false}}};
+  }
 
   return state;
 }

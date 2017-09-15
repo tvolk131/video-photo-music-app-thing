@@ -7,7 +7,7 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 import { connect } from 'react-redux';
-import { setCurrentPassword, setNewPassword, openPasswordDialog, closePasswordDialog } from '../../actions/controlActions';
+import { setCurrentPassword, setNewPassword, openPasswordDialog, closePasswordDialog, changePassword } from '../../actions/controlActions';
 
 const styles = {
   button: {
@@ -56,7 +56,7 @@ const PasswordChanger = (props) => (
         <Button onClick={props.closeDialog} color='primary'>
           Cancel
         </Button>
-        <Button onClick={console.log} color='primary'>
+        <Button onClick={() => {props.changePassword(props.currentPassword, props.newPassword)}} color='primary'>
           Yes, change it!
         </Button>
       </DialogActions>
@@ -77,7 +77,8 @@ const mapDispatchToProps = dispatch => {
     setCurrentPassword: (e) => dispatch(setCurrentPassword(e.target.value)),
     setNewPassword: (e) => dispatch(setNewPassword(e.target.value)),
     openDialog: () => dispatch(openPasswordDialog()),
-    closeDialog: () => dispatch(closePasswordDialog())
+    closeDialog: () => dispatch(closePasswordDialog()),
+    changePassword: (currentPassword, newPassword) => dispatch(changePassword(currentPassword, newPassword))
   };
 };
 

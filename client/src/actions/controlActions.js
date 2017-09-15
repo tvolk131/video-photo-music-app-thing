@@ -30,4 +30,18 @@ const closePasswordDialog = () => {
   };
 };
 
-export { toggleNavDrawer, setCurrentPassword, setNewPassword, openPasswordDialog, closePasswordDialog };
+const changePassword = (currentPassword, newPassword) => {
+  return {
+    type: 'CHANGE_PASSWORD',
+    payload: {currentPassword, newPassword}
+  }
+}
+
+export {
+  toggleNavDrawer,
+  setCurrentPassword,
+  setNewPassword,
+  openPasswordDialog,
+  closePasswordDialog,
+  changePassword
+};
