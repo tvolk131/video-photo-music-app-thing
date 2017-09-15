@@ -22,10 +22,10 @@ const UserType = new GraphQLObjectType({
     username: {type: GraphQLString},
     theme: {type: GraphQLInt},
     name: {type: GraphQLString},
-    handle: {type: GraphQLString},
     profession: {type: GraphQLString},
     avatarUrl: {type: GraphQLString},
     description: {type: GraphQLString},
+    role: {type: GraphQLString},
     followers: {
       type: new GraphQLList(UserType),
       resolve(parentValue, args) {
@@ -183,7 +183,6 @@ const RootQuery = new GraphQLObjectType({
       type: UserType,
       args: {
         id: {type: GraphQLInt},
-        handle: {type: GraphQLString},
         email: {type: GraphQLString},
         username: {type: GraphQLString}
       },
@@ -199,9 +198,6 @@ const RootQuery = new GraphQLObjectType({
         }
         if (args.id) {
           return db.User.getById(args.id);
-        }
-        if (args.handle) {
-          return db.User.getByHandle(args.handle);
         }
         if (args.email) {
           return db.User.getByEmail(args.email);
@@ -239,7 +235,6 @@ const mutation = new GraphQLObjectType({
         password: {type: GraphQLString},
         theme: {type: GraphQLInt},
         name: {type: GraphQLString},
-        handle: {type: GraphQLString},
         profession: {type: GraphQLString},
         avatar: {type: GraphQLString},
         description: {type: GraphQLString}
@@ -417,13 +412,14 @@ const mutation = new GraphQLObjectType({
       type: UserType,
       args: {
         userId: {type: new GraphQLNonNull(GraphQLInt)},
-        projectId: {type: new GraphQLNonNull(GraphQLInt)}
+        projectId: {type: new GraphQLNonNull(GraphQLInt)},
+        role: {type: new GraphQLNonNull(GraphQLString)}
       },
-      resolve(parentValue, {userId, projectId}, request) {
+      resolve(parentValue, {userId, projectId, role}, request) {
         if (!request.user) {
           return Promise.reject('Cannot add contributor when you are not logged in');
         }
-        return db.Project.addContributor({ownerId: request.user.id, contributorId: userId, projectId});
+        return db.Project.addContributor({ownerId: request.user.id, contributorId: userId, projectId, role});
       }
     },
     removeProjectContributor: {

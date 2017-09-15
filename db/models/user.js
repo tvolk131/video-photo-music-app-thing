@@ -23,7 +23,7 @@ const UserModel = db.define('users', {
     type: Sequelize.STRING(32)
   },
   email: {
-    type: Sequelize.STRING(64),
+    type: Sequelize.STRING(128),
     unique: true,
     validate: {
       isEmail: true
@@ -42,26 +42,24 @@ const UserModel = db.define('users', {
     type: Sequelize.INTEGER(4)
   },
   name: {
-    type: Sequelize.STRING(64)
-  },
-  handle: {
-    type: Sequelize.STRING(32),
-    unique: true
+    type: Sequelize.STRING(64),
+    notEmpty: true,
+    allowNull: false
   },
   profession: {
     type: Sequelize.STRING(64)
   },
   avatarUrl: {
-    type: Sequelize.STRING(64)
+    type: Sequelize.STRING(512)
   },
   description: {
-    type: Sequelize.STRING(256)
+    type: Sequelize.STRING(512)
   }
 });
 
 let User = {model: UserModel};
 
-User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, handle, profession, avatarUrl, description}) => {
+User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, profession, avatarUrl, description}) => {
   if (oAuthUserId && oAuthProvider) {
     if (password) {
       return new Promise((resolve, reject) => {
@@ -92,7 +90,6 @@ User.create = ({oAuthUserId, oAuthProvider, email, username, password, name, han
     password: password ? generateHash(password): undefined,
     theme: defaultTheme,
     name,
-    handle,
     profession,
     avatarUrl,
     description
@@ -108,8 +105,8 @@ User.update = (userId, query) => {
   }
   return User.getById(userId)
     .then((user) => {
-      if (user.oAuthUserId && (query.username || query.password)) {
-        return Promise.reject('Cannot update username or password fields when signed in through oAuth provider');
+      if (user.oAuthUserId && query.password) {
+        return Promise.reject('Cannot update password field when signed in through oAuth provider');
       }
       if (query.password) {
         query.password = generateHash(query.password);
@@ -199,15 +196,6 @@ User.getByEmail = (email) => {
 User.getByUsername = (username) => {
   return User.model.findOne({
     where: {username}
-  })
-    .then((user) => {
-      return user ? user : Promise.reject('User does not exist');
-    });
-};
-
-User.getByHandle = (handle) => {
-  return User.model.findOne({
-    where: {handle}
   })
     .then((user) => {
       return user ? user : Promise.reject('User does not exist');

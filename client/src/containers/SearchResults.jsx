@@ -4,20 +4,13 @@ import { connect } from 'react-redux';
 import ListingItem from '../components/ListingItem.jsx';
 import Upload from '../components/Upload.jsx';
 
-const SearchResults = ({ searchResults }) => {
-  const searchResultsItems = searchResults.map((content, key) => {
-    return (
+const SearchResults = ({ searchResults }) => (
+  <div style={{width: '100%'}}>{
+    searchResults.map((content, key) => (
       <ListingItem content={content} key={key} id={key} />
-    );
-  });
-
-  return (
-    <div style={{width: '100%'}}>
-      <Upload />
-      {searchResultsItems}
-    </div>
-  );
-};
+    ))
+  }</div>
+);
 
 const mapStateToProps = (state) => state.data;
 

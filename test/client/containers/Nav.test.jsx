@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow } from 'enzyme';
-import Nav from '../../../client/src/components/Nav.jsx';
+import Nav from '../../../client/src/containers/Nav';
 
 test('<Nav />', () => {
   it('renders AppBar', () => {

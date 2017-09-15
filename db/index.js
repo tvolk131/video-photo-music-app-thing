@@ -1,4 +1,5 @@
 const Comment = require('./models/comment');
+const Contributor = require('./models/contributor');
 const Like = require('./models/like');
 const Project = require('./models/project');
 const ProjectComponent = require('./models/projectComponent');
@@ -10,8 +11,8 @@ connection.clear = () => {
   return connection.sync({force: true});
 };
 
-User.model.belongsToMany(Project.model, {through: 'contributors', as: 'project', foreignKey: 'contributorId'});
-Project.model.belongsToMany(User.model, {through: 'contributors', as: 'contributor', foreignKey: 'projectId'});
+User.model.belongsToMany(Project.model, {through: Contributor.model, as: 'project', foreignKey: 'contributorId'});
+Project.model.belongsToMany(User.model, {through: Contributor.model, as: 'contributor', foreignKey: 'projectId'});
 
 User.model.belongsToMany(User.model, {through: 'followers', as: 'follower', foreignKey: 'followeeId'});
 User.model.belongsToMany(User.model, {through: 'followers', as: 'followee', foreignKey: 'followerId'});

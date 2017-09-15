@@ -1,5 +1,6 @@
 const db = require('../connection');
 const User = require('./user');
+const Contributor = require('./contributor');
 const Sequelize = require('sequelize');
 const Comment = require('./comment');
 const Like = require('./like');
@@ -12,12 +13,12 @@ const ProjectModel = db.define('projects', {
     primaryKey: true
   },
   name: {
-    type: Sequelize.STRING(64),
+    type: Sequelize.STRING(128),
     notEmpty: true,
     allowNull: false
   },
   description: {
-    type: Sequelize.STRING(256)
+    type: Sequelize.STRING(512)
   },
   tagline: {
     type: Sequelize.STRING(256)
@@ -108,7 +109,10 @@ Project.getByUserAndName = (userId, projectName) => {
     });
 };
 
-Project.addContributor = ({ownerId, contributorId, projectId}) => {
+Project.addContributor = ({ownerId, contributorId, projectId, role}) => {
+  if (!role || role.constructor !== String || role === '') {
+    return Promise.reject('Role must be a non-empty string');
+  }
   return Project.getById(projectId)
     .then((project) => {
       if (project.ownerId !== ownerId) {
@@ -119,9 +123,15 @@ Project.addContributor = ({ownerId, contributorId, projectId}) => {
           if (user.id === ownerId) {
             return Promise.reject('Owner cannot be added as a contributor');
           }
-          return project.addContributor(user)
-            .then((response) => {
-              return response.length ? true : Promise.reject('User is already a contributor to this project');
+          return Contributor.model.findOrCreate({
+            where: {
+              contributorId: user.id,
+              projectId: project.id
+            },
+            defaults: {role}
+          })
+            .spread((contributor, created) => {
+              return created ? true : Promise.reject('User is already a contributor to this project');
             });
         });
     });
@@ -151,12 +161,21 @@ Project.getContributors = (projectId) => {
     include: [
       {
         model: User.model,
-        as: 'contributor'
+        as: 'contributor',
+        through: {
+          attributes: ['role']
+        }
       }
     ]
   })
     .then((project) => {
-      return project ? project.contributor : Promise.reject('Project does not exist');
+      if (!project) {
+        return Promise.reject('Project does not exist');
+      }
+      project.contributor.forEach((contributorModel) => {
+        contributorModel.role = contributorModel.contributors.role;
+      });
+      return project.contributor;
     });
 };
 

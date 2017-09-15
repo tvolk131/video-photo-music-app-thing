@@ -16,9 +16,7 @@ const ProjectContributors = ({ owner, contributors }) => {
       />
       <CardHeader
         avatar={
-          <Avatar src={owner.avatarUrl} style={{width: 50, height: 50}}>
-             
-          </Avatar>
+          <Avatar src={owner.avatarUrl} style={{width: 50, height: 50}} />
         }
         title={owner.name}
         subheader='Project Owner'
@@ -32,7 +30,7 @@ const ProjectContributors = ({ owner, contributors }) => {
           return (
             <ListItem button key={key}>
               <ListItemAvatar>
-                <Avatar src={contributor.avatarUrl}></Avatar>
+                <Avatar src={contributor.avatarUrl} />
               </ListItemAvatar>
               <ListItemText
                 primary={contributor.name}

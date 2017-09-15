@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow } from 'enzyme';
-import ProjectContributors from '../../../client/src/components/SearchResultsItem.jsx';
+import ProjectContributors from '../../../client/src/components/ProjectContributors.jsx';
 
 test('<ProjectContributors />', () => {
   it('renders project owner header', () => {

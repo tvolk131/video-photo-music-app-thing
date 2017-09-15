@@ -19,6 +19,9 @@ app.use(middleware.auth.session);
 app.use(middleware.passport.initialize());
 app.use(middleware.passport.session());
 
+app.set('views', __dirname + '/views');
+app.set('view engine', 'pug');
+
 app.use('/', routes.auth);
 app.use('/api', routes.api);
 
@@ -41,7 +44,7 @@ app.get('*/manifest.json', (req, res) => {
   res.sendFile(path.resolve(__dirname + '/../public/dist/manifest.json'));
 });
 app.get('/*', (req, res) => {
-  res.sendFile(path.resolve(__dirname + '/../public/dist/index.html'));
+  res.render('index', {user: req.user ? JSON.stringify(req.user) : JSON.stringify(null)});
 });
 
 
