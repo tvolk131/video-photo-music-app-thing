@@ -50,7 +50,7 @@ const ProjectComponentModel = db.define('components', {
 
 let ProjectComponent = {model: ProjectComponentModel};
 
-ProjectComponent.create = ({userId, projectId, type, name, resourceUrl, description, isDownloadable = false}) => {
+ProjectComponent.create = ({userId, projectId, type, name, resourceUrl, description, isDownloadable = false, isFeatured = false}) => {
   if (!componentTypes[type]) {
     return Promise.reject('Component type is invalid');
   }
@@ -80,6 +80,16 @@ ProjectComponent.create = ({userId, projectId, type, name, resourceUrl, descript
         isDownloadable: isDownloadable === true ? true : false,
         isFeatured: false
       });
+    })
+    .then((newComponent) => {
+      if (isFeatured) {
+        return ProjectComponent.setAsFeatured({userId, componentId: newComponent.id})
+          .then(() => {
+            return ProjectComponent.getById(newComponent.id);
+          });
+      } else {
+        return newComponent;
+      }
     });
 };
 
