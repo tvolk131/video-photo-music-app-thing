@@ -11,7 +11,7 @@ if (process.env.DB_USERNAME && process.env.DB_PASSWORD && process.env.DB_NAME &&
     logging: process.env.DB_LOGGING === undefined ? false : process.env.DB_LOGGING
   };
 } else {
-  config = require('./config.json')[env];
+  config = require('../config/dbConfig.json')[env];
 }
 let connection = new Sequelize(config.database, config.username, config.password, config);
 connection.reset = () => {

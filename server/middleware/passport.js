@@ -15,7 +15,7 @@ let config = {
   }
 };
 if (!(config.Google.clientID && config.Google.clientSecret && config.Google.callbackURL)) {
-  config = require('./oAuthConfig.json');
+  config = require('../../config/oAuthConfig.json');
 }
 
 passport.serializeUser((user, done) => {

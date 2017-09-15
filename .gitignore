@@ -1,6 +1,6 @@
 # Project specific
 db/config.json
-server/middleware/oAuthConfig.json
+config/oAuthConfig.json
 
 
 # OS X
