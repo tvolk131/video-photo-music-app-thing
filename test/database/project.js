@@ -143,7 +143,7 @@ describe('Project Model', () => {
         .then((project) => {
           return Project.addContributor({ownerId: localUser.id, contributorId: oAuthUser.id, projectId: project.id, role: 'contributor'})
             .then(() => {
-              return expect(Project.update({userId: oAuthUser.id, projectId: project.id, options: {ownerId: oAuthUser.id}})).to.be.rejectedWith('Only the project owner can set another user as the owner');
+              return expect(Project.update({userId: oAuthUser.id, projectId: project.id, options: {ownerId: oAuthUser.id}})).to.be.rejectedWith('Must be owner to edit project');
             });
         });
     });
