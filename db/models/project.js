@@ -47,9 +47,6 @@ Project.create = ({ownerId, name, description, tagline}) => {
 Project.update = ({userId, projectId, options}) => {
   return Project.getById(projectId)
     .then((project) => {
-      if (options.ownerId && project.ownerId !== userId) {
-        return Promise.reject('Only the project owner can set another user as the owner');
-      }
       return userId === project.ownerId ? project.update(options) : Promise.reject('Must be owner to edit project');
     });
 };
