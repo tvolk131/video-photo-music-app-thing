@@ -33,6 +33,10 @@ const control = (state = initialState, action) => {
     return {...state, editingUser: !state.editingUser};
   }
 
+  if (action.type === 'SET_UPLOADED_FILE_URL') {
+    return {...state, uploadedFileUrl: action.fileUrl};
+  }
+
   return state;
 }
 
