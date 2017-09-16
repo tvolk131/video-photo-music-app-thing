@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Paper, Typography, Button, TextField } from 'material-ui';
+import { gql, graphql } from 'react-apollo';
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -7,7 +8,7 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 import { connect } from 'react-redux';
-import { setCurrentPassword, setNewPassword, openPasswordDialog, closePasswordDialog, changePassword } from '../../actions/controlActions';
+import { setCurrentPassword, setNewPassword, openPasswordDialog, closePasswordDialog, resetPassword } from '../../actions/controlActions';
 
 const styles = {
   button: {
@@ -56,7 +57,14 @@ const PasswordChanger = (props) => (
         <Button onClick={props.closeDialog} color='primary'>
           Cancel
         </Button>
-        <Button onClick={() => {props.changePassword(props.currentPassword, props.newPassword)}} color='primary'>
+        <Button onClick={
+          () => {
+            props.resetPassword(props.currentPassword, props.newPassword);
+            props.mutate({
+              variables: {currentPassword: props.currentPassword, newPassword: props.newPassword}
+            });
+          }
+        } color='primary'>
           Yes, change it!
         </Button>
       </DialogActions>
@@ -78,11 +86,20 @@ const mapDispatchToProps = dispatch => {
     setNewPassword: (e) => dispatch(setNewPassword(e.target.value)),
     openDialog: () => dispatch(openPasswordDialog()),
     closeDialog: () => dispatch(closePasswordDialog()),
-    changePassword: (currentPassword, newPassword) => dispatch(changePassword(currentPassword, newPassword))
+    resetPassword: (currentPassword, newPassword) => dispatch(resetPassword(currentPassword, newPassword))
   };
 };
 
-export default connect(
+// TODO - Show error if something goes wrong
+const changePassword = gql`
+  mutation editUser($currentPassword: String! $newPassword: String!) {
+    editUser(currentPassword: $currentPassword newPassword: $newPassword) {
+      id
+    }
+  }
+`;
+
+export default graphql(changePassword)(connect(
   mapStateToProps,
   mapDispatchToProps
-)(PasswordChanger);
+)(PasswordChanger));

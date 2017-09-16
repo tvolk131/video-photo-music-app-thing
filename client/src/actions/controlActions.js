@@ -30,10 +30,9 @@ const closePasswordDialog = () => {
   };
 };
 
-const changePassword = (currentPassword, newPassword) => {
+const resetPassword = () => {
   return {
-    type: 'CHANGE_PASSWORD',
-    payload: {currentPassword, newPassword}
+    type: 'RESET_PASSWORD'
   }
 }
 
@@ -43,5 +42,5 @@ export {
   setNewPassword,
   openPasswordDialog,
   closePasswordDialog,
-  changePassword
+  resetPassword
 };
