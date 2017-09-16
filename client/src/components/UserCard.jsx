@@ -56,6 +56,7 @@ const UserCard = ({ user, loading, error, currentUser, toggleEditUser }) => (
         </Button>
       }
       <Typography>{user.name}</Typography>
+      <Typography>{user.profession}</Typography>
       <Typography>{user.username}</Typography>
       <Typography>{user.email}</Typography>
       <Typography>Bio:</Typography>

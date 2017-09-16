@@ -10,31 +10,77 @@ import Loading from './Loading.jsx';
 import Upload from './Upload.jsx';
 import TextField from 'material-ui/TextField';
 
-const EditUserCard = ({ session, data: { user, loading, error } }) => (
+import { setUploadedFileUrl } from '../actions/controlActions.js';
 
+const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, uploadedFileUrl, setUploadedFileUrl }) => (
   loading &&
-  <Loading /> 
+  <Loading />
+
   ||
 
   error &&
   <Paper style={{padding: 25}}>
     <Typography style={{fontSize: 20}}>User info not found</Typography>
   </Paper>
+
   ||
 
   user &&
   <Paper>
     <Typography style={{paddingTop: 10, marginBottom: 5}}>Upload a new profile image:</Typography>
-    <Upload allowedType="image" />
-    <div style={{textAlign: 'left', padding: 10}}>
-      <TextField label="Name" placeholder={user.name} style={{width: '100%'}} />
-      <TextField label="Username" placeholder={user.username} style={{width: '100%'}} />
-      <TextField label="Email" placeholder={user.email} style={{width: '100%'}} />
-      <TextField label="Bio" placeholder={user.description} multiline style={{width: '100%'}} />
-    </div>
-    <Button color='primary' raised onClick={() => console.log('close')} style={{marginBottom: 10}}>
+    <Upload 
+      allowedType="image"
+      setUploadedFileUrl={setUploadedFileUrl}
+    />
+    <form style={{textAlign: 'left', padding: 10}} onSubmit={e => {
+      let form = e.target
+      e.preventDefault();
+      toggleEditUser();
+      console.log('FILEURL: ', uploadedFileUrl)
+      submitChanges({
+        name: form.name.value || user.name,
+        username: form.username.value || user.username,
+        email: form.email.value || user.email,
+        profession: form.profession.value || 'cat',
+        avatarUrl: uploadedFileUrl || user.avatarUrl || '',
+        description: form.description.value || user.description || null
+      });
+    }}>
+      <TextField
+        id="name"
+        label="Name"
+        placeholder={user.name}
+        style={{width: '100%'}}
+      />
+      <TextField
+        id="profession"
+        label="profession"
+        placeholder={user.profession}
+        style={{width: '100%'}}
+      />
+      <TextField
+        id="username"
+        label="Username"
+        placeholder={user.username}
+        style={{width: '100%'}}
+      />
+      <TextField
+        id="email"
+        label="Email"
+        placeholder={user.email}
+        style={{width: '100%'}}
+      />
+      <TextField
+        id="description"
+        label="Bio"
+        placeholder={user.description}
+        multiline
+        style={{width: '100%'}}
+      />
+    <Button color='primary' raised type="submit" style={{marginBottom: 10}}>
       Submit
     </Button>
+    </form>
   </Paper>
 );
 
@@ -42,22 +88,59 @@ EditUserCard.propTypes = {
   username: PropTypes.string.isRequired,
 };
 
-const userQuery = gql`
-  query userQuery($username: String!) {
-    user(username: $username) {
-      name
-      username
-      description
+const editUser = gql`
+  mutation editUser(
+    $email: String!
+    $username: String!
+    $name: String!
+    $profession: String!
+    $description: String!
+    $avatarUrl: String!
+  ) {
+    editUser(
+      email: $email
+      username: $username
+      name: $name
+      profession: $profession
+      description: $description
+      avatarUrl: $avatarUrl
+    ) {
       email
+      username
+      name
+      profession
+      description
       avatarUrl
     }
   }
 `;
 
-const EditUserProfileCardWithData = graphql(userQuery, {
-  options: ({ username }) => ({variables: { username }})
+const EditUserCardWithData = graphql(editUser, {
+  props: ({ ownProps, mutate }) => ({
+    submitChanges(formdata) {
+      mutate({variables: {...formdata}, optimisticResponse: {
+        __typename: 'Mutation',
+        editUser: {
+          __typename: 'user',
+          ...formdata
+        }
+      }});
+    }
+  })
 })(EditUserCard);
 
+const mapStateToProps = state => ({
+  uploadedFileUrl: state.control.uploadedFileUrl
+});
+
+const mapDispatchToProps = dispatch => ({
+  setUploadedFileUrl(fileUrl) {
+    console.log(dispatch)
+    dispatch(setUploadedFileUrl(fileUrl));
+  }
+});
+
 export default connect(
-  ({ data, session }) => ({ data, session })
-)(EditUserProfileCardWithData);
+  mapStateToProps,
+  mapDispatchToProps
+)(EditUserCardWithData);

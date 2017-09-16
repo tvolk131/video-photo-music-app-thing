@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
@@ -8,7 +9,7 @@ import { CircularProgress } from 'material-ui/Progress';
 
 import MediaIcon from './MediaIcon.jsx';
 
-const Upload = ({ allowedType, style }) => {
+const Upload = ({ allowedType, style, setUploadedFileUrl }) => {
   let dropzoneStyles = {};
   style = style || 'fullWidth';
   allowedType = allowedType || 'any';
@@ -96,7 +97,9 @@ const Upload = ({ allowedType, style }) => {
   dropzoneFileTypes = dropzoneFileTypes.join(',');
 
   const handleFinishedUpload = info => {
-    //URL=info.fileUrl
+    console.log('file ' + info.filename + 'successfully uploaded!');
+    console.log('the file link is ' + info.fileUrl);
+    setUploadedFileUrl(info.fileUrl);
   };
 
 
@@ -127,7 +130,8 @@ const Upload = ({ allowedType, style }) => {
 
 Upload.propTypes = {
   allowedType: PropTypes.string,
-  style: PropTypes.string
+  style: PropTypes.string,
+  setUploadedFileUrl: PropTypes.func
 };
 
 Upload.defaultProps = {

@@ -9,6 +9,7 @@ import Card, { CardContent, CardMedia } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 
 import UserCard from '../components/UserCard.jsx';
+import EditUserCard from '../components/EditUserCard.jsx';
 import ProjectList from '../components/ProjectList.jsx';
 
 import { toggleEditUser } from '../actions/controlActions';
@@ -30,7 +31,12 @@ const User = ({ currentUser, editingUser, toggleEditUser, data }) => (
       <Grid sm lg/>
       <Grid item xs={12} sm={12} md={4} lg={3}>
         {editingUser ?
-          <h1>You are editing your profile</h1>
+          <EditUserCard
+            user={currentUser}
+            error={data.error}
+            loading={data.loading}
+            toggleEditUser={toggleEditUser}
+          />
 
           :
 
@@ -82,6 +88,7 @@ const userQuery = gql`
       description
       email
       avatarUrl
+      profession
       projects {
         name
         tagline
