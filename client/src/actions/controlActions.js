@@ -36,8 +36,13 @@ const resetPassword = () => {
   }
 }
 
+const toggleEditUser = () => ({
+  type: 'TOGGLE_EDIT_USER'
+});
+
 export {
   toggleNavDrawer,
+  toggleEditUser
   setCurrentPassword,
   setNewPassword,
   openPasswordDialog,
