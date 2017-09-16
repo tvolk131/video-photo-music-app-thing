@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withStyles } from 'material-ui/styles';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import Card, { CardContent, CardMedia, CardHeader } from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
@@ -11,11 +10,12 @@ import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
 import CommentIcon from 'material-ui-icons/Comment';
 
-import VideoPlayer from './video.jsx';
+import VideoPlayer from './VideoPlayer.jsx';
 
 const VideoComponent = ({component, group, elevation}) => {
   let size = 12;
   let headerSize = 0;
+  group = group || 1;
   
   if (group > 1) {
     size = 6;
@@ -25,7 +25,7 @@ const VideoComponent = ({component, group, elevation}) => {
   return (
     <Grid item xs={12} md={size}>
       <Paper elevation={elevation}>
-        <VideoPlayer fluid="true" controls="true" sources={[{src: component.resourceUrl}]} />
+        <VideoPlayer fluid={true} controls={true} sources={[{src: component.resourceUrl}]} />
         <Grid container spacing={0} justify="space-between" align="center">
           <Grid item xs={headerSize}>
             <CardHeader
@@ -55,6 +55,16 @@ const VideoComponent = ({component, group, elevation}) => {
       </Paper>
     </Grid>
   );
+};
+
+VideoComponent.propTypes = {
+  component: PropTypes.object.isRequired,
+  group: PropTypes.number,
+  elevation: PropTypes.number.isRequired
+};
+
+VideoComponent.defaultProps = {
+  group: 1,
 };
 
 export default VideoComponent;

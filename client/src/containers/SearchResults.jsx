@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import ListingItem from '../components/ListingItem.jsx';
-import Upload from '../components/Upload.jsx';
 
 const SearchResults = ({ searchResults }) => (
   <div style={{width: '100%'}}>{

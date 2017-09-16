@@ -1,4 +1,8 @@
 let mockData = require('./mockData.json');
+let mockUsers = require('./mockUsers.json');
+let mockProjects = require('./mockProjects.json');
+let mockComponents = require('./mockComponents.json');
+let mockContributors = require('./mockContributors.json');
 let db = require('../');
 
 const injectMockData = () => {
@@ -8,7 +12,7 @@ const injectMockData = () => {
     })
     .then(() => {
       let promises = [];
-      mockData.users.forEach((userObj) => {
+      mockUsers.forEach((userObj) => {
         promises.push(
           db.User.create(userObj)
         );
@@ -17,7 +21,7 @@ const injectMockData = () => {
     })
     .then(() => {
       let promises = [];
-      mockData.projects.forEach((projectObj) => {
+      mockProjects.forEach((projectObj) => {
         promises.push(
           db.Project.create(projectObj)
         );
@@ -26,16 +30,7 @@ const injectMockData = () => {
     })
     .then(() => {
       let promises = [];
-      mockData.projectContributors.forEach((projectContributorObj) => {
-        promises.push(
-          db.Project.addContributor(projectContributorObj)
-        );
-      });
-      return Promise.all(promises);
-    })
-    .then(() => {
-      let promises = [];
-      mockData.projectComponents.forEach((projectComponentObj) => {
+      mockComponents.forEach((projectComponentObj) => {
         promises.push(
           db.ProjectComponent.create(projectComponentObj)
         );
@@ -44,27 +39,37 @@ const injectMockData = () => {
     })
     .then(() => {
       let promises = [];
-      mockData.projectComments.forEach((projectCommentObj) => {
+      mockContributors.forEach((projectContributorObj) => {
         promises.push(
-          db.Project.Comment.create(projectCommentObj)
+          db.Project.addContributor(projectContributorObj)
         );
       });
       return Promise.all(promises);
     })
-    .then(() => {
-      let promises = [];
-      mockData.projectComponentComments.forEach((projectComponentCommentObj) => {
-        promises.push(
-          db.ProjectComponent.Comment.create(projectComponentCommentObj)
-        );
-      });
-      return Promise.all(promises);
-    })
+    // .then(() => {
+    //   let promises = [];
+    //   mockData.projectComments.forEach((projectCommentObj) => {
+    //     promises.push(
+    //       db.Project.Comment.create(projectCommentObj)
+    //     );
+    //   });
+    //   return Promise.all(promises);
+    // })
+    // .then(() => {
+    //   let promises = [];
+    //   mockData.projectComponentComments.forEach((projectComponentCommentObj) => {
+    //     promises.push(
+    //       db.ProjectComponent.Comment.create(projectComponentCommentObj)
+    //     );
+    //   });
+    //   return Promise.all(promises);
+    // })
     .then(() => {
       console.log();
       console.log();
       console.log('Mock data has been injected!');
-    });
-}
+    })
+    .catch(err => console.log(err));
+};
 
 injectMockData();

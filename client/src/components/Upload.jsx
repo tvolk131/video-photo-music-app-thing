@@ -1,46 +1,107 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import Grid from 'material-ui/Grid';
-import Paper from 'material-ui/Paper';
-import Card, { CardContent, CardMedia } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import DropzoneS3Uploader from 'react-dropzone-s3-uploader';
-import AddIcon from 'material-ui-icons/Add';
+import { CircularProgress } from 'material-ui/Progress';
 
-const Upload = () => {
-  const dropzoneStyles = { 
-    marginBottom: 30,
-    border: 'dashed', 
-    borderColor: 'grey', 
-    borderRadius: 10, 
-    width: '100%', 
-    height: 200
-  };
+import MediaIcon from './MediaIcon.jsx';
 
-  let dropzoneFileTypes = [
-  //IMAGE FILE TYPES
-    'image/png',
-    'image/jpg',
-    'image/gif',
-    'image/bmp',
-    'image/svg',
-    //VIDEO FILE TYPES
-    'video/mp4',
-    'video/webm',
-    //TEXT FILE TYPES
-    'text/plain',
-    //AUDIO FILE TYPES
-    'audio/mp3',
-    'audio/wav',
-    'audio/ogg',
-    'audio/webm'
-  ];
+const Upload = ({ allowedType, style, setUploadedFileUrl }) => {
+  let dropzoneStyles = {};
+  style = style || 'fullWidth';
+  allowedType = allowedType || 'any';
+  
+  if (style === 'thumbnail') {
+    dropzoneStyles = { 
+      border: 'dashed', 
+      borderColor: 'grey', 
+      borderRadius: 10, 
+      width: 250, 
+      height: 250, 
+      overflow: 'hidden',
+      maxWidth: '100%',
+      boxSizing: 'border-box',
+      marginLeft: 'auto',
+      marginRight: 'auto'
+    };
+  } else if (style === 'fullWidth') {
+    dropzoneStyles = { 
+      border: 'dashed', 
+      borderColor: 'grey', 
+      borderRadius: 10, 
+      width: '100%', 
+      height: 250, 
+      overflow: 'hidden',
+      maxWidth: '100%',
+      boxSizing: 'border-box'
+    };
+  }
+
+  let dropzoneFileTypes = [];
+
+  if (allowedType === 'image') {
+    dropzoneFileTypes = [
+      'image/png',
+      'image/jpeg',
+      'image/gif',
+      'image/bmp',
+      'image/svg+xml'
+    ];
+  } else if (allowedType = 'any') {
+    dropzoneFileTypes = [
+      //IMAGE FILE TYPES
+      'image/png',
+      'image/jpeg',
+      'image/gif',
+      'image/bmp',
+      'image/svg+xml',
+      //VIDEO FILE TYPES
+      'video/mp4',
+      'video/webm',
+      //TEXT FILE TYPES
+      'text/plain',
+      //AUDIO FILE TYPES
+      'audio/mp3',
+      'audio/wav',
+      'audio/ogg',
+      'audio/webm',
+      'audio/aac'
+    ];
+  }
+
+  //Defining custom rendering components
+  const imageComponent = (({ uploadedFile }) => <img src={uploadedFile.fileUrl} style={{objectFit: 'cover', width: 'auto', height: '100%', align: 'center'}}/>);
+  const progressComponent = (({progress}) => (progress ? (<div style={{margin: 50}}><CircularProgress size={150} mode="determinate" value={progress} min={0} max={100} /></div>) : null));
+  const fileComponent = (({ uploadedFile }) => {
+    let type = 'text';                                                                          // Assume it's a text file, then:
+
+    if (uploadedFile.filename && uploadedFile.filename.match(/\.(mp4|m4v)/i)) {                 // Check if it's a video file...
+      type = 'video';
+    } else if (uploadedFile.filename && uploadedFile.filename.match(/\.(mp3|wav|ogg|aac)/i)) {  // ...or if it's an audio file.
+      type = 'audio';
+    }
+
+    return (
+      <div>
+        <MediaIcon type={type} size="large" />
+        <Typography>{uploadedFile.file.name}</Typography>
+      </div>
+    );
+  }
+
+  );
 
   dropzoneFileTypes = dropzoneFileTypes.join(',');
 
   const handleFinishedUpload = info => {
     console.log('file ' + info.filename + 'successfully uploaded!');
     console.log('the file link is ' + info.fileUrl);
+    setUploadedFileUrl(info.fileUrl);
   };
+
 
   const uploadOptions = {
     server: 'http://' + window.location.host
@@ -48,23 +109,34 @@ const Upload = () => {
   const s3Url = 'https://qraft-uploads.s3.amazonaws.com';
 
   return (
-    <Grid container spacing={24}>
-      <Grid item sm />
-      <Grid item xs={12} sm={10} md={8}>
-        <Card style={{display: 'flex'}}>
-          <Grid container spacing={0} justify="center">
-            <Grid item xs={12}>
-              <div style={{width: '100%', margin: 15}}>Drag files from desktop or click to upload.</div>
-            </Grid>
-            <Grid item xs={10}>
-              <DropzoneS3Uploader style={dropzoneStyles} accept={dropzoneFileTypes} onFinish={handleFinishedUpload} s3Url={s3Url} upload={uploadOptions} />
-            </Grid>
-          </Grid>
-        </Card>
+    <Grid container spacing={0} justify="center">
+      <Grid item xs={11}>
+        <DropzoneS3Uploader 
+          style={dropzoneStyles} 
+          accept={dropzoneFileTypes} 
+          onFinish={handleFinishedUpload} 
+          s3Url={s3Url} 
+          upload={uploadOptions} 
+          imageComponent={imageComponent}
+          progressComponent={progressComponent}
+          fileComponent={fileComponent} />
       </Grid>
-      <Grid item sm></Grid>
+      <Grid item xs={12}>
+        <Typography style={{width: '100%', margin: 5}}>Drag files from desktop or click to upload.</Typography>
+      </Grid>
     </Grid>
   );
+};
+
+Upload.propTypes = {
+  allowedType: PropTypes.string,
+  style: PropTypes.string,
+  setUploadedFileUrl: PropTypes.func
+};
+
+Upload.defaultProps = {
+  allowedType: 'any',
+  style: 'fullWidth'
 };
 
 export default Upload;

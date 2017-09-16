@@ -36,8 +36,18 @@ const resetPassword = () => {
   }
 }
 
+const toggleEditUser = () => ({
+  type: 'TOGGLE_EDIT_USER'
+});
+
+const setUploadedFileUrl = (fileUrl) => ({
+  type: 'SET_UPLOADED_FILE_URL',
+  fileUrl
+});
 export {
   toggleNavDrawer,
+  setUploadedFileUrl,
+  toggleEditUser,
   setCurrentPassword,
   setNewPassword,
   openPasswordDialog,

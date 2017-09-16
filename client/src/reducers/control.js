@@ -29,6 +29,14 @@ const control = (state = initialState, action) => {
     return {...state, settings: {...state.settings, password: {...state.settings.password, current: '', new: '', dialogOpen: false}}};
   }
 
+  if (action.type === 'TOGGLE_EDIT_USER') {
+    return {...state, editingUser: !state.editingUser};
+  }
+
+  if (action.type === 'SET_UPLOADED_FILE_URL') {
+    return {...state, uploadedFileUrl: action.fileUrl};
+  }
+
   return state;
 }
 

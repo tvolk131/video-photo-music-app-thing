@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 import './video.css';
 
-export default class VideoPlayer extends React.Component {
+class AudioPlayer extends Component {
   componentDidMount() {
     // instantiate video.js
     this.player = videojs(this.videoNode, this.props, function onPlayerReady() {
       console.log('onPlayerReady', this);
+      // this.bigPlayButton.hide();
+      this.controlBar.fullscreenToggle.hide();
     });
   }
 
@@ -23,8 +28,17 @@ export default class VideoPlayer extends React.Component {
   render() {
     return (
       <div data-vjs-player>
-        <video ref={ node => this.videoNode = node } className="video-js"></video>
+        <audio ref={ node => this.videoNode = node } className="video-js audio"></audio>
       </div>
     );
   }
 }
+
+AudioPlayer.propTypes = {
+  sources: PropTypes.array.isRequired,
+  fluid: PropTypes.bool.isRequired,
+  controls: PropTypes.bool.isRequired,
+  aspectRatio: PropTypes.string.isRequired
+};
+
+export default AudioPlayer;

@@ -28,52 +28,48 @@ const ListingItem = ({ content }) => {
   
   return (
     <Grid container spacing={0}>
-      <Grid item sm />
-      <Grid item style={{paddingBottom: 0}} xs={12} sm={10} md={8}>
-        <Route render={({history}) => (
-          <ListItem
-            button
-            onClick={() => history.push(`/project/${content.owner.username}/${content.name}`)}
-            style={{width: '100%', padding: 0}}
-          > 
-            <Grid container>
-              <Grid item xs={3} style={{
-                marginTop: 'auto',
-                marginBottom: 'auto',
-                align: 'right',
-                padding: 0
-              }}>
-                <MediaIcon type={content.featuredComponent.type}/>
-              </Grid>
-              <Grid item style={{textAlign: 'left'}}>
-                <h4 style={{marginBottom: 0}}>{content.name}</h4>
-                <Grid
-                  container
-                  align='center'
-                  spacing={0}
-                  style={{
-                    marginTop: 0,
-                    marginBottom: 'auto'
-                  }}
-                >
-                  <Grid item>
-                    <Avatar
-                      src={content.owner ? content.owner.avatarUrl : content.author.avatarUrl}
-                      style={smallIcon}
-                    />
-                  </Grid>
-                  <Grid item>
-                    {content.author ? content.author.name : content.owner.name}
-                  </Grid>
+      <Route render={({history}) => (
+        <ListItem
+          button
+          onClick={() => history.push(`/project/${content.owner.username}/${content.name}`)}
+          style={{width: '100%', padding: 0}}
+        > 
+          <Grid container>
+            <Grid item xs={3} style={{
+              marginTop: 'auto',
+              marginBottom: 'auto',
+              align: 'right',
+              padding: 0
+            }}>
+              <MediaIcon type={content.featuredComponent.type}/>
+            </Grid>
+            <Grid item style={{textAlign: 'left'}}>
+              <h4 style={{marginBottom: 0}}>{content.name}</h4>
+              <Grid
+                container
+                align='center'
+                spacing={0}
+                style={{
+                  marginTop: 0,
+                  marginBottom: 'auto'
+                }}
+              >
+                <Grid item>
+                  <Avatar
+                    src={content.owner ? content.owner.avatarUrl : content.author.avatarUrl}
+                    style={smallIcon}
+                  />
+                </Grid>
+                <Grid item>
+                  {content.author ? content.author.name : content.owner.name}
                 </Grid>
               </Grid>
-              <SocialButtons likeCount={randomCount()}/>
             </Grid>
-          </ListItem> 
-        )} />
-        <Divider />
-      </Grid>
-      <Grid item sm></Grid>
+            <SocialButtons likeCount={randomCount()}/>
+          </Grid>
+        </ListItem> 
+      )} />
+      <Divider />
     </Grid>
   );
 };
