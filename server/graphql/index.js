@@ -235,7 +235,7 @@ const mutation = new GraphQLObjectType({
         theme: {type: GraphQLInt},
         name: {type: GraphQLString},
         profession: {type: GraphQLString},
-        avatar: {type: GraphQLString},
+        avatarUrl: {type: GraphQLString},
         description: {type: GraphQLString}
       },
       resolve(parentValue, args, request) {
