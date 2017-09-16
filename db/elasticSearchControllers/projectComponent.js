@@ -18,18 +18,20 @@ ProjectComponent.create = (input) => {
 
 ProjectComponent.update = (userId, componentId, options) => {
   return dbProjectComponent.update(userId, componentId, options)
-    .tap((projectComponent) => {
+    .then((projectComponent) => {
       dbUser.getById(projectComponent.authorId)
         .then((author) => {
           elasticSearch.indexProjectComponent(projectComponent, author);
         });
+      return projectComponent;
     });
 };
 
 ProjectComponent.delete = (userId, componentId) => {
   return dbProjectComponent.delete(userId, componentId)
-    .tap(() => {
+    .then((data) => {
       elasticSearch.deleteProjectComponent(componentId);
+      return data;
     });
 };
 

@@ -6,29 +6,32 @@ let Project = {...dbProject};
 
 Project.create = (input) => {
   return dbProject.create(input)
-    .tap((project) => {
+    .then((project) => {
       dbUser.getById(project.ownerId)
         .then((owner) => {
           elasticSearch.indexProject(project, owner);
         });
+      return project;
     });
 };
 
 // TODO - Update all component indices
 Project.update = (input) => {
   return dbProject.update(input)
-    .tap((project) => {
+    .then((project) => {
       dbUser.getById(project.ownerId)
         .then((owner) => {
           elasticSearch.indexProject(project, owner);
         });
+      return project;
     });
 };
 
 Project.delete = (userId, projectId) => {
   return dbProject.delete(userId, projectId)
-    .tap(() => {
+    .then((data) => {
       elasticSearch.deleteProject(projectId);
+      return data;
     });
 };
 
