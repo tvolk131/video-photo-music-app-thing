@@ -36,7 +36,6 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
       let form = e.target
       e.preventDefault();
       toggleEditUser();
-      console.log('FILEURL: ', uploadedFileUrl)
       submitChanges({
         name: form.name.value || user.name,
         username: form.username.value || user.username,
