@@ -92,10 +92,8 @@ const mapDispatchToProps = dispatch => {
 
 // TODO - Show error if something goes wrong
 const changePassword = gql`
-  mutation editUser($currentPassword: String! $newPassword: String!) {
-    editUser(currentPassword: $currentPassword newPassword: $newPassword) {
-      id
-    }
+  mutation editUserPassword($currentPassword: String! $newPassword: String!) {
+    editUserPassword(currentPassword: $currentPassword newPassword: $newPassword)
   }
 `;
 
