@@ -65,3 +65,7 @@ module.exports.indexProjectComponent = (projectComponent, author) => {
     }
   });
 };
+
+module.exports.deleteProjectComponent = (componentId) => {
+  queue.push({delete: {_index, _type: 'projectComponent', _id: componentId}});
+};

@@ -14,6 +14,7 @@ Project.create = (input) => {
     });
 };
 
+// TODO - Update all component indices
 Project.update = (input) => {
   return dbProject.update(input)
     .tap((project) => {

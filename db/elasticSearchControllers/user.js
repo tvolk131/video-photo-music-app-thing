@@ -10,6 +10,7 @@ User.create = (input) => {
     });
 };
 
+// TODO - Update all user-related elasticsearch indices
 User.update = (userId, query) => {
   return dbUser.update(userId, query)
     .tap((user) => {
