@@ -94,9 +94,9 @@ const ProjectType = new GraphQLObjectType({
       }
     },
     likes: {
-      type: new GraphQLList(LikeType),
+      type: GraphQLInt,
       resolve(parentValue, args) {
-        return db.Project.Like.get(parentValue.id);
+        return db.Project.Like.getCount(parentValue.id);
       }
     },
     tags: {
@@ -137,9 +137,9 @@ const ProjectComponentType = new GraphQLObjectType({
       }
     },
     likes: {
-      type: new GraphQLList(LikeType),
+      type: GraphQLInt,
       resolve(parentValue, args) {
-        return db.ProjectComponent.Like.get(parentValue.id);
+        return db.ProjectComponent.Like.getCount(parentValue.id);
       }
     }
   })
@@ -151,9 +151,9 @@ const CommentType = new GraphQLObjectType({
     id: {type: GraphQLInt},
     text: {type: GraphQLString},
     likes: {
-      type: new GraphQLList(LikeType),
+      type: GraphQLInt,
       resolve(parentValue, args) {
-        return db.Comment.Like.get(parentValue.id);
+        return db.Comment.Like.getCount(parentValue.id);
       }
     },
     user: {
@@ -163,19 +163,6 @@ const CommentType = new GraphQLObjectType({
       }
     }
   })
-});
-
-const LikeType = new GraphQLObjectType({
-  name: 'Like',
-  fields: {
-    id: {type: GraphQLInt},
-    user: {
-      type: UserType,
-      resolve(parentValue, args) {
-        return db.User.getById(parentValue.userId);
-      }
-    }
-  }
 });
 
 const RootQuery = new GraphQLObjectType({
@@ -489,7 +476,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     likeProject: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         projectId: {type: new GraphQLNonNull(GraphQLInt)}
       },
@@ -498,7 +485,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     unlikeProject: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         projectId: {type: new GraphQLNonNull(GraphQLInt)}
       },
@@ -507,7 +494,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     likeComponent: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         projectComponentId: {type: new GraphQLNonNull(GraphQLInt)}
       },
@@ -516,7 +503,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     unlikeComponent: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         projectComponentId: {type: new GraphQLNonNull(GraphQLInt)}
       },
@@ -525,7 +512,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     likeComment: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         commentId: {type: new GraphQLNonNull(GraphQLInt)}
       },
@@ -534,7 +521,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     unlikeComment: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         commentId: {type: new GraphQLNonNull(GraphQLInt)}
       },

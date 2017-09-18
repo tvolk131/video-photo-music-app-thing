@@ -127,11 +127,17 @@ Like.addToClass = (parentClass) => {
   parentClass.Like = {};
 
   parentClass.Like.create = (input) => {
-    return Like.create({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']});
+    return Like.create({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']})
+      .then(() => {
+        return true;
+      });
   };
 
   parentClass.Like.delete = (input) => {
-    return Like.delete({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']});
+    return Like.delete({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']})
+      .then(() => {
+        return true;
+      });
   };
 
   parentClass.Like.isLikedByUser = (parentId, userId) => {
