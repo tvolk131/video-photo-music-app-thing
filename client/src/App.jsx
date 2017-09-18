@@ -26,7 +26,7 @@ import {
 
 const App = () => (
   <ApolloProvider client={client} store={store}>
-    <MuiThemeProvider theme={themes.get(1)}>
+    <MuiThemeProvider theme={themes.get(0)}>
       <div className="App">
         <Nav />
         <Route exact path='/' component={Search}/>
