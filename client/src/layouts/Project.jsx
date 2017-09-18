@@ -149,6 +149,8 @@ const projectQuery = gql`
         contributors {
           name
           avatarUrl
+          username
+          role
         }
         owner {
           name

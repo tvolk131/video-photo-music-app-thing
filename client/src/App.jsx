@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route} from 'react-router';
-
-import { client } from './reducers';
-import store from './store.js';
+import { connect } from 'react-redux';
 
 import Nav from './containers/Nav';
 import Search from './layouts/Search.jsx';
@@ -11,6 +9,7 @@ import User from './layouts/User.jsx';
 import Settings from './layouts/Settings.jsx';
 import Login from './layouts/Login.jsx';
 import Signup from './layouts/Signup.jsx';
+import CreateProject from './components/CreateProject.jsx';
 
 import themes from './themes';
 
@@ -18,11 +17,6 @@ import { MuiThemeProvider } from 'material-ui/styles';
 
 import logo from './logo.svg';
 import './App.css';
-
-import {
-  ApolloClient,
-  ApolloProvider
-} from 'react-apollo';
 
 const App = () => (
   <ApolloProvider client={client} store={store}>
