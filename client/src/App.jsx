@@ -29,6 +29,7 @@ const App = () => (
         path='/project/:username/:projectName'
         component={Project}
       />
+      <Route exact path='/project/create' component={CreateProject}/>
       <Route exact path='/user/:username' component={User}/>
       <Route exact path='/settings' component={Settings}/>
       <Route exact path='/login' component={Login}/>
