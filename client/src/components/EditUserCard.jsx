@@ -40,8 +40,8 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
         name: form.name.value || user.name,
         username: form.username.value || user.username,
         email: form.email.value || user.email,
-        profession: form.profession.value || 'cat',
-        avatarUrl: uploadedFileUrl || user.avatarUrl || '',
+        profession: form.profession.value,
+        avatarUrl: uploadedFileUrl || user.avatarUrl || null,
         description: form.description.value || user.description || null
       });
     }}>
@@ -76,9 +76,18 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
         multiline
         style={{width: '100%'}}
       />
-    <Button color='primary' raised type="submit" style={{marginBottom: 10}}>
-      Submit
-    </Button>
+      <Button
+        color='secondary'
+        raised
+        type="cancel"
+        style={{marginBottom: 10}}
+        onClick={toggleEditUser}
+      >
+        Cancel
+      </Button>
+      <Button color='primary' raised type="submit" style={{marginBottom: 10}}>
+        Submit
+      </Button>
     </form>
   </Paper>
 );
