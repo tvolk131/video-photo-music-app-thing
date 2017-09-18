@@ -87,20 +87,40 @@ describe('Like Model', () => {
     });
   });
 
-  describe('getByParent()', () => {
+  describe('getCountByParent()', () => {
     it('Should get all likes on a model when parameters are valid', () => {
-      return Like.getByParent({parentClass: Project, parentId: project.id})
+      return Like.getCountByParent({parentClass: Project, parentId: project.id})
         .then((likes) => {
-          expect(likes).to.be.a('array');
-          expect(likes.length).to.equal(1);
-          expect(likes[0].parentId).to.equal(project.id);
+          expect(likes).to.be.a('number');
+          expect(likes).to.equal(1);
         });
     });
     it('Should reject when parent type is not setup in like.js', () => {
-      return expect(Like.getByParent({parentClass: 'asdf', parentId: project.id})).to.be.rejectedWith('Like parent model not defined');
+      return expect(Like.getCountByParent({parentClass: 'asdf', parentId: project.id})).to.be.rejectedWith('Like parent model not defined');
     });
     it('Should reject when parent ID does not map to existing parent model', () => {
-      return expect(Like.getByParent({parentClass: Project, parentId: 1234})).to.be.rejectedWith('does not exist');
+      return expect(Like.getCountByParent({parentClass: Project, parentId: 1234})).to.be.rejectedWith('does not exist');
+    });
+  });
+
+  describe('getParentIsLikedByUser()', () => {
+    it('Should return false for a user that has not liked an item', () => {
+      return expect(Like.getParentIsLikedByUser({parentClass: Project, parentId: project.id, userId: userOne.id})).to.eventually.equal(false);
+    });
+    it('Should return true for a user that has liked an item', () => {
+      return Like.create({userId: userOne.id, parentClass: Project, parentId: project.id})
+        .then(() => {
+          return expect(Like.getParentIsLikedByUser({parentClass: Project, parentId: project.id, userId: userOne.id})).to.eventually.equal(true);
+        });
+    });
+    it('Should reject when user does not exist', () => {
+      return expect(Like.getParentIsLikedByUser({parentClass: Project, parentId: project.id, userId: 1234})).to.be.rejectedWith('User does not exist');
+    });
+    it('Should reject when parent does not exist', () => {
+      return expect(Like.getParentIsLikedByUser({parentClass: Project, parentId: 1234, userId: userOne.id})).to.be.rejectedWith('Project does not exist');
+    });
+    it('Should reject when parent type is not setup in like.js', () => {
+      return expect(Like.getParentIsLikedByUser({parentClass: 'asdf', parentId: project.id, userId: userOne.id})).to.be.rejectedWith('Like parent model not defined');
     });
   });
 

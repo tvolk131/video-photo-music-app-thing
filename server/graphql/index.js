@@ -94,9 +94,18 @@ const ProjectType = new GraphQLObjectType({
       }
     },
     likes: {
-      type: new GraphQLList(LikeType),
+      type: GraphQLInt,
       resolve(parentValue, args) {
-        return db.Project.Like.get(parentValue.id);
+        return db.Project.Like.getCount(parentValue.id);
+      }
+    },
+    hasLiked: {
+      type: GraphQLBoolean,
+      resolve(parentValue, args, request) {
+        if (!request.user) {
+          return false;
+        }
+        return db.Project.Like.isLikedByUser(parentValue.id, request.user.id);
       }
     },
     tags: {
@@ -137,9 +146,18 @@ const ProjectComponentType = new GraphQLObjectType({
       }
     },
     likes: {
-      type: new GraphQLList(LikeType),
+      type: GraphQLInt,
       resolve(parentValue, args) {
-        return db.ProjectComponent.Like.get(parentValue.id);
+        return db.ProjectComponent.Like.getCount(parentValue.id);
+      }
+    },
+    hasLiked: {
+      type: GraphQLBoolean,
+      resolve(parentValue, args) {
+        if (!request.user) {
+          return false;
+        }
+        return db.ProjectComponent.Like.isLikedByUser(parentValue.id, request.user.id);
       }
     }
   })
@@ -151,9 +169,18 @@ const CommentType = new GraphQLObjectType({
     id: {type: GraphQLInt},
     text: {type: GraphQLString},
     likes: {
-      type: new GraphQLList(LikeType),
+      type: GraphQLInt,
       resolve(parentValue, args) {
-        return db.Comment.Like.get(parentValue.id);
+        return db.Comment.Like.getCount(parentValue.id);
+      }
+    },
+    hasLiked: {
+      type: GraphQLBoolean,
+      resolve(parentValue, args) {
+        if (!request.user) {
+          return false;
+        }
+        return db.Comment.Like.isLikedByUser(parentValue.id, request.user.id);
       }
     },
     user: {
@@ -163,19 +190,6 @@ const CommentType = new GraphQLObjectType({
       }
     }
   })
-});
-
-const LikeType = new GraphQLObjectType({
-  name: 'Like',
-  fields: {
-    id: {type: GraphQLInt},
-    user: {
-      type: UserType,
-      resolve(parentValue, args) {
-        return db.User.getById(parentValue.userId);
-      }
-    }
-  }
 });
 
 const RootQuery = new GraphQLObjectType({
@@ -280,7 +294,7 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, {userId}, request) {
         if (!request.user) {
-          return Promise.reject('Cannot follow a user when you are not logged in');
+          return Promise.reject('Cannot unfollow a user when you are not logged in');
         }
         return db.User.unfollow(request.user.id, userId);
       }
@@ -489,7 +503,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     likeProject: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         projectId: {type: new GraphQLNonNull(GraphQLInt)}
       },
@@ -498,7 +512,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     unlikeProject: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         projectId: {type: new GraphQLNonNull(GraphQLInt)}
       },
@@ -507,7 +521,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     likeComponent: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         projectComponentId: {type: new GraphQLNonNull(GraphQLInt)}
       },
@@ -516,7 +530,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     unlikeComponent: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         projectComponentId: {type: new GraphQLNonNull(GraphQLInt)}
       },
@@ -525,7 +539,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     likeComment: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         commentId: {type: new GraphQLNonNull(GraphQLInt)}
       },
@@ -534,7 +548,7 @@ const mutation = new GraphQLObjectType({
       }
     },
     unlikeComment: {
-      type: LikeType,
+      type: GraphQLBoolean,
       args: {
         commentId: {type: new GraphQLNonNull(GraphQLInt)}
       },

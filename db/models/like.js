@@ -62,15 +62,36 @@ Like.delete = ({userId, parentClass, parentId}) => {
     });
 };
 
-Like.getByParent = ({parentClass, parentId}) => {
+Like.getCountByParent = ({parentClass, parentId}) => {
   if (!parentClass.getById) {
     return Promise.reject('Like parent model not defined');
   }
   return parentClass.getById(parentId)
-    .then((parent) => {
+    .then(() => {
       return Like.model.findAll({
-        where: {parentType: parentClass.name, parentId: parent.id}
+        where: {parentType: parentClass.name, parentId}
       });
+    })
+    .then((likes) => {
+      return likes.length;
+    });
+};
+
+Like.getParentIsLikedByUser = ({parentClass, parentId, userId}) => {
+  if (!parentClass.getById) {
+    return Promise.reject('Like parent model not defined');
+  }
+  return User.getById(userId)
+    .then(() => {
+      return parentClass.getById(parentId);
+    })
+    .then(() => {
+      return Like.model.findOne({
+        where: {parentType: parentClass.name, parentId, userId}
+      });
+    })
+    .then((like) => {
+      return !!like;
     });
 };
 
@@ -106,15 +127,25 @@ Like.addToClass = (parentClass) => {
   parentClass.Like = {};
 
   parentClass.Like.create = (input) => {
-    return Like.create({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']});
+    return Like.create({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']})
+      .then(() => {
+        return true;
+      });
   };
 
   parentClass.Like.delete = (input) => {
-    return Like.delete({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']});
+    return Like.delete({userId: input.userId, parentClass, parentId: input[parentClass.name + 'Id']})
+      .then(() => {
+        return true;
+      });
   };
 
-  parentClass.Like.get = (parentId) => {
-    return Like.getByParent({parentClass, parentId});
+  parentClass.Like.isLikedByUser = (parentId, userId) => {
+    return Like.getParentIsLikedByUser({parentClass, parentId, userId});
+  };
+
+  parentClass.Like.getCount = (parentId) => {
+    return Like.getCountByParent({parentClass, parentId});
   };
 };
 

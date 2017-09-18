@@ -692,14 +692,14 @@ describe('Project Model', () => {
           });
       });
     });
-    describe('get()', () => {
+    describe('getCount()', () => {
       it('Should return likes for a project', () => {
         return Project.Like.create({userId: localUser.id, projectId: project.id})
           .then(() => {
-            return Project.Like.get(project.id);
+            return Project.Like.getCount(project.id);
           })
           .then((likes) => {
-            expect(likes.length).to.equal(1);
+            expect(likes).to.equal(1);
           });
       });
     });
