@@ -1,10 +1,11 @@
-const Comment = require('./elasticSearchControllers/comment');
-const Contributor = require('./elasticSearchControllers/contributor');
-const Like = require('./elasticSearchControllers/like');
-const Project = require('./elasticSearchControllers/project');
-const ProjectComponent = require('./elasticSearchControllers/projectComponent');
-const Tag = require('./elasticSearchControllers/tag');
-const User = require('./elasticSearchControllers/user');
+const folder = process.env.USE_ELASTICSEARCH !== 'false' ? 'elasticSearchControllers' : 'models';
+const Comment = require(`./elasticSearchControllers/comment`);
+const Contributor = require(`./${folder}/contributor`);
+const Like = require(`./${folder}/like`);
+const Project = require(`./${folder}/project`);
+const ProjectComponent = require(`./${folder}/projectComponent`);
+const Tag = require(`./${folder}/tag`);
+const User = require(`./${folder}/user`);
 
 const connection = require('./connection');
 connection.clear = () => {
