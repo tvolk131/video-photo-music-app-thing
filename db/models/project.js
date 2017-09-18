@@ -22,12 +22,15 @@ const ProjectModel = db.define('projects', {
   },
   tagline: {
     type: Sequelize.STRING(256)
+  },
+  thumbnailUrl: {
+    type: Sequelize.STRING(512)
   }
 });
 
 let Project = {model: ProjectModel};
 
-Project.create = ({ownerId, name, description, tagline}) => {
+Project.create = ({ownerId, name, description, tagline, thumbnailUrl}) => {
   return User.getById(ownerId)
     .then(() => {
       return Project.getByUserAndName(ownerId, name)
@@ -38,7 +41,7 @@ Project.create = ({ownerId, name, description, tagline}) => {
     })
     .catch((e) => {
       if (e === 'Project does not exist') {
-        return Project.model.create({ownerId, name, description, tagline});
+        return Project.model.create({ownerId, name, description, tagline, thumbnailUrl});
       } else {
         return Promise.reject(e);
       }

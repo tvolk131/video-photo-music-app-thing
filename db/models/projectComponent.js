@@ -45,12 +45,15 @@ const ProjectComponentModel = db.define('components', {
     type: Sequelize.BOOLEAN,
     notEmpty: true,
     allowNull: false
+  },
+  thumbnailUrl: {
+    type: Sequelize.STRING(512)
   }
 });
 
 let ProjectComponent = {model: ProjectComponentModel};
 
-ProjectComponent.create = ({userId, projectId, type, name, resourceUrl, description, isDownloadable = false, isFeatured = false}) => {
+ProjectComponent.create = ({userId, projectId, type, name, resourceUrl, description, isDownloadable = false, isFeatured = false, thumbnailUrl}) => {
   if (!componentTypes[type]) {
     return Promise.reject('Component type is invalid');
   }
@@ -78,7 +81,8 @@ ProjectComponent.create = ({userId, projectId, type, name, resourceUrl, descript
         description,
         type,
         isDownloadable: isDownloadable === true ? true : false,
-        isFeatured: false
+        isFeatured: false,
+        thumbnailUrl
       });
     })
     .then((newComponent) => {
