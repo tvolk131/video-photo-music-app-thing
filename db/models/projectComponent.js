@@ -181,7 +181,7 @@ ProjectComponent.getFeatured = (projectId) => {
       });
     })
     .then((featuredComponent) => {
-      return featuredComponent || Promise.reject('Project does not have a featured component');
+      return featuredComponent || null;
     });
 };
 

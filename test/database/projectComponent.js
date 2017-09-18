@@ -286,8 +286,8 @@ describe('Project Component Model', () => {
     it('Should reject if project does not exist', () => {
       return expect(ProjectComponent.getFeatured(1234)).to.be.rejectedWith('Project does not exist');
     });
-    it('Should reject if project does not have a featured component', () => {
-      return expect(ProjectComponent.getFeatured(project.id)).to.be.rejectedWith('Project does not have a featured component');
+    it('Should return null if project does not have a featured component', () => {
+      return expect(ProjectComponent.getFeatured(project.id)).to.eventually.equal(null);
     });
   });
 
