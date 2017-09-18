@@ -141,7 +141,7 @@ Like.addToClass = (parentClass) => {
   };
 
   parentClass.Like.isLikedByUser = (parentId, userId) => {
-    return Like.getIsLikedByUser({parentClass, parentId, userId});
+    return Like.getParentIsLikedByUser({parentClass, parentId, userId});
   };
 
   parentClass.Like.getCount = (parentId) => {

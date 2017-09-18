@@ -99,6 +99,15 @@ const ProjectType = new GraphQLObjectType({
         return db.Project.Like.getCount(parentValue.id);
       }
     },
+    hasLiked: {
+      type: GraphQLBoolean,
+      resolve(parentValue, args, request) {
+        if (!request.user) {
+          return false;
+        }
+        return db.Project.Like.isLikedByUser(parentValue.id, request.user.id);
+      }
+    },
     tags: {
       type: new GraphQLList(GraphQLString),
       resolve(parentValue, args) {
@@ -141,6 +150,15 @@ const ProjectComponentType = new GraphQLObjectType({
       resolve(parentValue, args) {
         return db.ProjectComponent.Like.getCount(parentValue.id);
       }
+    },
+    hasLiked: {
+      type: GraphQLBoolean,
+      resolve(parentValue, args) {
+        if (!request.user) {
+          return false;
+        }
+        return db.ProjectComponent.Like.isLikedByUser(parentValue.id, request.user.id);
+      }
     }
   })
 });
@@ -154,6 +172,15 @@ const CommentType = new GraphQLObjectType({
       type: GraphQLInt,
       resolve(parentValue, args) {
         return db.Comment.Like.getCount(parentValue.id);
+      }
+    },
+    hasLiked: {
+      type: GraphQLBoolean,
+      resolve(parentValue, args) {
+        if (!request.user) {
+          return false;
+        }
+        return db.Comment.Like.isLikedByUser(parentValue.id, request.user.id);
       }
     },
     user: {
@@ -267,7 +294,7 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parentValue, {userId}, request) {
         if (!request.user) {
-          return Promise.reject('Cannot follow a user when you are not logged in');
+          return Promise.reject('Cannot unfollow a user when you are not logged in');
         }
         return db.User.unfollow(request.user.id, userId);
       }
