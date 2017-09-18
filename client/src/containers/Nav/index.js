@@ -84,7 +84,7 @@ const Nav = (props) => (
           {props.currentUser &&
             <div>
               <NavLink
-                to={`/user/${props.currentUser.username}`}
+                to={'/project/create'}
                 onClick={props.toggleNavDrawer}
                 style={style}
               >
@@ -92,7 +92,7 @@ const Nav = (props) => (
                   <ListItemIcon>
                     <PermMedia />
                   </ListItemIcon>
-                  <ListItemText primary='My Projects'/>
+                  <ListItemText primary='Create a Project'/>
                 </ListItem>
               </NavLink>
 

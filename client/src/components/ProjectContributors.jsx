@@ -1,11 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Route } from 'react-router-dom';
+
 import Avatar from 'material-ui/Avatar';
 import Paper from 'material-ui/Paper';
 import Card, { CardContent, CardMedia, CardHeader } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import List, { ListItem, ListItemText, ListItemAvatar } from 'material-ui/List';
 import Typography from 'material-ui/Typography';
+
+const propTypes = {
+  owner: PropTypes.object.isRequired,
+  contributors: PropTypes.array
+};
  
 const ProjectContributors = ({ owner, contributors }) => (
   <Card>
@@ -27,22 +34,26 @@ const ProjectContributors = ({ owner, contributors }) => (
       {contributors.map((contributor, key) => {
         var key = key++ || 0;
         return (
-          <ListItem button key={key}>
-            <ListItemAvatar>
-              <Avatar src={contributor.avatarUrl} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={contributor.name}
-              style={{textAlign: 'left'}}
-            />
-            <Divider inset />
-          </ListItem>
+          <Route render={({ history }) => (
+            <ListItem button key={key} onClick={() => {
+              history.push(`/user/${contributor.username}`);
+            }}>
+              <ListItemAvatar>
+                <Avatar src={contributor.avatarUrl} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={contributor.name}
+                style={{textAlign: 'left'}}
+              />
+              <Divider inset />
+            </ListItem>
+          )}/>
         );
       })}
     </List>
   </Card>
 );
 
-ProjectContributors.propTypes = {};
+ProjectContributors.propTypes = propTypes;
  
 export default ProjectContributors; 
