@@ -61,6 +61,7 @@ const ProjectType = new GraphQLObjectType({
     name: {type: GraphQLString},
     description: {type: GraphQLString},
     tagline: {type: GraphQLString},
+    thumbnailUrl: {type: GraphQLString},
     owner: {
       type: UserType,
       resolve(parentValue, args) {
@@ -116,6 +117,7 @@ const ProjectComponentType = new GraphQLObjectType({
     description: {type: GraphQLString},
     type: {type: GraphQLString},
     isDownloadable: {type: GraphQLBoolean},
+    thumbnailUrl: {type: GraphQLString},
     author: {
       type: UserType,
       resolve(parentValue, args) {
@@ -288,13 +290,14 @@ const mutation = new GraphQLObjectType({
       args: {
         name: {type: new GraphQLNonNull(GraphQLString)},
         description: {type: GraphQLString},
-        tagline: {type: GraphQLString}
+        tagline: {type: GraphQLString},
+        thumbnailUrl: {type: GraphQLString},
       },
-      resolve(parentValue, {name, description, tagline}, request) {
+      resolve(parentValue, {name, description, tagline, thumbnailUrl}, request) {
         if (!request.user) {
           return Promise.reject('Cannot create a project when you are not logged in');
         }
-        return db.Project.create({ownerId: request.user.id, name, description, tagline});
+        return db.Project.create({ownerId: request.user.id, name, description, tagline, thumbnailUrl});
       }
     },
     editProject: {
@@ -368,13 +371,14 @@ const mutation = new GraphQLObjectType({
         type: {type: new GraphQLNonNull(GraphQLString)},
         resourceUrl: {type: new GraphQLNonNull(GraphQLString)},
         description: {type: GraphQLString},
-        isDownloadable: {type: new GraphQLNonNull(GraphQLBoolean)}
+        isDownloadable: {type: new GraphQLNonNull(GraphQLBoolean)},
+        thumbnailUrl: {type: GraphQLString},
       },
-      resolve(parentValue, {projectId, name, type, resourceUrl, description, isDownloadable}, request) {
+      resolve(parentValue, {projectId, name, type, resourceUrl, description, isDownloadable, thumbnailUrl}, request) {
         if (!request.user) {
           return Promise.reject('Cannot create a project component when you are not logged in');
         }
-        return db.ProjectComponent.create({userId: request.user.id, projectId, name, type, resourceUrl, description, isDownloadable});
+        return db.ProjectComponent.create({userId: request.user.id, projectId, name, type, resourceUrl, description, isDownloadable, thumbnailUrl});
       }
     },
     editProjectComponent: {
