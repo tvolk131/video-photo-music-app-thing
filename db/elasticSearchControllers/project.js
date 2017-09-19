@@ -7,10 +7,7 @@ let Project = {...dbProject};
 Project.create = (input) => {
   return dbProject.create(input)
     .then((project) => {
-      dbUser.getById(project.ownerId)
-        .then((owner) => {
-          elasticSearch.indexProject(project, owner);
-        });
+      elasticSearch.indexProject(project.id);
       return project;
     });
 };
@@ -19,10 +16,7 @@ Project.create = (input) => {
 Project.update = (input) => {
   return dbProject.update(input)
     .then((project) => {
-      dbUser.getById(project.ownerId)
-        .then((owner) => {
-          elasticSearch.indexProject(project, owner);
-        });
+      elasticSearch.indexProject(project.id);
       return project;
     });
 };

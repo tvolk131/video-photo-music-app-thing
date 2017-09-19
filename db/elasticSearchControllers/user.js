@@ -6,7 +6,7 @@ let User = {...dbUser};
 User.create = (input) => {
   return dbUser.create(input)
     .then((user) => {
-      elasticSearch.indexUser(user);
+      elasticSearch.indexUser(user.id);
       return user;
     });
 };
@@ -15,7 +15,7 @@ User.create = (input) => {
 User.update = (userId, query) => {
   return dbUser.update(userId, query)
     .then((user) => {
-      elasticSearch.indexUser(user);
+      elasticSearch.indexUser(user.id);
       return user;
     });
 };
