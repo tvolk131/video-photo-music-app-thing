@@ -1,40 +1,28 @@
-const toggleNavDrawer = () => {
-  return {
-    type: 'TOGGLE_NAV_DRAWER'
-  };
-};
+const toggleNavDrawer = () => ({
+  type: 'TOGGLE_NAV_DRAWER'
+});
 
-const setCurrentPassword = (password) => {
-  return {
-    type: 'SET_CURRENT_PASSWORD',
-    payload: password
-  };
-};
+const setCurrentPassword = (password) => ({
+  type: 'SET_CURRENT_PASSWORD',
+  payload: password
+});
 
-const setNewPassword = (password) => {
-  return {
-    type: 'SET_NEW_PASSWORD',
-    payload: password
-  };
-};
+const setNewPassword = (password) => ({
+  type: 'SET_NEW_PASSWORD',
+  payload: password
+});
 
-const openPasswordDialog = () => {
-  return {
-    type: 'OPEN_PASSWORD_DIALOG'
-  };
-};
+const openPasswordDialog = () => ({
+  type: 'OPEN_PASSWORD_DIALOG'
+});
 
-const closePasswordDialog = () => {
-  return {
-    type: 'CLOSE_PASSWORD_DIALOG'
-  };
-};
+const closePasswordDialog = () => ({
+  type: 'CLOSE_PASSWORD_DIALOG'
+});
 
-const resetPassword = () => {
-  return {
-    type: 'RESET_PASSWORD'
-  }
-}
+const resetPassword = () => ({
+  type: 'RESET_PASSWORD'
+});
 
 const toggleEditUser = () => ({
   type: 'TOGGLE_EDIT_USER'
@@ -44,6 +32,16 @@ const setUploadedFileUrl = (fileUrl) => ({
   type: 'SET_UPLOADED_FILE_URL',
   fileUrl
 });
+
+const alert = (message = 'ERROR', type = null) => ({
+  type: 'ALERT',
+  alert: {message, type}
+});
+
+const clearAlert = () => ({
+  type: 'CLEAR_ALERT'
+});
+
 export {
   toggleNavDrawer,
   setUploadedFileUrl,
@@ -52,5 +50,7 @@ export {
   setNewPassword,
   openPasswordDialog,
   closePasswordDialog,
-  resetPassword
+  resetPassword,
+  alert,
+  clearAlert
 };
