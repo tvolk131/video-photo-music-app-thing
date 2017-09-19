@@ -10,14 +10,14 @@ import {
   ApolloClient,
   ApolloProvider
 } from 'react-apollo';
-import registerServiceWorker from './registerServiceWorker';
+// import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render((
-  <BrowserRouter basename="/">
-    <ApolloProvider client={client} store={store}>
+  <ApolloProvider client={client} store={store}>
+    <BrowserRouter basename="/">
       <App />
-    </ApolloProvider>
-  </BrowserRouter>
+    </BrowserRouter>
+  </ApolloProvider>
 ), document.getElementById('root'));
 
-registerServiceWorker();
+// registerServiceWorker();

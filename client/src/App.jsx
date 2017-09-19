@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route} from 'react-router';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Nav from './containers/Nav';
@@ -18,24 +20,34 @@ import { MuiThemeProvider } from 'material-ui/styles';
 import logo from './logo.svg';
 import './App.css';
 
-const App = () => (
-  <MuiThemeProvider theme={themes.get(0)}>
+const propTypes = {
+  theme: PropTypes.number
+};
+
+const App = ({ theme }) => (
+  <MuiThemeProvider theme={themes.get(theme)}>
     <div className="App">
       <Nav />
-      <Route exact path='/' component={Search}/>
-      <Route exact path='/search' component={Search}/>
-      <Route
-        exact
-        path='/project/:username/:projectName'
-        component={Project}
-      />
-      <Route exact path='/project/create' component={CreateProject}/>
-      <Route exact path='/user/:username' component={User}/>
-      <Route exact path='/settings' component={Settings}/>
-      <Route exact path='/login' component={Login}/>
-      <Route exact path='/signup' component={Signup}/>
+      <switch>
+        <Route exact path='/' component={Search}/>
+        <Route exact path='/search' component={Search}/>
+        <Route
+          exact
+          path='/project/:username/:projectName'
+          component={Project}
+        />
+        <Route exact path='/project/create' component={CreateProject}/>
+        <Route exact path='/user/:username' component={User}/>
+        <Route exact path='/settings' component={Settings}/>
+        <Route exact path='/login' component={Login}/>
+        <Route exact path='/signup' component={Signup}/>
+      </switch>
     </div>
   </MuiThemeProvider>
 );
 
-export default App;
+App.propTypes = propTypes;
+
+export default withRouter(connect(state => ({
+  theme: state.session.currentUser.theme
+}))(App));

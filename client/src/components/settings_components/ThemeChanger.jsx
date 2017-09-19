@@ -29,7 +29,6 @@ class ThemeChanger extends Component {
     this.handleClickListItem = this.handleClickListItem.bind(this);
     this.handleMenuItemClick = this.handleMenuItemClick.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
-    this.saveTheme = this.saveTheme.bind(this);
   }
 
   handleClickListItem (event) {
@@ -42,11 +41,6 @@ class ThemeChanger extends Component {
 
   handleRequestClose () {
     this.setState({ menuOpen: false });
-  }
-
-  saveTheme (index) {
-    // TODO - Let apollo update the user's theme and also change the theme within the redux store
-    console.log(this.state.selectedIndex);
   }
 
   render () {
@@ -83,7 +77,13 @@ class ThemeChanger extends Component {
               </MenuItem>
             ))}
           </Menu>
-          <Button style={styles.button} raised onClick={this.saveTheme} color='primary'>
+          <Button
+            style={styles.button}
+            raised
+            onClick={() => {
+              this.props.setTheme(this.state.selectedIndex);
+            }}
+            color='primary'>
             Save
           </Button>
         </Paper>
