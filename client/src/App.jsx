@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route} from 'react-router';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { MuiThemeProvider } from 'material-ui/styles';
+
+import SnackBar from 'material-ui/Snackbar';
+import Typography from 'material-ui/Typography';
 
 import Nav from './containers/Nav';
 import Search from './layouts/Search.jsx';
@@ -13,20 +17,22 @@ import Login from './layouts/Login.jsx';
 import Signup from './layouts/Signup.jsx';
 import CreateProject from './components/CreateProject.jsx';
 
+import { clearAlert } from './actions/controlActions.js';
 import themes from './themes';
-
-import { MuiThemeProvider } from 'material-ui/styles';
 
 import logo from './logo.svg';
 import './App.css';
 
 const propTypes = {
-  theme: PropTypes.number
+  theme: PropTypes.number,
+  alert: PropTypes.object,
+  clearAlert: PropTypes.func
 };
 const defaultTheme = 0;
 
-const App = ({ currentUser }) => (
-  <MuiThemeProvider theme={themes.get(currentUser ? currentUser.theme : defaultTheme)}>
+
+const App = ({ theme, alert, clearAlert }) => (
+  <MuiThemeProvider theme={themes.get(theme)}>
     <div className="App">
       <Nav />
       <switch>
@@ -43,12 +49,39 @@ const App = ({ currentUser }) => (
         <Route exact path='/login' component={Login}/>
         <Route exact path='/signup' component={Signup}/>
       </switch>
+      <SnackBar
+        open={alert.message}
+        onEnter={() => {
+          setTimeout(clearAlert, 3500);
+        }}
+        message={alert.message}
+        type='display1'
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right'
+        }}
+        SnackbarContentProps={alert.type === 'error' ? {
+          style: {
+            backgroundColor: '#d50000',
+            color: 'white'
+          }
+        } : {}}
+      />
     </div>
   </MuiThemeProvider>
 );
 
 App.propTypes = propTypes;
 
-export default withRouter(connect(state => ({
-  currentUser: state.session.currentUser
-}))(App));
+const mapStateToProps = state => ({
+  theme: state.session.currentUser ? state.session.currentUser.theme : 0,
+  alert: state.control.alert
+});
+
+const mapDispatchToProps = dispatch => ({
+  clearAlert() {
+    dispatch(clearAlert());
+  }
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
