@@ -11,6 +11,7 @@ import { CircularProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
+import Divider from 'material-ui/Divider';
 
 const propTypes = {
   user: PropTypes.object,
@@ -37,7 +38,7 @@ const UserCard = ({ user, loading, error, currentUser, toggleEditUser }) => (
 
   user &&
   <Paper>
-    <img src={user.avatarUrl || 'https://cdn2.lobster.media/assets/default_avatar-afa14913913cc117c73f1ac69496d74e.png'} style={{width: '100%'}}/>
+    <img src={user.avatarUrl || 'https://cdn2.lobster.media/assets/default_avatar-afa14913913cc117c73f1ac69496d74e.png'} style={{width: '100%', objectFit: 'cover'}}/>
     <div style={{textAlign: 'left', padding: 10}}>
       {
         currentUser &&
@@ -55,11 +56,11 @@ const UserCard = ({ user, loading, error, currentUser, toggleEditUser }) => (
           <ModeEditIcon />
         </Button>
       }
-      <Typography>{user.name}</Typography>
-      <Typography>{user.profession}</Typography>
-      <Typography>{user.username}</Typography>
-      <Typography>{user.email}</Typography>
-      <Typography>Bio:</Typography>
+      <Typography type="title">{user.name}</Typography>
+      <Typography color="secondary">Profession: {user.profession}</Typography>
+      <Typography color="secondary">Username: {user.username}</Typography>
+      <Typography color="secondary">Email: {user.email}</Typography>
+      <Divider style={{marginTop: 5, marginBottom: 5}}/>
       <Typography>{user.description}</Typography>
     </div>
   </Paper>
