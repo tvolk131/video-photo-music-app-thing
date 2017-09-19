@@ -29,4 +29,20 @@ Project.delete = (userId, projectId) => {
     });
 };
 
+Project.addTag = (input) => {
+  return dbProject.addTag(input)
+    .then((data) => {
+      elasticSearch.indexProject(input.projectId);
+      return data;
+    });
+};
+
+Project.removeTag = (input) => {
+  return dbProject.removeTag(input)
+    .then((data) => {
+      elasticSearch.indexProject(input.projectId);
+      return data;
+    });
+};
+
 module.exports = Project;
