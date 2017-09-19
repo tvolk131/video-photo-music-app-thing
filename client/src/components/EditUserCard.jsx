@@ -12,6 +12,16 @@ import TextField from 'material-ui/TextField';
 
 import { setUploadedFileUrl } from '../actions/controlActions.js';
 
+const propTypes = {
+  user: PropTypes.string,
+  loading: PropTypes.bool,
+  error: PropTypes.bool,
+  toggleEditUser: PropTypes.func.isRequired,
+  submitChanges: PropTypes.func.isRequired,
+  uploadedFileUrl: PropTypes.string,
+  setUploadedFileUrl: PropTypes.func.isRequired
+};
+
 const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, uploadedFileUrl, setUploadedFileUrl }) => (
   loading &&
   <Loading />
@@ -92,9 +102,7 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
   </Paper>
 );
 
-EditUserCard.propTypes = {
-  username: PropTypes.string.isRequired,
-};
+EditUserCard.propTypes = propTypes;
 
 const editUser = gql`
   mutation editUser(
