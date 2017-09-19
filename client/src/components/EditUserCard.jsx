@@ -40,7 +40,7 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
         name: form.name.value || user.name,
         username: form.username.value || user.username,
         email: form.email.value || user.email,
-        profession: form.profession.value,
+        profession: form.profession.value || user.profession,
         avatarUrl: uploadedFileUrl || user.avatarUrl || null,
         description: form.description.value || user.description || null
       });
