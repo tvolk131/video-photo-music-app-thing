@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { MuiThemeProvider } from 'material-ui/styles';
 
-import SnackBar from 'material-ui/SnackBar';
+import SnackBar from 'material-ui/Snackbar';
 import Typography from 'material-ui/Typography';
 
 import Nav from './containers/Nav';
