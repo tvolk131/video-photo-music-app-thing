@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { graphql, gql } from 'react-apollo';
 
+import { alert } from '../../actions/controlActions.js';
+
 import {
   AppBar,
   Avatar,
@@ -35,14 +37,20 @@ import { toggleNavDrawer } from '../../actions/controlActions';
 
 const style = {textDecoration: 'none'};
 
-const Nav = (props) => (
+const proptypes = {
+
+}
+
+const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser }) => (
   <div>
     <AppBar position='static'>
       <Toolbar disableGutters>
         <IconButton
           color='contrast'
           aria-label='Menu'
-          onClick={props.toggleNavDrawer}
+          onClick={() => {
+            toggleNavDrawer();
+          }}
         >
           <MenuIcon />
         </IconButton>
@@ -55,22 +63,22 @@ const Nav = (props) => (
     </AppBar>
 
     <Drawer
-      open={props.navDrawerOpen}
+      open={navDrawerOpen}
       elevation={1}  
     >
-      <IconButton onClick={props.toggleNavDrawer}>
+      <IconButton onClick={toggleNavDrawer}>
         <ChevronLeftIcon />
       </IconButton>
       <div style={{width: 250}}>
         <List>
           <NavHeader
-            user={props.currentUser}
-            toggleNavDrawer={props.toggleNavDrawer}
+            user={currentUser}
+            toggleNavDrawer={toggleNavDrawer}
           />
 
           <NavLink
             to='/search'
-            onClick={props.toggleNavDrawer}
+            onClick={toggleNavDrawer}
             style={style}
           >
             <ListItem>
@@ -81,11 +89,11 @@ const Nav = (props) => (
             </ListItem>
           </NavLink>
 
-          {props.currentUser &&
+          {currentUser &&
             <div>
               <NavLink
                 to={'/project/create'}
-                onClick={props.toggleNavDrawer}
+                onClick={toggleNavDrawer}
                 style={style}
               >
                 <ListItem>
@@ -97,8 +105,8 @@ const Nav = (props) => (
               </NavLink>
 
               <NavLink
-                to={`/user/${props.currentUser.username}`}
-                onClick={props.toggleNavDrawer}
+                to={`/user/${currentUser.username}`}
+                onClick={toggleNavDrawer}
                 style={style}
               >
                 <ListItem>
@@ -111,7 +119,7 @@ const Nav = (props) => (
 
               <NavLink
                 to='/settings'
-                onClick={props.toggleNavDrawer}
+                onClick={toggleNavDrawer}
                 style={style}
               >
                 <ListItem>
@@ -144,12 +152,9 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    toggleNavDrawer: () => dispatch(toggleNavDrawer())
-  };
-};
-
+const mapDispatchToProps = dispatch => ({
+  toggleNavDrawer: () => dispatch(toggleNavDrawer())
+});
 export default connect(
   mapStateToProps,
   mapDispatchToProps
