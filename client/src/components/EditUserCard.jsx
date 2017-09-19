@@ -83,6 +83,9 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
   </Paper>
 );
 
+EditUserCard.propTypes = {
+  username: PropTypes.string.isRequired,
+};
 
 const editUser = gql`
   mutation editUser(
