@@ -233,7 +233,7 @@ Project.removeTag = ({userId, projectId, text}) => {
               return contributorIds.includes(userId) || userId === project.ownerId ? true : Promise.reject('Must be a contributor or owner to remove tags from this project');
             })
             .then(() => {
-              Tag.model.findOne({
+              return Tag.model.findOne({
                 where: {
                   text
                 }

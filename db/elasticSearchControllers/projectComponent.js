@@ -8,10 +8,7 @@ ProjectComponent.create = (input) => {
   return dbProjectComponent.create(input)
     // TODO - Find a way to use 'tap' instead of 'then' here
     .then((projectComponent) => {
-      dbUser.getById(projectComponent.authorId)
-        .then((author) => {
-          elasticSearch.indexProjectComponent(projectComponent, author);
-        });
+      elasticSearch.indexProjectComponent(projectComponent.id);
       return projectComponent;
     });
 };
@@ -19,10 +16,7 @@ ProjectComponent.create = (input) => {
 ProjectComponent.update = (userId, componentId, options) => {
   return dbProjectComponent.update(userId, componentId, options)
     .then((projectComponent) => {
-      dbUser.getById(projectComponent.authorId)
-        .then((author) => {
-          elasticSearch.indexProjectComponent(projectComponent, author);
-        });
+      elasticSearch.indexProjectComponent(projectComponent.id);
       return projectComponent;
     });
 };

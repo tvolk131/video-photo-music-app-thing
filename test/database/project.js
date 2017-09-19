@@ -483,10 +483,10 @@ describe('Project Model', () => {
     });
 
     describe('removeTag()', () => {
-      it('Should remove tag from project as owner', () => {
+      it('Should not reject when attempting to removing tag from project as owner', () => {
         return expect(Project.removeTag({userId: localUser.id, projectId: project.id, text: 'test tag'})).to.eventually.equal(true);
       });
-      it('Should remove tag from project as contributor', () => {
+      it('Should not reject when attempting to removing tag from project as contributor', () => {
         return Project.addContributor({
           ownerId: localUser.id,
           contributorId: oAuthUser.id,
@@ -495,6 +495,23 @@ describe('Project Model', () => {
         })
           .then(() => {
             return expect(Project.removeTag({userId: oAuthUser.id, projectId: project.id, text: 'test tag'})).to.eventually.equal(true);
+          });
+      });
+      it('Should remove tag from project', () => {
+        return Project.addContributor({
+          ownerId: localUser.id,
+          contributorId: oAuthUser.id,
+          projectId: project.id,
+          role: 'contributor'
+        })
+          .then(() => {
+            return Project.addTag({userId: oAuthUser.id, projectId: project.id, text: 'test tag'});
+          })
+          .then(() => {
+            return Project.removeTag({userId: oAuthUser.id, projectId: project.id, text: 'test tag'});
+          })
+          .then(() => {
+            return expect(Project.getTags(project.id)).to.eventually.eql([]);
           });
       });
       it('Should reject when removing tag as neither an owner or contributor', () => {
