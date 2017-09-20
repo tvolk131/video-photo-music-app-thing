@@ -46,7 +46,7 @@ const ProjectCard = ({ project, loading, error, currentUser, toggleEditProject }
   <Paper>
     <img src={project.thumbnailUrl || 'https://www.velo-nice.info/img/folder.svg'} style={{width: '100%', objectFit: 'cover'}}/>
     <div style={overlayStyle}>
-      <Typography type="title" style={{textAlign: 'left', padding: 10, color: 'white'}}>{project.name}</Typography>
+      <Typography type="title" style={{textAlign: 'left', padding: 10, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{project.name}</Typography>
     </div>
     {
       currentUser &&
@@ -69,8 +69,8 @@ const ProjectCard = ({ project, loading, error, currentUser, toggleEditProject }
       </div>
     }
     {
-      currentUser &&
-      currentUser.username !== project.owner.username &&
+      (currentUser && currentUser.username !== project.owner.username) ||
+      !currentUser &&
       <div>
         <Typography style={{padding: 10, textAlign: 'left', marginTop: -40, paddingBottom: 0}}>{project.tagline}</Typography>
         <Typography style={{padding: 10, textAlign: 'left'}}>{project.description}</Typography>
