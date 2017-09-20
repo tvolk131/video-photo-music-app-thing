@@ -10,6 +10,7 @@ import ProjectContributors from '../components/ProjectContributors.jsx';
 import MediaComponent from '../components/MediaComponent';
 import Spacer from '../components/Spacer.jsx';
 import DisplayProjectCard from '../components/DisplayProjectCard.jsx';
+import CreateComponent from '../components/CreateComponent.jsx';
 
 import { toggleEditProject } from '../actions/controlActions';
 
@@ -103,7 +104,9 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                 <MediaComponent 
                   content={featuredComponent} 
                   elevation={FEATURED_ELEVATION} 
+                  editingProject={editingProject} 
                   likeCount={likeCount}
+                  isFeatured={true}
                   id='featured'
                 />
               </Grid>
@@ -113,6 +116,12 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                   margin: 0,
                   width: '100%'
                 }}>
+                  {
+                    editingProject &&
+                    <Grid item xs={12}>
+                      <CreateComponent toggleEditProject={toggleEditProject} />
+                    </Grid>
+                  }
                   {components.map((content, key) => ( 
                     <MediaComponent 
                       content={content} 
@@ -121,6 +130,7 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                       elevation={COMPONENT_ELEVATION} 
                       editingProject={editingProject} 
                       likeCount={likeCount}
+                      isFeatured={false}
                       id={key}
                     />
                   ))}
@@ -141,7 +151,7 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <ProjectContributors owner={owner} contributors={contributors} />
+                <ProjectContributors owner={owner} contributors={contributors} editingProject={editingProject} />
               </Grid>
             </Grid>
           </Grid>
@@ -161,7 +171,9 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                 <MediaComponent 
                   content={featuredComponent} 
                   elevation={FEATURED_ELEVATION} 
+                  editingProject={editingProject} 
                   likeCount={likeCount}
+                  isFeatured={true}
                   id='featured'
                 />
               </Grid>
@@ -176,7 +188,7 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <ProjectContributors owner={owner} contributors={contributors} />
+                <ProjectContributors owner={owner} contributors={contributors} editingProject={editingProject} />
               </Grid>
               <Grid item xs={12} style={{padding: 0}}>
                 <Grid container direction="row" spacing={24} style={{
@@ -184,6 +196,12 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                   margin: 0,
                   width: '100%'
                 }}>
+                  {
+                    editingProject &&
+                    <Grid item xs={12}>
+                      <CreateComponent toggleEditProject={toggleEditProject} />
+                    </Grid>
+                  }
                   {components.map((content, key) => ( 
                     <MediaComponent 
                       content={content} 
@@ -191,7 +209,9 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                       group={groups[key]} 
                       elevation={COMPONENT_ELEVATION} 
                       editingProject={editingProject} 
-                      likeCount={likeCount} 
+                      likeCount={likeCount}
+                      isFeatured={false}
+                      id={key}
                     /> 
                   ))}
                 </Grid>

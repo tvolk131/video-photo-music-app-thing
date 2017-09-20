@@ -11,7 +11,7 @@ import SocialButtons from '../SocialButtons.jsx';
 import AudioPlayer from './AudioPlayer.jsx';
 // import videojsWavesurfer from 'videojs-wavesurfer';
 
-const AudioComponent = ({component, elevation, editingProject, likeCount, id}) => (
+const AudioComponent = ({component, elevation, editingProject, likeCount, id, isFeatured}) => (
   <Grid item xs={12}>
     <Paper elevation={elevation}>
       <AudioPlayer aspectRatio="8:1" fluid={true} controls={true} sources={[{src: component.resourceUrl, type: 'audio/mp3'}]} />
@@ -27,7 +27,7 @@ const AudioComponent = ({component, elevation, editingProject, likeCount, id}) =
           />
         </Grid>
         <Grid item>
-          <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} />
+          <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} isFeatured={isFeatured} />
         </Grid>
       </Grid>
       <Typography type="body1" component="p" style={{textAlign: 'left', padding: '15px'}}>

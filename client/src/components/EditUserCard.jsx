@@ -9,6 +9,7 @@ import Button from 'material-ui/Button';
 import Loading from './Loading.jsx';
 import Upload from './Upload.jsx';
 import TextField from 'material-ui/TextField';
+import Divider from 'material-ui/Divider';
 
 import { setUploadedFileUrl } from '../actions/controlActions.js';
 
@@ -37,6 +38,8 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
 
   user &&
   <Paper>
+    <Typography type='title' style={{padding: 10}}> Edit Profile </Typography>
+    <Divider style={{width: '90%', marginLeft: 'auto', marginRight: 'auto'}} />
     <Typography style={{paddingTop: 10, marginBottom: 5}}>Upload a new profile image:</Typography>
     <Upload 
       allowedType="image"
@@ -87,17 +90,17 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
         multiline
         style={{width: '100%'}}
       />
+      <Button color='primary' raised type="submit" style={{marginBottom: 10, marginTop: 10, width:'100%'}}>
+        Submit
+      </Button>
       <Button
         color='default'
         raised
         type="cancel"
-        style={{marginBottom: 10}}
+        style={{width:'100%'}}
         onClick={toggleEditUser}
       >
         Cancel
-      </Button>
-      <Button color='primary' raised type="submit" style={{marginBottom: 10}}>
-        Submit
       </Button>
     </form>
   </Paper>

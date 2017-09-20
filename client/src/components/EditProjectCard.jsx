@@ -9,6 +9,7 @@ import Button from 'material-ui/Button';
 import Loading from './Loading.jsx';
 import Upload from './Upload.jsx';
 import TextField from 'material-ui/TextField';
+import Divider from 'material-ui/Divider';
 
 import { setUploadedFileUrl } from '../actions/controlActions.js';
 
@@ -27,6 +28,8 @@ const EditProjectCard = ({ project, loading, error, toggleEditProject, submitCha
 
   project &&
   <Paper>
+    <Typography type='title' style={{padding: 10}}> Edit Project Info </Typography>
+    <Divider style={{width: '90%', marginLeft: 'auto', marginRight: 'auto'}} />
     <Typography style={{paddingTop: 10, marginBottom: 5}}>Upload a new thumbnail image:</Typography>
     <Upload 
       allowedType="image"
@@ -63,17 +66,17 @@ const EditProjectCard = ({ project, loading, error, toggleEditProject, submitCha
         multiline
         style={{width: '100%'}}
       />
+      <Button color='primary' raised type="submit" style={{marginBottom: 10, marginTop: 10, width:'100%'}}>
+        Submit
+      </Button>
       <Button
         color='default'
         raised
         type="cancel"
-        style={{marginBottom: 10}}
+        style={{width:'100%'}}
         onClick={toggleEditProject}
       >
         Cancel
-      </Button>
-      <Button color='primary' raised type="submit" style={{marginBottom: 10}}>
-        Submit
       </Button>
     </form>
   </Paper>

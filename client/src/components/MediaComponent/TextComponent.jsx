@@ -8,7 +8,7 @@ import Grid from 'material-ui/Grid';
 import SocialButtons from '../SocialButtons.jsx';
 
 
-const TextComponent = ({component, elevation, editingProject, likeCount, id}) => (
+const TextComponent = ({component, elevation, editingProject, likeCount, id, isFeatured}) => (
   <Grid item xs={12}>
     <Paper elevation={elevation}>
       <Grid container justify="space-between" align="center">
@@ -23,7 +23,7 @@ const TextComponent = ({component, elevation, editingProject, likeCount, id}) =>
           />
         </Grid>
         <Grid item>
-          <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} />
+          <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} isFeatured={isFeatured} />
         </Grid>
       </Grid>
       <div style={{padding: 10}}>

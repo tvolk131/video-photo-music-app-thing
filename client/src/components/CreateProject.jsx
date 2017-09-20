@@ -12,19 +12,18 @@ import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import Loading from './Loading.jsx';
 import Upload from './Upload.jsx';
 import TextField from 'material-ui/TextField';
+import Divider from 'material-ui/Divider';
 
-import Spacer from './Spacer.jsx';
 
-const CreateProject = ({ createProject }) => (
+const CreateProject = ({ createProject, toggleEditUser }) => (
   <Grid container spacing={0} style={{
-    padding: '2%',
     margin: 0,
-    width: '100%',
-    paddingBottom: '0px'
+    width: '100%'
   }}>
-    <Spacer hidden={['xs', 's']}/>
-    <Grid item xs={12} md={8} lg={6}>
+    <Grid item xs={12}>
       <Paper>
+        <Typography type='title' style={{padding: 10}}> Create Project </Typography>
+        <Divider style={{width: '90%', marginLeft: 'auto', marginRight: 'auto'}} />
         <Typography style={{paddingTop: 10, marginBottom: 5}}>
           Upload a thumbnail:
         </Typography>
@@ -65,14 +64,22 @@ const CreateProject = ({ createProject }) => (
             raised
             color='primary'
             type="submit"
-            onClick={() => console.log('close')} style={{marginBottom: 10}}
+            style={{marginBottom: 10, marginTop: 10, width:'100%'}}
           >
             Submit
+          </Button>
+          <Button
+            raised
+            color='default'
+            type="cancel"
+            style={{width:'100%'}}
+            onClick={toggleEditUser}
+          >
+            Cancel
           </Button>
         </form>
       </Paper>
     </Grid>
-    <Spacer hidden={['m', 's']}/>
   </Grid>
 );
 

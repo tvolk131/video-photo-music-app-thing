@@ -9,7 +9,7 @@ import SocialButtons from '../SocialButtons.jsx';
 
 import VideoPlayer from './VideoPlayer.jsx';
 
-const VideoComponent = ({component, group, elevation, editingProject, likeCount, id}) => {
+const VideoComponent = ({component, group, elevation, editingProject, likeCount, id, isFeatured}) => {
   let size = 12;
   let headerSize = 0;
   group = group || 1;
@@ -35,7 +35,7 @@ const VideoComponent = ({component, group, elevation, editingProject, likeCount,
             />
           </Grid>
           <Grid item xs={headerSize}>
-            <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} />
+            <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} isFeatured={isFeatured} />
           </Grid>
         </Grid>
         <Typography type="body1" component="p" style={{textAlign: 'left', padding: '15px'}}>

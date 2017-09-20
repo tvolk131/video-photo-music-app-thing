@@ -13,20 +13,36 @@ import Loading from './Loading.jsx';
 import Upload from './Upload.jsx';
 import TextField from 'material-ui/TextField';
 import Switch from 'material-ui/Switch';
+import Divider from 'material-ui/Divider';
 
-const CreateComponent = () => (
+const CreateComponent = ({toggleEditProject}) => (
   <Paper>
-    <Typography style={{paddingTop: 10, marginBottom: 5}}>Upload file:</Typography>
+    <Typography type='title' style={{padding: 10}}> Create Component </Typography>
+    <Divider style={{width: '90%', marginLeft: 'auto', marginRight: 'auto'}} />
+    <Typography style={{margin: 5}}>Upload file:</Typography>
     <Upload />
-    <div style={{textAlign: 'left', padding: 10}}>
+    <form style={{textAlign: 'left', padding: 10}} onSubmit={e => {
+      let from = e.target;
+      e.preventDefault();
+      toggleEditProject();
+    }}>
       <TextField label="Name" placeholder="My Awesome Component!" style={{width: '100%'}} />
       <TextField label="Description" placeholder="This component is part of what helps make the project so cool..." multiline style={{width: '100%'}} />
       <Typography style={{marginTop: '16px'}}>Should it be downloadable?</Typography>
       <Switch label="Download" />
-    </div>
-    <Button color='primary' raised onClick={() => console.log('close')} style={{marginBottom: 10}}>
-      Submit
-    </Button>
+      <Button color='primary' raised type="submit" style={{marginBottom: 10, marginTop: 10, width: '100%'}}>
+        Submit
+      </Button>
+      <Button
+        color='default'
+        raised
+        type="cancel"
+        style={{width: '100%'}}
+        onClick={toggleEditProject}
+      >
+        Cancel
+      </Button>
+    </form>
   </Paper>
 );
 
