@@ -7,8 +7,26 @@ import ShareIcon from 'material-ui-icons/Share';
 import DeleteIcon from 'material-ui-icons/Delete';
 import ArrowUpwardIcon from 'material-ui-icons/ArrowUpward';
 
-const SocialButtons = ({ likeCount, editingProject, editingUser, id }) => (
-  editingProject &&
+const SocialButtons = ({ likeCount, editingProject, editingUser, id, isFeatured }) => (
+
+  (editingProject && isFeatured) &&
+  <Grid item style={{marginLeft: 'auto'}}>
+    <Grid container spacing={0} align='center'>
+      <Grid item style={{marginLeft: 'auto'}}>
+        <IconButton
+          onClick={() => console.log('delete ' + id)}
+          aria-label="Remove from project"
+          style={{zIndex: 1000, align: 'left'}}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Grid>
+    </Grid>
+  </Grid>
+
+  ||
+
+  (editingProject && !isFeatured) &&
   <Grid item style={{marginLeft: 'auto'}}>
     <Grid container spacing={0} align='center'>
       <Grid item style={{marginLeft: 'auto'}}>

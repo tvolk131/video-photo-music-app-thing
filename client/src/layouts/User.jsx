@@ -10,6 +10,7 @@ import Typography from 'material-ui/Typography';
 
 import DisplayUserCard from '../components/DisplayUserCard.jsx';
 import ProjectList from '../components/ProjectList.jsx';
+import CreateProject from '../components/CreateProject.jsx';
 
 import { toggleEditUser } from '../actions/controlActions';
 
@@ -39,6 +40,10 @@ const User = ({ currentUser, editingUser, toggleEditUser, data }) => (
       </Grid>
 
       <Grid item xs={12} sm={12} md={8} lg={6}>
+        {
+          editingUser &&
+          <CreateProject toggleEditUser={toggleEditUser} />
+        }
         <Paper>
           { 
             data.user &&

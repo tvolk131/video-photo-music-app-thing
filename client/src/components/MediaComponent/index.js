@@ -6,7 +6,7 @@ import AudioComponent from './AudioComponent.jsx';
 import PhotoComponent from './PhotoComponent.jsx';
 import TextComponent from './TextComponent.jsx';
 
-const MediaComponent = ({ content, group, elevation, editingProject, likeCount, id }) => (
+const MediaComponent = ({ content, group, elevation, editingProject, likeCount, id, isFeatured }) => (
 
   content.type === 'video' &&
     <VideoComponent 
@@ -16,6 +16,7 @@ const MediaComponent = ({ content, group, elevation, editingProject, likeCount, 
       editingProject={editingProject} 
       likeCount={likeCount} 
       id={id}
+      isFeatured={isFeatured}
     />
   ||
 
@@ -27,6 +28,7 @@ const MediaComponent = ({ content, group, elevation, editingProject, likeCount, 
       editingProject={editingProject} 
       likeCount={likeCount} 
       id={id}
+      isFeatured={isFeatured}
     />
   ||
 
@@ -37,6 +39,7 @@ const MediaComponent = ({ content, group, elevation, editingProject, likeCount, 
       editingProject={editingProject} 
       likeCount={likeCount} 
       id={id}
+      isFeatured={isFeatured}
     />
   ||
 
@@ -47,6 +50,7 @@ const MediaComponent = ({ content, group, elevation, editingProject, likeCount, 
       editingProject={editingProject} 
       likeCount={likeCount} 
       id={id}
+      isFeatured={isFeatured}
     />
 );
 

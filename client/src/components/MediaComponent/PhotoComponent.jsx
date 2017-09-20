@@ -10,7 +10,7 @@ import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
 import SocialButtons from '../SocialButtons.jsx';
 
-const PhotoComponent = ({component, group, elevation, editingProject, likeCount, id}) => {
+const PhotoComponent = ({component, group, elevation, editingProject, likeCount, id, isFeatured}) => {
   const FULL_WIDTH = 12;
   const HALF_WIDTH = 6;
   const ONE_THIRD_WIDTH = 4;
@@ -59,7 +59,7 @@ const PhotoComponent = ({component, group, elevation, editingProject, likeCount,
             />
           </Grid>
           <Grid item xs={headerSize}>
-            <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} />
+            <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} isFeatured={isFeatured} />
           </Grid>
         </Grid>
       </Paper>
