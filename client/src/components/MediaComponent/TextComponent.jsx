@@ -5,13 +5,10 @@ import Paper from 'material-ui/Paper';
 import Card, { CardContent, CardMedia, CardHeader } from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 import Grid from 'material-ui/Grid';
-import IconButton from 'material-ui/IconButton';
-import FavoriteIcon from 'material-ui-icons/Favorite';
-import CommentIcon from 'material-ui-icons/Comment';
-import ShareIcon from 'material-ui-icons/Share';
+import SocialButtons from '../SocialButtons.jsx';
 
 
-const TextComponent = ({component, elevation}) => (
+const TextComponent = ({component, elevation, editingProject, likeCount, id, isFeatured}) => (
   <Grid item xs={12}>
     <Paper elevation={elevation}>
       <Grid container justify="space-between" align="center">
@@ -26,15 +23,7 @@ const TextComponent = ({component, elevation}) => (
           />
         </Grid>
         <Grid item>
-          <IconButton aria-label="Add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="Comments">
-            <CommentIcon />
-          </IconButton>
-          <IconButton aria-label="Share">
-            <ShareIcon />
-          </IconButton>
+          <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} isFeatured={isFeatured} />
         </Grid>
       </Grid>
       <div style={{padding: 10}}>

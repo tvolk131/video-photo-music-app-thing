@@ -9,6 +9,11 @@ import { CircularProgress } from 'material-ui/Progress';
 import ProjectContributors from '../components/ProjectContributors.jsx';
 import MediaComponent from '../components/MediaComponent';
 import Spacer from '../components/Spacer.jsx';
+import DisplayProjectCard from '../components/DisplayProjectCard.jsx';
+import CreateComponent from '../components/CreateComponent.jsx';
+
+import { toggleEditProject } from '../actions/controlActions';
+
 
 ////////////////////////////////////////
 //---RUN THESE COMMANDS IN TERMINAL---//
@@ -20,7 +25,7 @@ import Spacer from '../components/Spacer.jsx';
 // To see if the command worked run the following command:
 // select * from components where isFeatured=true;
 
-const Project = ({ data }) => {
+const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
 
   if (data.loading) {
     return (
@@ -32,6 +37,8 @@ const Project = ({ data }) => {
 
   const COMPONENT_ELEVATION = 4;
   const FEATURED_ELEVATION = 8;
+
+  let likeCount = 137;
 
   let {
     components,
@@ -83,47 +90,137 @@ const Project = ({ data }) => {
   let groups = groupingPreCheck(components);
 
   return (
-    <div>
-      <Grid container spacing={24} style={{
-        padding: '2%',
-        margin: 0,
-        width: '100%',
-        paddingBottom: '0px'
-      }}>
-
-        <Spacer hidden={['md']} />
-        <Grid item xs={12} md={8} lg={6}>
-          <MediaComponent content={featuredComponent} elevation={FEATURED_ELEVATION} />
+    <Grid container >
+      <Grid item xs={12} hidden={{ smDown: true }}>
+        <Grid container spacing={24} style={{
+          padding: '2%',
+          margin: 0,
+          width: '100%',
+        }}>
+          <Spacer hidden={['md']} />
+          <Grid item xs={12} md={8} lg={6}>
+            <Grid container>
+              <Grid item xs={12}>
+                <MediaComponent 
+                  content={featuredComponent} 
+                  elevation={FEATURED_ELEVATION} 
+                  editingProject={editingProject} 
+                  likeCount={likeCount}
+                  isFeatured={true}
+                  id='featured'
+                />
+              </Grid>
+              <Grid item xs={12} style={{padding: 0}}>
+                <Grid container direction="row" spacing={24} style={{
+                  padding: 0,
+                  margin: 0,
+                  width: '100%'
+                }}>
+                  {
+                    editingProject &&
+                    <Grid item xs={12}>
+                      <CreateComponent toggleEditProject={toggleEditProject} />
+                    </Grid>
+                  }
+                  {components.map((content, key) => ( 
+                    <MediaComponent 
+                      content={content} 
+                      key={key} 
+                      group={groups[key]} 
+                      elevation={COMPONENT_ELEVATION} 
+                      editingProject={editingProject} 
+                      likeCount={likeCount}
+                      isFeatured={false}
+                      id={key}
+                    />
+                  ))}
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} md={4} lg={3}>
+            <Grid container>
+              <Grid item xs={12}>
+                <DisplayProjectCard
+                  editingProject={editingProject}
+                  currentUser={currentUser}
+                  error={data.error}
+                  loading={data.loading}
+                  project={data.user.project}
+                  toggleEditProject={toggleEditProject}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <ProjectContributors owner={owner} contributors={contributors} editingProject={editingProject} />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Spacer hidden={['md']} />
         </Grid>
-        <Grid item xs={12} md={4} lg={3}>
-          <ProjectContributors owner={owner} contributors={contributors} />
-        </Grid>
-        <Spacer hidden={['md']} />
-
       </Grid>
-      <Grid container spacing={0} style={{
-        padding: '2%',
-        margin: 0,
-        width: '100%',
-        paddingTop: '0px'
-      }}>
 
-        <Spacer hidden={['sm']} />
-        <Grid item xs={12} md={8} lg={6}>
-          <Grid container direction="row" spacing={24} style={{
-            margin: 0,
-            width: '100%'
-          }}>
-            {components.map((content, key) => {
-              return ( <MediaComponent content={content} key={key} group={groups[key]} elevation={COMPONENT_ELEVATION} /> );
-            })}
+      <Grid item xs={12} hidden={{ mdUp: true }}>
+        <Grid container spacing={24} style={{
+          padding: '2%',
+          margin: 0,
+          width: '100%',
+        }}>
+          <Grid item xs={12} md={8} lg={6}>
+            <Grid container>
+              <Grid item xs={12}>
+                <MediaComponent 
+                  content={featuredComponent} 
+                  elevation={FEATURED_ELEVATION} 
+                  editingProject={editingProject} 
+                  likeCount={likeCount}
+                  isFeatured={true}
+                  id='featured'
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <DisplayProjectCard
+                  editingProject={editingProject}
+                  currentUser={currentUser}
+                  error={data.error}
+                  loading={data.loading}
+                  project={data.user.project}
+                  toggleEditProject={toggleEditProject}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <ProjectContributors owner={owner} contributors={contributors} editingProject={editingProject} />
+              </Grid>
+              <Grid item xs={12} style={{padding: 0}}>
+                <Grid container direction="row" spacing={24} style={{
+                  padding: 0,
+                  margin: 0,
+                  width: '100%'
+                }}>
+                  {
+                    editingProject &&
+                    <Grid item xs={12}>
+                      <CreateComponent toggleEditProject={toggleEditProject} />
+                    </Grid>
+                  }
+                  {components.map((content, key) => ( 
+                    <MediaComponent 
+                      content={content} 
+                      key={key} 
+                      group={groups[key]} 
+                      elevation={COMPONENT_ELEVATION} 
+                      editingProject={editingProject} 
+                      likeCount={likeCount}
+                      isFeatured={false}
+                      id={key}
+                    /> 
+                  ))}
+                </Grid>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12} md={4} lg={3} />
-        <Spacer hidden={['sm']} />
-
       </Grid>
-    </div>
+    </Grid>
   );
 };
 
@@ -132,9 +229,11 @@ const projectQuery = gql`
   query projectQuery($projectName: String! $username: String!) {
     user(username: $username) {
       project(name: $projectName) {
+        id
         name
         description
         tagline
+        thumbnailUrl
         featuredComponent {
           name
           resourceUrl
@@ -173,7 +272,19 @@ const projectQuery = gql`
   }
 `;
 
-export default graphql(projectQuery, {
+const mapStateToProps = state => ({
+  currentUser: state.session.currentUser,
+  editingProject: state.control.editingProject
+});
+
+const mapDispatchToProps = dispatch => ({
+  toggleEditProject() {
+    dispatch(toggleEditProject());
+  }
+});
+
+
+const projectWithData = graphql(projectQuery, {
   options: ({ match }) => {
     return {variables: {
       projectName: match.params.projectName.split('_').join(' '),
@@ -181,3 +292,5 @@ export default graphql(projectQuery, {
     }
     };
   }})(Project);
+
+export default connect(mapStateToProps, mapDispatchToProps)(projectWithData);

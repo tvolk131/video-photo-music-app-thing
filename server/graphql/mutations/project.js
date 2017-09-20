@@ -24,13 +24,14 @@ module.exports = {
       id: {type: new GraphQLNonNull(GraphQLInt)},
       name: {type: GraphQLString},
       description: {type: GraphQLString},
-      tagline: {type: GraphQLString}
+      tagline: {type: GraphQLString},
+      thumbnailUrl: {type: GraphQLString}
     },
-    resolve(parentValue, {id, name, description, tagline}, request) {
+    resolve(parentValue, {id, name, description, tagline, thumbnailUrl}, request) {
       if (!request.user) {
         return Promise.reject('Cannot edit a project when you are not logged in');
       }
-      let args = {name, description, tagline}
+      let args = {name, description, tagline, thumbnailUrl};
       clearUndefinedVals(args);
       return db.Project.update({userId: request.user.id, projectId: id, options: args});
     }
