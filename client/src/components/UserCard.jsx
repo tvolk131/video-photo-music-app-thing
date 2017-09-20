@@ -13,6 +13,8 @@ import Button from 'material-ui/Button';
 import ModeEditIcon from 'material-ui-icons/ModeEdit';
 import Divider from 'material-ui/Divider';
 
+import Loading from './Loading.jsx';
+
 const propTypes = {
   user: PropTypes.object,
   loading: PropTypes.bool.isRequired,
@@ -23,9 +25,7 @@ const propTypes = {
 
 const UserCard = ({ user, loading, error, currentUser, toggleEditUser }) => (
   loading &&
-  <Paper style={{padding: 25}}>
-    <CircularProgress/>
-  </Paper>
+  <Loading />
 
   ||
 
@@ -39,30 +39,46 @@ const UserCard = ({ user, loading, error, currentUser, toggleEditUser }) => (
   user &&
   <Paper>
     <img src={user.avatarUrl || 'https://cdn2.lobster.media/assets/default_avatar-afa14913913cc117c73f1ac69496d74e.png'} style={{width: '100%', objectFit: 'cover'}}/>
-    <div style={{textAlign: 'left', padding: 10}}>
-      {
-        currentUser &&
-        currentUser.username === user.username &&
-        <Button
-          fab
-          color="accent"
-          aria-label="edit"
-          onClick={toggleEditUser}
-          style={{
-            textAlign: 'right',
-            float: 'right',
-            top: '-35'
-          }}>
-          <ModeEditIcon />
-        </Button>
-      }
-      <Typography type="title">{user.name}</Typography>
-      <Typography color="secondary">Profession: {user.profession}</Typography>
-      <Typography color="secondary">Username: {user.username}</Typography>
-      <Typography color="secondary">Email: {user.email}</Typography>
-      <Divider style={{marginTop: 5, marginBottom: 5}}/>
-      <Typography>{user.description}</Typography>
-    </div>
+    {
+      currentUser &&
+      currentUser.username === user.username &&
+      <div>
+        <div style={{textAlign: 'right'}}>
+          <Button
+            fab
+            color="accent"
+            aria-label="edit"
+            onClick={toggleEditUser}
+            style={{
+              textAlign: 'right',
+              float: 'inherit',
+              top: '-35'
+            }}>
+            <ModeEditIcon />
+          </Button>
+        </div>
+        <div style={{textAlign: 'left', padding: 10, marginTop: -55}}>
+          <Typography type="title">{user.name}</Typography>
+          <Typography color="secondary">Profession: {user.profession}</Typography>
+          <Typography color="secondary">Username: {user.username}</Typography>
+          <Typography color="secondary">Email: {user.email}</Typography>
+          <Divider style={{marginTop: 5, marginBottom: 5}}/>
+          <Typography>{user.description}</Typography>
+        </div>
+      </div>
+    }
+    {
+      currentUser &&
+      currentUser.username !== user.username &&
+      <div>
+        <Typography type="title">{user.name}</Typography>
+        <Typography color="secondary">Profession: {user.profession}</Typography>
+        <Typography color="secondary">Username: {user.username}</Typography>
+        <Typography color="secondary">Email: {user.email}</Typography>
+        <Divider style={{marginTop: 5, marginBottom: 5}}/>
+        <Typography>{user.description}</Typography>
+      </div>
+    }
   </Paper>
 );
 

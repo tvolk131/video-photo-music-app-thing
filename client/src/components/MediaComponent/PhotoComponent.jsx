@@ -8,12 +8,9 @@ import { withStyles } from 'material-ui/styles';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
-import IconButton from 'material-ui/IconButton';
-import FavoriteIcon from 'material-ui-icons/Favorite';
-import ShareIcon from 'material-ui-icons/Share';
-import CommentIcon from 'material-ui-icons/Comment';
+import SocialButtons from '../SocialButtons.jsx';
 
-const PhotoComponent = ({component, group, elevation}) => {
+const PhotoComponent = ({component, group, elevation, editingProject, likeCount, id}) => {
   const FULL_WIDTH = 12;
   const HALF_WIDTH = 6;
   const ONE_THIRD_WIDTH = 4;
@@ -62,15 +59,7 @@ const PhotoComponent = ({component, group, elevation}) => {
             />
           </Grid>
           <Grid item xs={headerSize}>
-            <IconButton aria-label="Add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label="Comments">
-              <CommentIcon />
-            </IconButton>
-            <IconButton aria-label="Share">
-              <ShareIcon />
-            </IconButton>
+            <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} />
           </Grid>
         </Grid>
       </Paper>

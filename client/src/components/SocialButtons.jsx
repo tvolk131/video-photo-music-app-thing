@@ -4,11 +4,56 @@ import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
 import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
+import DeleteIcon from 'material-ui-icons/Delete';
+import ArrowUpwardIcon from 'material-ui-icons/ArrowUpward';
 
-const SocialButtons = ({ likeCount }) => (
+const SocialButtons = ({ likeCount, editingProject, editingUser, id }) => (
+  editingProject &&
   <Grid item style={{marginLeft: 'auto'}}>
     <Grid container spacing={0} align='center'>
-      <Grid item>
+      <Grid item style={{marginLeft: 'auto'}}>
+        <IconButton
+          onClick={() => console.log('delete ' + id)}
+          aria-label="Remove from project"
+          style={{zIndex: 1000, align: 'left'}}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Grid>
+      <Grid item style={{marginRight: 'auto'}}>
+        <IconButton 
+          onClick={() => console.log('make ' + id + ' featured')}
+          aria-label="Promote to featured"
+        >
+          <ArrowUpwardIcon />
+        </IconButton>
+      </Grid>
+    </Grid>
+  </Grid>
+
+  ||
+
+  editingUser &&
+  <Grid item style={{marginLeft: 'auto'}}>
+    <Grid container spacing={0} align='center'>
+      <Grid item style={{marginLeft: 'auto'}}>
+        <IconButton
+          onClick={() => console.log('delete ' + id)}
+          aria-label="Remove from project"
+          style={{zIndex: 1000, align: 'left'}}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Grid>
+    </Grid>
+  </Grid>
+
+  ||
+
+  !editingProject && !editingUser &&
+  <Grid item style={{marginLeft: 'auto'}}>
+    <Grid container spacing={0} align='center'>
+      <Grid item style={{marginLeft: 'auto'}}>
         <h4 style={{margin: 0, width: 50, textAlign: 'right'}}>
           {likeCount}
         </h4>
@@ -22,7 +67,7 @@ const SocialButtons = ({ likeCount }) => (
           <FavoriteIcon />
         </IconButton>
       </Grid>
-      <Grid item>
+      <Grid item style={{marginRight: 'auto'}}>
         <IconButton aria-label="Share">
           <ShareIcon />
         </IconButton>

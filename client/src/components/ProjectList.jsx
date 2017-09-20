@@ -5,7 +5,7 @@ import Typography from 'material-ui/Typography';
 
 import ListingItem from '../components/ListingItem.jsx';
 
-const ProjectList = ({ projects }) => (
+const ProjectList = ({ projects, editingUser }) => (
   <div style={{width: '100%'}}>
     {
       !projects &&
@@ -15,7 +15,7 @@ const ProjectList = ({ projects }) => (
 
       projects &&
       projects.map((content, key) => (
-        <ListingItem content={content} key={key} id={key} />
+        <ListingItem content={content} key={key} id={key} editingUser={editingUser} />
       ))
     }
   </div>

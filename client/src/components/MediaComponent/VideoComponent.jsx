@@ -5,14 +5,11 @@ import Card, { CardContent, CardMedia, CardHeader } from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
-import IconButton from 'material-ui/IconButton';
-import FavoriteIcon from 'material-ui-icons/Favorite';
-import ShareIcon from 'material-ui-icons/Share';
-import CommentIcon from 'material-ui-icons/Comment';
+import SocialButtons from '../SocialButtons.jsx';
 
 import VideoPlayer from './VideoPlayer.jsx';
 
-const VideoComponent = ({component, group, elevation}) => {
+const VideoComponent = ({component, group, elevation, editingProject, likeCount, id}) => {
   let size = 12;
   let headerSize = 0;
   group = group || 1;
@@ -38,15 +35,7 @@ const VideoComponent = ({component, group, elevation}) => {
             />
           </Grid>
           <Grid item xs={headerSize}>
-            <IconButton aria-label="Add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label="Comments">
-              <CommentIcon />
-            </IconButton>
-            <IconButton aria-label="Share">
-              <ShareIcon />
-            </IconButton>
+            <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} />
           </Grid>
         </Grid>
         <Typography type="body1" component="p" style={{textAlign: 'left', padding: '15px'}}>
