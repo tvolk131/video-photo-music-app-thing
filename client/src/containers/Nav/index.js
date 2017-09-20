@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Redirect } from 'react-router-dom';
 import { graphql, gql } from 'react-apollo';
 
 import { alert } from '../../actions/controlActions.js';
+import { search } from '../../actions/searchActions.js';
 
 import {
   AppBar,
@@ -41,8 +42,11 @@ const proptypes = {
 
 }
 
-const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser }) => (
+const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser, search, searching }) => (
   <div>
+  {searching &&
+    <Redirect to='/search' />
+  }
     <AppBar position='static'>
       <Toolbar disableGutters>
         <IconButton
@@ -54,11 +58,18 @@ const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser }) => (
         >
           <MenuIcon />
         </IconButton>
-        <Input
-          autoFocus
-          placeholder='Search for projects'
-          style={{color: 'white'}}
-        />
+        <form
+          onChange={(e) => {
+            e.preventDefault();
+            search(e.target.form.searchField.value);
+        }}>
+          <Input
+            id="searchField"
+            autoFocus
+            placeholder='Search for projects'
+            style={{color: 'white'}}
+          />
+        </form>
       </Toolbar>
     </AppBar>
 
@@ -148,12 +159,14 @@ const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser }) => (
 const mapStateToProps = state => {
   return {
     currentUser: state.session.currentUser,
-    navDrawerOpen: state.control.navDrawerOpen
+    navDrawerOpen: state.control.navDrawerOpen,
+    searching: state.search.searching
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  toggleNavDrawer: () => dispatch(toggleNavDrawer())
+  toggleNavDrawer: () => dispatch(toggleNavDrawer()),
+  search: (query) => dispatch(search(query))
 });
 export default connect(
   mapStateToProps,
