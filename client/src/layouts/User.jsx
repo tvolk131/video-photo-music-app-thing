@@ -44,6 +44,7 @@ const User = ({ currentUser, editingUser, toggleEditUser, data }) => (
             data.user &&
             <ProjectList
               projects={data.user.projects}
+              editingUser={editingUser}
             />
           }
         </Paper>

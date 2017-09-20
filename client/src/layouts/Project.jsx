@@ -37,6 +37,8 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
   const COMPONENT_ELEVATION = 4;
   const FEATURED_ELEVATION = 8;
 
+  let likeCount = 137;
+
   let {
     components,
     featuredComponent,
@@ -98,7 +100,12 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
           <Grid item xs={12} md={8} lg={6}>
             <Grid container>
               <Grid item xs={12}>
-                <MediaComponent content={featuredComponent} elevation={FEATURED_ELEVATION} />
+                <MediaComponent 
+                  content={featuredComponent} 
+                  elevation={FEATURED_ELEVATION} 
+                  likeCount={likeCount}
+                  id='featured'
+                />
               </Grid>
               <Grid item xs={12} style={{padding: 0}}>
                 <Grid container direction="row" spacing={24} style={{
@@ -106,9 +113,17 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                   margin: 0,
                   width: '100%'
                 }}>
-                  {components.map((content, key) => {
-                    return ( <MediaComponent content={content} key={key} group={groups[key]} elevation={COMPONENT_ELEVATION} /> );
-                  })}
+                  {components.map((content, key) => ( 
+                    <MediaComponent 
+                      content={content} 
+                      key={key} 
+                      group={groups[key]} 
+                      elevation={COMPONENT_ELEVATION} 
+                      editingProject={editingProject} 
+                      likeCount={likeCount}
+                      id={key}
+                    />
+                  ))}
                 </Grid>
               </Grid>
             </Grid>
@@ -143,7 +158,12 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
           <Grid item xs={12} md={8} lg={6}>
             <Grid container>
               <Grid item xs={12}>
-                <MediaComponent content={featuredComponent} elevation={FEATURED_ELEVATION} />
+                <MediaComponent 
+                  content={featuredComponent} 
+                  elevation={FEATURED_ELEVATION} 
+                  likeCount={likeCount}
+                  id='featured'
+                />
               </Grid>
               <Grid item xs={12}>
                 <DisplayProjectCard
@@ -164,9 +184,16 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                   margin: 0,
                   width: '100%'
                 }}>
-                  {components.map((content, key) => {
-                    return ( <MediaComponent content={content} key={key} group={groups[key]} elevation={COMPONENT_ELEVATION} /> );
-                  })}
+                  {components.map((content, key) => ( 
+                    <MediaComponent 
+                      content={content} 
+                      key={key} 
+                      group={groups[key]} 
+                      elevation={COMPONENT_ELEVATION} 
+                      editingProject={editingProject} 
+                      likeCount={likeCount} 
+                    /> 
+                  ))}
                 </Grid>
               </Grid>
             </Grid>

@@ -6,15 +6,12 @@ import Card, { CardContent, CardMedia, CardHeader } from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 import Typography from 'material-ui/Typography';
 import Grid from 'material-ui/Grid';
-import IconButton from 'material-ui/IconButton';
-import FavoriteIcon from 'material-ui-icons/Favorite';
-import ShareIcon from 'material-ui-icons/Share';
-import CommentIcon from 'material-ui-icons/Comment';
+import SocialButtons from '../SocialButtons.jsx';
 
 import AudioPlayer from './AudioPlayer.jsx';
 // import videojsWavesurfer from 'videojs-wavesurfer';
 
-const AudioComponent = ({component, elevation}) => (
+const AudioComponent = ({component, elevation, editingProject, likeCount, id}) => (
   <Grid item xs={12}>
     <Paper elevation={elevation}>
       <AudioPlayer aspectRatio="8:1" fluid={true} controls={true} sources={[{src: component.resourceUrl, type: 'audio/mp3'}]} />
@@ -30,15 +27,7 @@ const AudioComponent = ({component, elevation}) => (
           />
         </Grid>
         <Grid item>
-          <IconButton aria-label="Add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="Comments">
-            <CommentIcon />
-          </IconButton>
-          <IconButton aria-label="Share">
-            <ShareIcon />
-          </IconButton>
+          <SocialButtons editingProject={editingProject} likeCount={likeCount} id={id} />
         </Grid>
       </Grid>
       <Typography type="body1" component="p" style={{textAlign: 'left', padding: '15px'}}>
