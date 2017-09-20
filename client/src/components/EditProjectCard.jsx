@@ -12,17 +12,7 @@ import TextField from 'material-ui/TextField';
 
 import { setUploadedFileUrl } from '../actions/controlActions.js';
 
-const propTypes = {
-  user: PropTypes.object,
-  loading: PropTypes.bool,
-  error: PropTypes.bool,
-  toggleEditUser: PropTypes.func.isRequired,
-  submitChanges: PropTypes.func.isRequired,
-  uploadedFileUrl: PropTypes.string,
-  setUploadedFileUrl: PropTypes.func.isRequired
-};
-
-const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, uploadedFileUrl, setUploadedFileUrl }) => (
+const EditProjectCard = ({ project, loading, error, toggleEditProject, submitChanges, uploadedFileUrl, setUploadedFileUrl }) => (
   loading &&
   <Loading />
 
@@ -30,14 +20,14 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
 
   error &&
   <Paper style={{padding: 25}}>
-    <Typography style={{fontSize: 20}}>User info not found</Typography>
+    <Typography style={{fontSize: 20}}>Project info not found</Typography>
   </Paper>
 
   ||
 
-  user &&
+  project &&
   <Paper>
-    <Typography style={{paddingTop: 10, marginBottom: 5}}>Upload a new profile image:</Typography>
+    <Typography style={{paddingTop: 10, marginBottom: 5}}>Upload a new thumbnail image:</Typography>
     <Upload 
       allowedType="image"
       setUploadedFileUrl={setUploadedFileUrl}
@@ -45,45 +35,31 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
     <form style={{textAlign: 'left', padding: 10}} onSubmit={e => {
       let form = e.target
       e.preventDefault();
-      toggleEditUser();
+      toggleEditProject();
       submitChanges({
-        id: user.id,
-        name: form.name.value || user.name,
-        username: form.username.value || user.username,
-        email: form.email.value || user.email,
-        profession: form.profession.value || user.profession,
-        avatarUrl: uploadedFileUrl || user.avatarUrl || null,
-        description: form.description.value || user.description || null
+        id: project.id,
+        thumbnailUrl: uploadedFileUrl || project.thumbnailUrl || '',
+        name: form.name.value || project.name,
+        tagline: form.tagline.value || project.tagline,
+        description: form.description.value || project.description || null
       });
     }}>
       <TextField
         id="name"
         label="Name"
-        placeholder={user.name}
+        placeholder={project.name}
         style={{width: '100%'}}
       />
       <TextField
-        id="profession"
-        label="profession"
-        placeholder={user.profession}
-        style={{width: '100%'}}
-      />
-      <TextField
-        id="username"
-        label="Username"
-        placeholder={user.username}
-        style={{width: '100%'}}
-      />
-      <TextField
-        id="email"
-        label="Email"
-        placeholder={user.email}
+        id="tagline"
+        label="tagline"
+        placeholder={project.tagline}
         style={{width: '100%'}}
       />
       <TextField
         id="description"
-        label="Bio"
-        placeholder={user.description}
+        label="description"
+        placeholder={project.description}
         multiline
         style={{width: '100%'}}
       />
@@ -92,7 +68,7 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
         raised
         type="cancel"
         style={{marginBottom: 10}}
-        onClick={toggleEditUser}
+        onClick={toggleEditProject}
       >
         Cancel
       </Button>
@@ -103,51 +79,43 @@ const EditUserCard = ({ user, loading, error, toggleEditUser, submitChanges, upl
   </Paper>
 );
 
-EditUserCard.propTypes = propTypes;
-
-const editUser = gql`
-  mutation editUser(
+const editProject = gql`
+  mutation editProject(
     $id: Int!
-    $email: String!
-    $username: String!
+    $thumbnailUrl: String!
     $name: String!
-    $profession: String!
+    $tagline: String!
     $description: String!
-    $avatarUrl: String!
   ) {
-    editUser(
+    editProject(
       id: $id
-      email: $email
-      username: $username
+      thumbnailUrl: $thumbnailUrl
       name: $name
-      profession: $profession
+      tagline: $tagline
       description: $description
-      avatarUrl: $avatarUrl
     ) {
       id
-      email
-      username
+      thumbnailUrl
       name
-      profession
+      tagline
       description
-      avatarUrl
     }
   }
 `;
 
-const EditUserCardWithData = graphql(editUser, {
+const EditProjectCardWithData = graphql(editProject, {
   props: ({ ownProps, mutate }) => ({
     submitChanges(formdata) {
       mutate({variables: {...formdata}, optimisticResponse: {
         __typename: 'Mutation',
-        editUser: {
-          __typename: 'user',
+        editProject: {
+          __typename: 'project',
           ...formdata
         }
       }});
     }
   })
-})(EditUserCard);
+})(EditProjectCard);
 
 const mapStateToProps = state => ({
   uploadedFileUrl: state.control.uploadedFileUrl
@@ -163,4 +131,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EditUserCardWithData);
+)(EditProjectCardWithData);

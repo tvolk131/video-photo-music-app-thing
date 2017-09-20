@@ -8,15 +8,13 @@ import Paper from 'material-ui/Paper';
 import Card, { CardContent, CardMedia } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 
-import UserCard from '../components/UserCard.jsx';
-import EditUserCard from '../components/EditUserCard.jsx';
+import DisplayUserCard from '../components/DisplayUserCard.jsx';
 import ProjectList from '../components/ProjectList.jsx';
 
 import { toggleEditUser } from '../actions/controlActions';
 
 const propTypes = {
   currentUser: PropTypes.object,
-  editingUser: PropTypes.bool.isRequired,
   toggleEditUser: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired
 };
@@ -30,24 +28,14 @@ const User = ({ currentUser, editingUser, toggleEditUser, data }) => (
     }}>
       <Grid sm lg/>
       <Grid item xs={12} sm={12} md={4} lg={3}>
-        {editingUser ?
-          <EditUserCard
-            user={currentUser}
-            error={data.error}
-            loading={data.loading}
-            toggleEditUser={toggleEditUser}
-          />
-
-          :
-
-          <UserCard 
-            user={data.user}
-            error={data.error}
-            loading={data.loading}
-            currentUser={currentUser}
-            toggleEditUser={toggleEditUser}
-          />
-        }
+        <DisplayUserCard
+          currentUser={currentUser}
+          loading={data.loading}
+          error={data.error}
+          toggleEditUser={toggleEditUser}
+          editingUser={editingUser}
+          user={data.user}
+        />
       </Grid>
 
       <Grid item xs={12} sm={12} md={8} lg={6}>
@@ -83,6 +71,7 @@ const User = ({ currentUser, editingUser, toggleEditUser, data }) => (
 const userQuery = gql`
   query userQuery($username: String!) {
     user(username: $username) {
+      id
       name
       username
       description

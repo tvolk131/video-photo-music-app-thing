@@ -41,6 +41,11 @@ const control = (state = initialState, action) => {
   if (action.type === 'TOGGLE_EDIT_USER') {
     return {...state, editingUser: !state.editingUser};
   }
+
+  if (action.type === 'TOGGLE_EDIT_PROJECT') {
+    return {...state, editingProject: !state.editingProject};
+  }
+
   if (action.type === 'SET_UPLOADED_FILE_URL') {
     return {...state, uploadedFileUrl: action.fileUrl};
   }

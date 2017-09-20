@@ -28,6 +28,10 @@ const toggleEditUser = () => ({
   type: 'TOGGLE_EDIT_USER'
 });
 
+const toggleEditProject = () => ({
+  type: 'TOGGLE_EDIT_PROJECT'
+});
+
 const setUploadedFileUrl = (fileUrl) => ({
   type: 'SET_UPLOADED_FILE_URL',
   fileUrl
@@ -46,6 +50,7 @@ export {
   toggleNavDrawer,
   setUploadedFileUrl,
   toggleEditUser,
+  toggleEditProject,
   setCurrentPassword,
   setNewPassword,
   openPasswordDialog,

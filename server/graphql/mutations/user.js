@@ -6,6 +6,7 @@ module.exports = {
   editUser: {
     type: UserType,
     args: {
+      id: {type: GraphQLInt},
       email: {type: GraphQLString},
       username: {type: GraphQLString},
       theme: {type: GraphQLInt},
