@@ -16,10 +16,9 @@ import SocialButtons from './SocialButtons.jsx';
 const ListingItem = ({ content }) => {
 
   let smallIcon = {
-    height: 30,
-    width: 30,
-    margin: 5,
-    marginLeft: 0
+    height: 50,
+    width: 50,
+    margin: 0
   };
 
   const randomCount = () => {
@@ -31,7 +30,17 @@ const ListingItem = ({ content }) => {
       <Route render={({history}) => (
         <ListItem
           button
-          onClick={() => history.push(`/project/${content.owner.username}/${content.name}`)}
+          onClick={() => {
+            let path = '/search';
+            if (content.username) {
+              path = `/user/${content.username}`;
+            } else if (content.owner) {
+              path = `/project/${content.owner.username}/${content.name}`;
+            } else if (content.author) {
+              console.log('no such path yet');
+            }
+            history.push(path);
+          }}
           style={{width: '100%', padding: 0}}
         > 
           <Grid container>
@@ -41,7 +50,13 @@ const ListingItem = ({ content }) => {
               align: 'right',
               padding: 0
             }}>
-              <MediaIcon type={content.featuredComponent.type}/>
+              <img
+                src={content.thumbnailUrl || content.avatarUrl} 
+                style={{
+                  height: 50,
+                  width: 50
+                }}
+              />
             </Grid>
             <Grid item style={{textAlign: 'left'}}>
               <h4 style={{marginBottom: 0}}>{content.name}</h4>
@@ -54,22 +69,26 @@ const ListingItem = ({ content }) => {
                   marginBottom: 'auto'
                 }}
               >
-                <Grid item>
-                  <Avatar
-                    src={content.owner ? content.owner.avatarUrl : content.author.avatarUrl}
-                    style={smallIcon}
-                  />
-                </Grid>
-                <Grid item>
-                  {content.author ? content.author.name : content.owner.name}
-                </Grid>
+                {!content.username &&
+                  <div>
+                    <Grid item>
+                      <Avatar
+                        src={content.author ? content.author.avatarUrl : content.owner.avatarUrl}
+                        style={smallIcon}
+                      />
+                    </Grid>
+                    <Grid item>
+                      {content.author ? content.author.name : content.owner.name}
+                    </Grid>
+                  </div>
+                }
               </Grid>
             </Grid>
             <SocialButtons likeCount={randomCount()}/>
           </Grid>
         </ListItem> 
       )} />
-      <Divider />
+      <Divider/>
     </Grid>
   );
 };
