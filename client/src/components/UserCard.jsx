@@ -52,12 +52,13 @@ const UserCard = ({ user, loading, error, currentUser, toggleEditUser }) => (
             style={{
               textAlign: 'right',
               float: 'inherit',
-              top: '-35'
+              top: '-40',
+              margin: 10
             }}>
             <ModeEditIcon />
           </Button>
         </div>
-        <div style={{textAlign: 'left', padding: 10, marginTop: -55}}>
+        <div style={{textAlign: 'left', padding: 10, marginTop: -75}}>
           <Typography type="title">{user.name}</Typography>
           <Typography color="secondary">Profession: {user.profession}</Typography>
           <Typography color="secondary">Username: {user.username}</Typography>
@@ -70,7 +71,18 @@ const UserCard = ({ user, loading, error, currentUser, toggleEditUser }) => (
     {
       currentUser &&
       currentUser.username !== user.username &&
-      <div>
+      <div style={{textAlign: 'left', padding: 10}}>
+        <Typography type="title">{user.name}</Typography>
+        <Typography color="secondary">Profession: {user.profession}</Typography>
+        <Typography color="secondary">Username: {user.username}</Typography>
+        <Typography color="secondary">Email: {user.email}</Typography>
+        <Divider style={{marginTop: 5, marginBottom: 5}}/>
+        <Typography>{user.description}</Typography>
+      </div>
+    }
+    {
+      !currentUser &&
+      <div style={{textAlign: 'left', padding: 10}}>
         <Typography type="title">{user.name}</Typography>
         <Typography color="secondary">Profession: {user.profession}</Typography>
         <Typography color="secondary">Username: {user.username}</Typography>
