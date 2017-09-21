@@ -4,6 +4,7 @@ import { gql, graphql } from 'react-apollo';
 
 import Grid from 'material-ui/Grid';
 import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
 import { CircularProgress } from 'material-ui/Progress';
 
 import ProjectContributors from '../components/ProjectContributors.jsx';
@@ -13,6 +14,7 @@ import DisplayProjectCard from '../components/DisplayProjectCard.jsx';
 import CreateComponent from '../components/CreateComponent.jsx';
 
 import { toggleEditProject } from '../actions/controlActions';
+import { toggleCreateComponentExpanded } from '../actions/controlActions';
 
 
 ////////////////////////////////////////
@@ -25,7 +27,7 @@ import { toggleEditProject } from '../actions/controlActions';
 // To see if the command worked run the following command:
 // select * from components where isFeatured=true;
 
-const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
+const Project = ({ currentUser, editingProject, toggleEditProject, toggleCreateComponentExpanded, createComponentExpanded, data }) => {
 
   if (data.loading) {
     return (
@@ -87,7 +89,11 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
     return groups;
   };
 
-  let groups = groupingPreCheck(components);
+  let groups;
+
+  if (components.length > 0) {
+    groups = groupingPreCheck(components);
+  }
 
   return (
     <Grid container >
@@ -101,14 +107,17 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
           <Grid item xs={12} md={8} lg={6}>
             <Grid container>
               <Grid item xs={12}>
-                <MediaComponent 
-                  content={featuredComponent} 
-                  elevation={FEATURED_ELEVATION} 
-                  editingProject={editingProject} 
-                  likeCount={likeCount}
-                  isFeatured={true}
-                  id='featured'
-                />
+                {
+                  featuredComponent &&
+                  <MediaComponent 
+                    content={featuredComponent} 
+                    elevation={FEATURED_ELEVATION} 
+                    editingProject={editingProject} 
+                    likeCount={likeCount}
+                    isFeatured={true}
+                    id='featured'
+                  />  
+                }
               </Grid>
               <Grid item xs={12} style={{padding: 0}}>
                 <Grid container direction="row" spacing={24} style={{
@@ -117,23 +126,40 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                   width: '100%'
                 }}>
                   {
+                    currentUser && (contributors.includes(currentUser)) &&
+                    <CreateComponent toggleEditProject={() => console.log('click')} toggleCreateComponentExpanded={toggleCreateComponentExpanded} createComponentExpanded={createComponentExpanded} />
+                  }
+                  {
                     editingProject &&
                     <Grid item xs={12}>
-                      <CreateComponent toggleEditProject={toggleEditProject} />
+                      <CreateComponent toggleEditProject={toggleEditProject} toggleCreateComponentExpanded={toggleCreateComponentExpanded} createComponentExpanded={createComponentExpanded} />
                     </Grid>
                   }
-                  {components.map((content, key) => ( 
-                    <MediaComponent 
-                      content={content} 
-                      key={key} 
-                      group={groups[key]} 
-                      elevation={COMPONENT_ELEVATION} 
-                      editingProject={editingProject} 
-                      likeCount={likeCount}
-                      isFeatured={false}
-                      id={key}
-                    />
-                  ))}
+                  {
+                    (components.length > 0) &&
+                    components.map((content, key) => ( 
+                      <MediaComponent 
+                        content={content} 
+                        key={key} 
+                        group={groups[key]} 
+                        elevation={COMPONENT_ELEVATION} 
+                        editingProject={editingProject} 
+                        likeCount={likeCount}
+                        isFeatured={false}
+                        id={key}
+                      />
+                    ))
+
+                    ||
+
+                    components.length === 0 && !editingProject &&
+                    <div style={{width: '100%'}}>
+                      <Paper style={{width: '100%', marginBottom: 15}}>
+                        <Typography type='title' style={{padding: 10}}>This project doesn't have any components yet. You should add one!</Typography>
+                      </Paper>
+                      <CreateComponent toggleEditProject={() => console.log('no no')} toggleCreateComponentExpanded={toggleCreateComponentExpanded} createComponentExpanded={createComponentExpanded} />
+                    </div>
+                  }
                 </Grid>
               </Grid>
             </Grid>
@@ -168,14 +194,17 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
           <Grid item xs={12} md={8} lg={6}>
             <Grid container>
               <Grid item xs={12}>
-                <MediaComponent 
-                  content={featuredComponent} 
-                  elevation={FEATURED_ELEVATION} 
-                  editingProject={editingProject} 
-                  likeCount={likeCount}
-                  isFeatured={true}
-                  id='featured'
-                />
+                {
+                  featuredComponent &&
+                  <MediaComponent 
+                    content={featuredComponent} 
+                    elevation={FEATURED_ELEVATION} 
+                    editingProject={editingProject} 
+                    likeCount={likeCount}
+                    isFeatured={true}
+                    id='featured'
+                  />  
+                }
               </Grid>
               <Grid item xs={12}>
                 <DisplayProjectCard
@@ -197,23 +226,40 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
                   width: '100%'
                 }}>
                   {
+                    currentUser && (contributors.includes(currentUser)) &&
+                    <CreateComponent toggleEditProject={() => console.log('click')} toggleCreateComponentExpanded={toggleCreateComponentExpanded} createComponentExpanded={createComponentExpanded} />
+                  }
+                  {
                     editingProject &&
                     <Grid item xs={12}>
-                      <CreateComponent toggleEditProject={toggleEditProject} />
+                      <CreateComponent toggleEditProject={toggleEditProject} toggleCreateComponentExpanded={toggleCreateComponentExpanded} createComponentExpanded={createComponentExpanded} />
                     </Grid>
                   }
-                  {components.map((content, key) => ( 
-                    <MediaComponent 
-                      content={content} 
-                      key={key} 
-                      group={groups[key]} 
-                      elevation={COMPONENT_ELEVATION} 
-                      editingProject={editingProject} 
-                      likeCount={likeCount}
-                      isFeatured={false}
-                      id={key}
-                    /> 
-                  ))}
+                  {
+                    (components.length > 0) &&
+                    components.map((content, key) => ( 
+                      <MediaComponent 
+                        content={content} 
+                        key={key} 
+                        group={groups[key]} 
+                        elevation={COMPONENT_ELEVATION} 
+                        editingProject={editingProject} 
+                        likeCount={likeCount}
+                        isFeatured={false}
+                        id={key}
+                      />
+                    ))
+
+                    ||
+
+                    components.length === 0 && !editingProject &&
+                    <div style={{width: '100%'}}>
+                      <Paper style={{width: '100%', marginBottom: 15}}>
+                        <Typography type='title' style={{padding: 10}}>This project doesn't have any components yet. You should add one!</Typography>
+                      </Paper>
+                      <CreateComponent toggleEditProject={() => console.log('no no')} toggleCreateComponentExpanded={toggleCreateComponentExpanded} createComponentExpanded={createComponentExpanded} />
+                    </div>
+                  }
                 </Grid>
               </Grid>
             </Grid>
@@ -281,10 +327,14 @@ const projectQuery = gql`
 
 const mapStateToProps = state => ({
   currentUser: state.session.currentUser,
-  editingProject: state.control.editingProject
+  editingProject: state.control.editingProject,
+  createComponentExpanded: state.control.createComponentExpanded
 });
 
 const mapDispatchToProps = dispatch => ({
+  toggleCreateComponentExpanded() {
+    dispatch(toggleCreateComponentExpanded());
+  },
   toggleEditProject() {
     dispatch(toggleEditProject());
   }
@@ -294,7 +344,7 @@ const mapDispatchToProps = dispatch => ({
 const projectWithData = graphql(projectQuery, {
   options: ({ match }) => {
     return {variables: {
-      projectName: match.params.projectName.split('_').join(' '),
+      projectName: match.params.projectName,
       username: match.params.username
     }
     };
