@@ -85,13 +85,16 @@ const userQuery = gql`
       avatarUrl
       profession
       projects {
+        id
         name
         tagline
         owner {
+          id
           name
           username
         }
         featuredComponent {
+          id
           name
           type
         }
