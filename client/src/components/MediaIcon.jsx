@@ -5,6 +5,7 @@ import ImageIcon from 'material-ui-icons/Image';
 import AudiotrackIcon from 'material-ui-icons/Audiotrack';
 import TextFieldsIcon from 'material-ui-icons/TextFields';
 import TheatersIcon from 'material-ui-icons/Theaters';
+import HelpOutlineIcon from 'material-ui-icons/HelpOutline';
 import List, { ListItem, ListItemText, ListItemAvatar } from 'material-ui/List';
 
 const MediaIcon = ({ type, size }) => {
@@ -28,6 +29,10 @@ const MediaIcon = ({ type, size }) => {
   }
 
   return (
+    type === 'unknown' &&
+      <HelpOutlineIcon style={style} />
+    ||
+
     type === 'text' && 
       <TextFieldsIcon style={style} />
     ||

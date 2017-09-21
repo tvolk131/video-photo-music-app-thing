@@ -14,8 +14,9 @@ import Upload from './Upload.jsx';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 
+import { setUploadedFileUrl } from '../actions/controlActions.js';
 
-const CreateProject = ({ createProject, toggleEditUser }) => (
+const CreateProject = ({ createProject, toggleEditUser, setUploadedFileUrl, uploadedFileUrl }) => (
   <Grid container spacing={0} style={{
     margin: 0,
     width: '100%'
@@ -30,11 +31,13 @@ const CreateProject = ({ createProject, toggleEditUser }) => (
         <Upload
           style="thumbnail"
           allowedType="image"
+          setUploadedFileUrl={setUploadedFileUrl}
         />
         <form style={{textAlign: 'left', padding: 10}} onSubmit={e => {
           let form = e.target;
           e.preventDefault();
           createProject({
+            thumbnailUrl: uploadedFileUrl || '',
             name: form.name.value,
             description: form.description.value,
             tagline: form.tagline.value
@@ -85,16 +88,18 @@ const CreateProject = ({ createProject, toggleEditUser }) => (
 
 const createProject = gql`
   mutation createProject(
+    $thumbnailUrl: String!
     $name: String!
     $tagline: String!
     $description: String!
   ) {
     createProject(
+      thumbnailUrl: $thumbnailUrl
       name: $name
       tagline: $tagline
       description: $description
     ) {
-      id
+      thumbnailUrl
       name
       description
       tagline
@@ -116,5 +121,18 @@ const CreateProjectWithData = graphql(createProject, {
   })
 })(CreateProject);
 
+const mapStateToProps = state => ({
+  uploadedFileUrl: state.control.uploadedFileUrl
+});
 
-export default CreateProjectWithData;
+const mapDispatchToProps = dispatch => ({
+  setUploadedFileUrl(fileUrl) {
+    console.log(dispatch)
+    dispatch(setUploadedFileUrl(fileUrl));
+  }
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateProjectWithData);

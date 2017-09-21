@@ -46,6 +46,10 @@ const clearAlert = () => ({
   type: 'CLEAR_ALERT'
 });
 
+const toggleCreateComponentExpanded = () => ({
+  type: 'TOGGLE_CREATE_COMPONENT_EXPANDED'
+});
+
 export {
   toggleNavDrawer,
   setUploadedFileUrl,
@@ -57,5 +61,6 @@ export {
   closePasswordDialog,
   resetPassword,
   alert,
-  clearAlert
+  clearAlert,
+  toggleCreateComponentExpanded
 };
