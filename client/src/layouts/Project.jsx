@@ -228,6 +228,7 @@ const Project = ({ currentUser, editingProject, toggleEditProject, data }) => {
 const projectQuery = gql`
   query projectQuery($projectName: String! $username: String!) {
     user(username: $username) {
+      id
       project(name: $projectName) {
         id
         name
@@ -235,33 +236,39 @@ const projectQuery = gql`
         tagline
         thumbnailUrl
         featuredComponent {
+          id
           name
           resourceUrl
           description
           type
           author {
+            id
             name
             username
             avatarUrl
           }
         }
         contributors {
+          id
           name
           avatarUrl
           username
           role
         }
         owner {
+          id
           name
           username
           avatarUrl
         }
         components(includeFeatured: false) {
+          id
           name
           resourceUrl
           description
           type
           author {
+            id
             name
             username
             avatarUrl

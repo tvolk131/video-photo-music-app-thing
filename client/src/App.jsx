@@ -43,21 +43,23 @@ const defaultTheme = 0;
 const App = ({ theme, alert, clearAlert }) => (
   <MuiThemeProvider theme={themes.get(theme)}>
     <div className="App">
-      <Nav />
-      <switch>
-        <Route exact path='/' component={Search}/>
-        <Route exact path='/search' component={Search}/>
-        <Route
-          exact
-          path='/project/:username/:projectName'
-          component={Project}
-        />
-        <Route exact path='/project/create' component={CreateProject}/>
-        <Route exact path='/user/:username' component={User}/>
-        <Route exact path='/settings' component={Settings}/>
-        <Route exact path='/login' component={Login}/>
-        <Route exact path='/signup' component={Signup}/>
-      </switch>
+      <Nav style={{marginBottom: 500}}/>
+      <div style={{paddingTop: 60}}>
+        <switch>
+          <Route exact path='/' component={Search}/>
+          <Route exact path='/search' component={Search}/>
+          <Route
+            exact
+            path='/project/:username/:projectName'
+            component={Project}
+          />
+          <Route exact path='/project/create' component={CreateProject}/>
+          <Route exact path='/user/:username' component={User}/>
+          <Route exact path='/settings' component={Settings}/>
+          <Route exact path='/login' component={Login}/>
+          <Route exact path='/signup' component={Signup}/>
+        </switch>
+      </div>
       <SnackBar
         open={alert.message}
         onEnter={() => {

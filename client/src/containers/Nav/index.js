@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Redirect } from 'react-router-dom';
 import { graphql, gql } from 'react-apollo';
+import PropTypes from 'prop-types';
 
 import { alert } from '../../actions/controlActions.js';
+import { search } from '../../actions/searchActions.js';
 
 import {
   AppBar,
@@ -38,12 +40,19 @@ import { toggleNavDrawer } from '../../actions/controlActions';
 const style = {textDecoration: 'none'};
 
 const proptypes = {
+  toggleNavDrawer: PropTypes.func,
+  navDrawerOpen: PropTypes.bool,
+  currentUser: PropTypes.object,
+  search: PropTypes.func,
+  searching: PropTypes.bool
+};
 
-}
-
-const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser }) => (
+const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser, search, searching }) => (
   <div>
-    <AppBar position='static'>
+    {searching &&
+      <Redirect to='/search' />
+    }
+    <AppBar position='fixed'>
       <Toolbar disableGutters>
         <IconButton
           color='contrast'
@@ -54,17 +63,24 @@ const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser }) => (
         >
           <MenuIcon />
         </IconButton>
-        <Input
-          autoFocus
-          placeholder='Search for projects'
-          style={{color: 'white'}}
-        />
+        <form
+          onChange={(e) => {
+            e.preventDefault();
+            search(e.target.form.searchField.value);
+        }}>
+          <Input
+            id="searchField"
+            autoFocus
+            placeholder='Search for projects'
+            style={{color: 'white'}}
+          />
+        </form>
       </Toolbar>
     </AppBar>
 
     <Drawer
       open={navDrawerOpen}
-      elevation={1}  
+      elevation={1}
     >
       <IconButton onClick={toggleNavDrawer}>
         <ChevronLeftIcon />
@@ -138,7 +154,6 @@ const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser }) => (
                 </ListItem>
             </div>
           }
-
         </List> 
       </div>
     </Drawer>
@@ -148,12 +163,14 @@ const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser }) => (
 const mapStateToProps = state => {
   return {
     currentUser: state.session.currentUser,
-    navDrawerOpen: state.control.navDrawerOpen
+    navDrawerOpen: state.control.navDrawerOpen,
+    searching: state.search.searching
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  toggleNavDrawer: () => dispatch(toggleNavDrawer())
+  toggleNavDrawer: () => dispatch(toggleNavDrawer()),
+  search: (query) => dispatch(search(query))
 });
 export default connect(
   mapStateToProps,

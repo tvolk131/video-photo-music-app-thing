@@ -94,6 +94,7 @@ const createProject = gql`
       tagline: $tagline
       description: $description
     ) {
+      id
       name
       description
       tagline

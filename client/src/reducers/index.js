@@ -4,6 +4,7 @@ import { combineReducers } from 'redux';
 import control from './control';
 import data from './data';
 import session from './session';
+import search from './search';
 
 const networkInterface = createNetworkInterface({
   uri: '/graphql',
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   data: client.reducer(),
   control,
   session,
+  search,
   data
 });
 
