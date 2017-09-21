@@ -52,7 +52,7 @@ const control = (state = initialState, action) => {
 
   if (action.type === 'TOGGLE_CREATE_COMPONENT_EXPANDED') {
     return {...state, createComponentExpanded: !state.createComponentExpanded};
-  }
+  } 
 
   return state;
 }
