@@ -23,6 +23,15 @@ import themes from './themes';
 import logo from './logo.svg';
 import './App.css';
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then((registration) => {
+        console.log('ServiceWorker registration was successful!');
+      });
+  });
+}
+
 const propTypes = {
   theme: PropTypes.number,
   alert: PropTypes.object,
