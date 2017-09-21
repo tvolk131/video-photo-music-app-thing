@@ -43,9 +43,6 @@ app.get('*/favicon.ico', (req, res) => {
 app.get('*/manifest.json', (req, res) => {
   res.sendFile(path.resolve(__dirname + '/../public/dist/manifest.json'));
 });
-app.get('*/sw.js', (req, res) => {
-  res.sendFile(path.resolve(__dirname + '/../client/src/sw.js'));
-});
 app.get('/*', (req, res) => {
   res.render('index', {user: req.user ? JSON.stringify(req.user) : JSON.stringify(null)});
 });
