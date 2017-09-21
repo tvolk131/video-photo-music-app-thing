@@ -104,7 +104,7 @@ const Upload = ({ allowedType, style, setUploadedFileUrl }) => {
 
 
   const uploadOptions = {
-    server: 'http://' + window.location.host
+    server: window.location.origin
   };
   const s3Url = 'https://qraft-uploads.s3.amazonaws.com';
 
