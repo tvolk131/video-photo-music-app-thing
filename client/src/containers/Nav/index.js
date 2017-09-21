@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
 import { graphql, gql } from 'react-apollo';
+import PropTypes from 'prop-types';
 
 import { alert } from '../../actions/controlActions.js';
 import { search } from '../../actions/searchActions.js';
@@ -39,15 +40,19 @@ import { toggleNavDrawer } from '../../actions/controlActions';
 const style = {textDecoration: 'none'};
 
 const proptypes = {
-
-}
+  toggleNavDrawer: PropTypes.func,
+  navDrawerOpen: PropTypes.bool,
+  currentUser: PropTypes.object,
+  search: PropTypes.func,
+  searching: PropTypes.bool
+};
 
 const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser, search, searching }) => (
   <div>
-  {searching &&
-    <Redirect to='/search' />
-  }
-    <AppBar position='static'>
+    {searching &&
+      <Redirect to='/search' />
+    }
+    <AppBar position='fixed'>
       <Toolbar disableGutters>
         <IconButton
           color='contrast'
@@ -75,7 +80,7 @@ const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser, search, searching })
 
     <Drawer
       open={navDrawerOpen}
-      elevation={1}  
+      elevation={1}
     >
       <IconButton onClick={toggleNavDrawer}>
         <ChevronLeftIcon />
@@ -149,7 +154,6 @@ const Nav = ({ toggleNavDrawer, navDrawerOpen, currentUser, search, searching })
                 </ListItem>
             </div>
           }
-
         </List> 
       </div>
     </Drawer>

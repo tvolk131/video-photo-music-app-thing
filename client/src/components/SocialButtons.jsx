@@ -6,6 +6,7 @@ import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
 import DeleteIcon from 'material-ui-icons/Delete';
 import ArrowUpwardIcon from 'material-ui-icons/ArrowUpward';
+import Typography from 'material-ui/Typography';
 
 const SocialButtons = ({ likeCount, editingProject, editingUser, id, isFeatured }) => (
 
@@ -71,10 +72,10 @@ const SocialButtons = ({ likeCount, editingProject, editingUser, id, isFeatured 
   !editingProject && !editingUser &&
   <Grid item style={{marginLeft: 'auto'}}>
     <Grid container spacing={0} align='center'>
-      <Grid item style={{marginLeft: 'auto'}}>
-        <h4 style={{margin: 0, width: 50, textAlign: 'right'}}>
+      <Grid item>
+        <Typography style={{margin: 0, width: 50}} align='right' color='secondary'>
           {likeCount}
-        </h4>
+        </Typography>
       </Grid>
       <Grid item>
         <IconButton

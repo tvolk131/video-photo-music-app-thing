@@ -6,7 +6,7 @@ import Paper from 'material-ui/Paper';
 import ListingItem from '../components/ListingItem.jsx';
 
 const SearchResults = ({ results }) => (
-  <Paper style={{width: '100%'}}>{
+  <Paper>{
     results.map((result, key) => (
       <ListingItem content={result._source} key={key} id={key} />
     ))

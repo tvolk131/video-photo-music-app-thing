@@ -1,6 +1,10 @@
 body {
   background-color: #F5F5F6;
 }
+
+html {
+  width: 100vw;
+}
 .App {
   text-align: center;
 }
