@@ -92,6 +92,8 @@ module.exports.indexProjectComponent = (projectComponentId) => {
       queue.push({index: {_index, _type: 'projectComponent', _id: projectComponent.id}});
       queue.push({
         name: projectComponent.name,
+        description: projectComponent.description,
+        thumbnailUrl: projectComponent.thumbnailUrl,
         author: {
           username: author.username,
           name: author.name,
