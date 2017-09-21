@@ -60,11 +60,12 @@ const ProjectCard = ({ project, loading, error, currentUser, toggleEditProject }
           style={{
             textAlign: 'right',
             float: 'inherit',
-            top: '-70'
+            top: -80,
+            margin: 10
           }}>
           <ModeEditIcon />
         </Button>
-        <Typography style={{padding: 10, textAlign: 'left', marginTop: -100, paddingBottom: 0}}>{project.tagline}</Typography>
+        <Typography style={{padding: 10, textAlign: 'left', marginTop: -120, paddingBottom: 0}}>{project.tagline}</Typography>
         <Typography style={{padding: 10, textAlign: 'left', marginTop: -5}}>{project.description}</Typography>
       </div>
     }

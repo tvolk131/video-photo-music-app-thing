@@ -88,6 +88,7 @@ const userQuery = gql`
         id
         name
         tagline
+        thumbnailUrl
         owner {
           id
           name
