@@ -69,7 +69,14 @@ const ProjectCard = ({ project, loading, error, currentUser, toggleEditProject }
       </div>
     }
     {
-      (currentUser && currentUser.username !== project.owner.username) ||
+      (currentUser && currentUser.username !== project.owner.username) &&
+      <div>
+        <Typography style={{padding: 10, textAlign: 'left', marginTop: -40, paddingBottom: 0}}>{project.tagline}</Typography>
+        <Typography style={{padding: 10, textAlign: 'left'}}>{project.description}</Typography>
+      </div>
+
+      ||
+
       !currentUser &&
       <div>
         <Typography style={{padding: 10, textAlign: 'left', marginTop: -40, paddingBottom: 0}}>{project.tagline}</Typography>
